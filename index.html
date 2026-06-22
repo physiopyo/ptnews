@@ -83,6 +83,20 @@ button{font-family:inherit;cursor:pointer}
 .fancard:hover .stk1{transform:translate(16px,-15px)}
 .fancard:hover .stk2{transform:translate(32px,-30px)}
 .fancard:hover .stk3{transform:translate(48px,-45px)}
+.envlink{flex:none;display:inline-flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;cursor:pointer}
+.env{position:relative;width:52px;height:36px;perspective:420px;flex:none}
+.env__paper{position:absolute;left:6px;right:6px;top:5px;height:30px;background:#fff;border-radius:2px 2px 3px 3px;z-index:1;transform:translateY(0);transition:transform .42s cubic-bezier(.22,.61,.36,1);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.env__paper i{position:absolute;left:7px;height:2px;border-radius:2px;background:#E8503A;opacity:.5}
+.env__paper i:nth-child(1){top:7px;right:9px}
+.env__paper i:nth-child(2){top:13px;right:16px}
+.env__paper i:nth-child(3){top:19px;right:24px}
+.env__front{position:absolute;inset:0;z-index:2;background:#D8483A;border-radius:5px;box-shadow:0 4px 12px -3px rgba(0,0,0,.5)}
+.env__flap{position:absolute;top:0;left:0;width:100%;height:60%;background:#C9402F;border-radius:5px 5px 0 0;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:50% 0;transform:rotateX(0);transition:transform .42s ease,z-index 0s .21s;z-index:3}
+.envlink:hover .env__flap,.envlink:focus-visible .env__flap{transform:rotateX(180deg);z-index:0;transition:transform .42s ease,z-index 0s 0s}
+.envlink:hover .env__paper,.envlink:focus-visible .env__paper{transform:translateY(-17px)}
+.env__label{font-size:11px;font-weight:800;color:#C2CAD8;letter-spacing:-.01em;white-space:nowrap;transition:color .2s}
+.envlink:hover .env__label,.envlink:focus-visible .env__label{color:#FF8A5C}
+.envlink:active .env{transform:translateY(1px)}
 @keyframes notiroll{0.00%{transform:translateY(0px)}27.33%{transform:translateY(0px)}33.33%{transform:translateY(-24px)}60.67%{transform:translateY(-24px)}66.67%{transform:translateY(-48px)}94.00%{transform:translateY(-48px)}100%{transform:translateY(-72px)}}.notiroll{animation:notiroll 12s ease infinite}</style></head>
 <body>
 <div id="app"></div>
@@ -355,7 +369,7 @@ function render(){
       rbPanel()+
       (ST.w>=1820?'<img src="img/crowd4.webp" alt="" style="flex:none;margin-left:auto;height:74px;width:auto;display:block;border-radius:6px;">':'')+
     '</div>'+
-    '<div style="min-width:0;max-width:100%;display:flex;flex-direction:column;align-items:center;gap:5px;line-height:1.12;"><span style="font-size:'+(wide?'31px':'18px')+';font-weight:900;color:#F22C2C;letter-spacing:-.025em;white-space:nowrap;text-shadow:0 1px 14px rgba(242,44,44,.25);">도수치료 관리급여 결사 저지</span><span style="font-size:'+(wide?'13px':'11px')+';font-weight:700;color:#fff;letter-spacing:-.01em;white-space:nowrap;">6.28(일) 14:00 경복궁 동십자각</span></div>'+
+    '<div style="min-width:0;max-width:100%;display:flex;align-items:center;justify-content:center;gap:'+(wide?'20px':'14px')+';"><div style="display:flex;flex-direction:column;align-items:center;gap:5px;line-height:1.12;"><span style="font-size:'+(wide?'31px':'18px')+';font-weight:900;color:#F22C2C;letter-spacing:-.025em;white-space:nowrap;text-shadow:0 1px 14px rgba(242,44,44,.25);">도수치료 관리급여 결사 저지</span><span style="font-size:'+(wide?'13px':'11px')+';font-weight:700;color:#fff;letter-spacing:-.01em;white-space:nowrap;">6.28(일) 14:00 경복궁 동십자각</span></div><a class="envlink" href="https://ptsite-nine.vercel.app" target="_blank" rel="noopener" aria-label="물리치료학과 학생들에게 안내 사이트 열기"><span class="env"><span class="env__paper"><i></i><i></i><i></i></span><span class="env__front"></span><span class="env__flap"></span></span><span class="env__label">물리치료학과 학생들에게</span></a></div>'+
     '<div style="'+(wide?'justify-self:end;justify-content:flex-end;':'')+'display:flex;align-items:center;gap:9px;min-width:0;">'+(ST.w>=1500&&ST.w<1820?'<img src="img/crowd4.webp" alt="" style="flex:none;height:74px;width:auto;display:block;border-radius:6px;">':'')+'<button data-act="stopwatch" data-tip="스톱워치" aria-label="스톱워치" style="flex:none;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:transparent;border:0;cursor:pointer;padding:1px;"><img src="img/stopwatch.png?v=3" alt="스톱워치" style="width:100%;height:100%;object-fit:contain;display:block;"></button>'+
      '<a href="https://open.kakao.com/o/pCuo1Fzi" target="_blank" rel="noopener" class="ktalk" style="flex:none;display:inline-flex;align-items:center;gap:7px;background:#FEE500;color:#1A1A1A;font-size:15px;font-weight:800;letter-spacing:-.01em;padding:9px 16px;border-radius:11px;white-space:nowrap;box-shadow:0 3px 12px -3px rgba(254,229,0,.5),inset 0 1px 0 rgba(255,255,255,.5);"><span style="font-size:16px;">💬</span>도수치료 관리급여 저지 단톡방</a>'+
     '</div>'+
