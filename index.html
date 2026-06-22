@@ -191,15 +191,12 @@ function rbPanel(){
   var rows=Math.ceil(rb.length/4)||1;
   function cell(x){
     var mc=x.r===1?'#FFCB39':x.r===2?'#CBD2DD':x.r===3?'#D08A4E':'#9DB6DE';
-    return '<div style="display:flex;align-items:center;font-size:12px;line-height:1.4;white-space:nowrap;">'
-      +'<span style="display:inline-block;min-width:46px;font-weight:'+(x.r?'800':'700')+';color:'+(x.r?mc:'#C9D2E1')+';">'+E(x.n)+'</span>'
-      +'<span style="color:#6B7488;margin:0 4px;">:</span>'
-      +(x.r?'<span style="font-weight:900;color:'+mc+';">'+x.r+'위</span>':'<span style="color:#646E82;font-weight:700;">✕</span>')
-    +'</div>';
+    if(x.r) return '<div style="display:flex;align-items:center;gap:6px;font-size:13px;line-height:1.42;white-space:nowrap;font-weight:800;color:'+mc+';"><span style="font-weight:900;">'+x.r+'위</span><span>'+E(x.n)+'</span></div>';
+    return '<div style="font-size:13px;line-height:1.42;white-space:nowrap;font-weight:600;color:#C9D2E1;opacity:.42;">'+E(x.n)+'</div>';
   }
   return '<div style="flex:none;">'
-    +'<div style="font-size:12px;font-weight:900;color:#A9C6F2;letter-spacing:-.02em;white-space:nowrap;margin-bottom:4px;">물리치료협회 집회공지 현황판</div>'
-    +'<div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat('+rows+',auto);column-gap:10px;row-gap:1px;">'+rb.map(cell).join('')+'</div>'
+    +'<div style="font-size:13px;font-weight:900;color:#A9C6F2;letter-spacing:-.02em;white-space:nowrap;margin-bottom:5px;">물리치료협회 집회공지 현황판</div>'
+    +'<div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat('+rows+',auto);column-gap:16px;row-gap:1px;">'+rb.map(cell).join('')+'</div>'
   +'</div>';
 }
 function clusterFeed(list){
