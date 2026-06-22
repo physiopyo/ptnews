@@ -77,7 +77,7 @@ function card(c,mode,key){
       '<div style="flex:none;padding:11px 15px 13px;"><h4 class="clamp2" style="margin:0;font-size:14px;line-height:1.4;font-weight:700;color:#EDEFF5;letter-spacing:-.01em;">'+E(c.title)+'</h4></div></a>';
   }
   const box=wide?'flex:none;width:206px;height:100%;':'';
-  const th=wide?thumb(c,'flex:1;min-height:64px'):thumb(c,'height:118px');
+  const th=wide?thumb(c,'flex:1;min-height:64px'):thumb(c,'flex:none;height:118px');
   return '<a class="card gcard" href="'+E(c.url||'#')+'" target="_blank" rel="noopener" style="color:inherit;display:flex;flex-direction:column;border-radius:12px;overflow:hidden;'+box+'">'+th+
     '<div style="flex:none;padding:11px 12px 12px;"><h4 class="clamp2" style="margin:0;font-size:13px;line-height:1.42;font-weight:700;color:#EDEFF5;letter-spacing:-.01em;">'+E(c.title)+'</h4></div></a>';
 }
