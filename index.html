@@ -195,7 +195,7 @@ function rbPanel(){
     return '<div style="font-size:11px;line-height:1.5;white-space:nowrap;font-weight:600;color:#C9D2E1;opacity:.42;">'+E(x.n)+'</div>';
   }
   return '<div style="flex:none;">'
-    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;"><span style="font-size:13px;font-weight:900;color:#A9C6F2;letter-spacing:-.02em;white-space:nowrap;">물리치료협회 집회공지 현황판</span><button data-act="boardpop" data-board="sub" style="flex:none;cursor:pointer;font-size:10.5px;font-weight:800;color:#CDD7E8;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);padding:1.5px 8px;border-radius:7px;white-space:nowrap;line-height:1.5;">분과학회</button><button data-act="boardpop" data-board="research" style="flex:none;cursor:pointer;font-size:10.5px;font-weight:800;color:#CDD7E8;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);padding:1.5px 8px;border-radius:7px;white-space:nowrap;line-height:1.5;">연구회</button></div>'
+    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap;"><span style="font-size:13px;font-weight:900;color:#A9C6F2;letter-spacing:-.02em;white-space:nowrap;">물리치료협회 집회공지 현황판</span><button data-act="boardpop" data-board="sub" style="flex:none;cursor:pointer;font-size:10.5px;font-weight:800;color:#fff;background:linear-gradient(180deg,#5A8AE0,#3559A6);border:1px solid rgba(150,184,244,.6);padding:2px 9px;border-radius:7px;white-space:nowrap;line-height:1.5;box-shadow:0 2px 7px -2px rgba(70,120,220,.6);">분과학회</button><button data-act="boardpop" data-board="research" style="flex:none;cursor:pointer;font-size:10.5px;font-weight:800;color:#fff;background:linear-gradient(180deg,#46C088,#2C8159);border:1px solid rgba(120,224,170,.55);padding:2px 9px;border-radius:7px;white-space:nowrap;line-height:1.5;box-shadow:0 2px 7px -2px rgba(60,180,120,.6);">연구회</button></div>'
     +'<div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat('+rows+',auto);column-gap:9px;row-gap:2px;">'+rb.map(cell).join('')+'</div>'
   +'</div>';
 }
@@ -211,9 +211,9 @@ function boardPopup(){
     if(x.r) return '<div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:800;color:'+mc+';padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.07);"><span style="font-weight:900;flex:none;">'+x.r+'위</span><span>'+E(x.n)+'</span></div>';
     return '<div style="font-size:14px;font-weight:600;color:#C9D2E1;opacity:.5;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.07);">'+E(x.n)+'</div>';
   }).join('');
-  return '<div data-act="boardpopbd" style="position:fixed;inset:0;z-index:210;background:rgba(8,10,16,.84);display:flex;align-items:center;justify-content:center;padding:20px;">'
-    +'<div style="width:min(460px,94vw);max-height:82vh;overflow-y:auto;background:#161B28;border:1px solid rgba(255,255,255,.14);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.6);padding:16px 20px 18px;">'
-    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><span style="font-size:16px;font-weight:900;color:#A9C6F2;letter-spacing:-.02em;">'+ttl+'</span><span style="font-size:11px;font-weight:800;color:#46D08A;background:rgba(70,208,138,.15);padding:2px 7px;border-radius:6px;">'+done+'/'+list.length+'</span><span style="flex:1;"></span><button data-act="boardpopx" style="flex:none;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:800;padding:6px 13px;border-radius:8px;cursor:pointer;">닫기 ✕</button></div>'
+  return '<div data-act="boardpopbd" style="position:fixed;inset:0;z-index:210;">'
+    +'<div id="boardDD" class="sb" style="position:fixed;top:0;left:-9999px;width:min(400px,94vw);max-height:70vh;overflow-y:auto;background:#161B28;border:1px solid rgba(255,255,255,.14);border-radius:13px;box-shadow:0 20px 50px rgba(0,0,0,.55);padding:11px 14px 12px;">'
+    +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;"><span style="font-size:14.5px;font-weight:900;color:'+(isSub?'#9FC2F2':'#7FE0B0')+';letter-spacing:-.02em;">'+ttl+'</span><span style="font-size:11px;font-weight:800;color:#46D08A;background:rgba(70,208,138,.15);padding:2px 7px;border-radius:6px;">'+done+'/'+list.length+'</span><span style="flex:1;"></span><button data-act="boardpopx" style="flex:none;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:12px;font-weight:800;padding:5px 11px;border-radius:7px;cursor:pointer;">닫기 ✕</button></div>'
     +rows
     +'</div></div>';
 }
@@ -365,6 +365,7 @@ function render(){
     '</div>'+
    '</main>'+lb+grp+pop+boardPopup()+'</div>';
   document.getElementById('app').innerHTML=app;
+  if(ST.boardPop){var _dd=document.getElementById('boardDD'),_bt=document.querySelector('button[data-board="'+ST.boardPop+'"]');if(_dd&&_bt){var _r=_bt.getBoundingClientRect(),_w=_dd.offsetWidth||380;var _l=Math.max(8,Math.min(_r.left,window.innerWidth-_w-8));_dd.style.left=Math.round(_l)+'px';_dd.style.top=Math.round(_r.bottom+6)+'px';}}
   document.querySelectorAll('.wheelx').forEach(el=>{el.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;const max=el.scrollWidth-el.clientWidth;if(max<=0)return;e.preventDefault();el.scrollLeft+=e.deltaY;},{passive:false});});
   document.querySelectorAll('.fanrow').forEach(function(row){
     var cards=[].slice.call(row.children);
