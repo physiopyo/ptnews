@@ -112,10 +112,10 @@ function row(key,title,accent,accentBg,list,links,raw,upd){
       '<div style="flex:1;"></div>'+(upd?'<span style="flex:none;white-space:nowrap;font-size:11px;color:rgba(255,255,255,.6);font-weight:700;">'+E(upd)+'</span>':'')+'</div>'+body+'</section>';
 }
 function petCard(p,cmp){
-  return '<a class="pet" href="'+E(p.url||'#')+'" target="_blank" rel="noopener" style="display:flex;flex-direction:column;background:#1E2840;border:1px solid rgba(255,255,255,'+(cmp?'.09':'.1')+');'+(cmp?'':'border-left:4px solid #D8483A;')+'border-radius:'+(cmp?'10px':'12px')+';padding:'+(cmp?'10px 12px':'13px 14px')+';">'+
-   '<h3 style="margin:0 0 '+(cmp?'9px':'11px')+';font-size:13.5px;line-height:1.45;font-weight:700;letter-spacing:-.015em;color:#F4F6FB;">'+E(p.title)+'</h3>'+
+  return '<a class="pet" href="'+E(p.url||'#')+'" target="_blank" rel="noopener" style="display:flex;flex-direction:column;background:#1E2840;border:1px solid rgba(255,255,255,.1);border-left:4px solid #D8483A;border-radius:12px;padding:13px 14px;">'+
+   '<h3 style="margin:0 0 11px;font-size:13.5px;line-height:1.45;font-weight:700;letter-spacing:-.015em;color:#F4F6FB;">'+E(p.title)+'</h3>'+
    '<div style="display:flex;gap:12px;align-items:stretch;">'+
-     (p.qr?'<img src="'+E(p.qr)+'" alt="QR" width="'+(cmp?72:82)+'" height="'+(cmp?72:82)+'" loading="lazy" style="flex:none;background:#fff;border-radius:8px;padding:5px;box-sizing:border-box;">':'')+
+     (p.qr?'<img src="'+E(p.qr)+'" alt="QR" width="82" height="82" loading="lazy" style="flex:none;background:#fff;border-radius:8px;padding:5px;box-sizing:border-box;">':'')+
      '<div style="flex:1;min-width:0;display:flex;flex-direction:column;">'+
        (cmp?'':'<span style="font-size:16px;font-weight:800;color:#E0726E;letter-spacing:-.02em;white-space:nowrap;">'+E(p.dl||'6월 24일 (수) 18시 마감')+'</span>')+
        (p.count?'<span style="'+(cmp?'':'margin-top:4px;')+'font-size:13px;color:#8C95A8;font-weight:600;">'+E(p.count)+'</span>':'')+
