@@ -212,7 +212,7 @@ function rbPanel(){
   var rb=rb0.filter(function(x){return x.r;}).sort(function(a,b){return a.r-b.r;}).concat(rb0.filter(function(x){return !x.r&&x.on;}).sort(function(a,b){return a.on-b.on;})).concat(rb0.filter(function(x){return !x.r&&!x.on;}));
   var rows=Math.ceil(rb.length/6)||1;
   function cell(x){
-    var mc=x.r===1?'#FFCB39':x.r===2?'#CBD2DD':x.r===3?'#D08A4E':'#C9D2E1';
+    var mc=x.r===1?'#FFCB39':x.r===2?'#86CDEC':x.r===3?'#D08A4E':'#C9D2E1';
     if(x.r) return '<div'+(x.r&&x.r<=3?' class="shine"':'')+' style="'+(x.r<=3?shineStyle():'')+'display:flex;align-items:center;gap:5px;font-size:11px;line-height:1.5;white-space:nowrap;font-weight:800;color:'+mc+';"><span style="font-weight:900;">'+x.r+'등</span><span>'+E(x.n)+'</span></div>';
     if(x.on) return '<div style="font-size:11px;line-height:1.5;white-space:nowrap;font-weight:700;color:#C9D2E1;">'+E(x.n)+'</div>';
     return '<div style="font-size:11px;line-height:1.5;white-space:nowrap;font-weight:600;color:#C9D2E1;opacity:.42;">'+E(x.n)+'</div>';
