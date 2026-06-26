@@ -42,10 +42,10 @@ button{font-family:inherit;cursor:pointer}
 .stmtpull{transition:transform .26s cubic-bezier(.22,.61,.36,1),box-shadow .26s ease,filter .2s ease}
 .stmtpull:hover{transform:translateY(-62px);z-index:30;box-shadow:0 26px 52px -10px rgba(0,0,0,.85);filter:brightness(1.05)}
 .stmtsec{overflow:hidden}
-.stmtsec:has(.stmtpull:hover){overflow:visible;z-index:6}
+.stmtsec:has(.stmtpull:hover){overflow-x:clip;overflow-y:visible;z-index:6}
 [data-tip]{position:relative}
 .mrk>div{font-size:12px!important}
-.stmtsec:has([data-tip]:hover){overflow:visible;z-index:7}
+.stmtsec:has([data-tip]:hover){overflow-x:clip;overflow-y:visible;z-index:7}
 .stmtlb{transition:transform .18s ease,box-shadow .18s ease}
 .stmtlb:hover{transform:translateY(-5px);box-shadow:0 14px 26px -8px rgba(0,0,0,.6);filter:brightness(1.05)}
 .pet:hover{background:#202940!important;border-color:rgba(255,255,255,.16)!important}
