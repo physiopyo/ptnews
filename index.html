@@ -249,8 +249,6 @@ function rbPanel(mob){
   +'</div>';
   if(mob){
     function mlabel(txt,grad,bd){return '<span style="flex:none;display:inline-block;width:62px;text-align:center;box-sizing:border-box;font-size:12px;line-height:1.4;font-weight:900;color:#fff;background:'+grad+';border:1px solid '+bd+';padding:2px 0;border-radius:8px;letter-spacing:-.03em;white-space:nowrap;box-shadow:0 2px 8px -2px rgba(0,0,0,.4);">'+txt+'</span>';}
-    function sgn(c){return '<span style="font-size:16px;font-weight:900;color:#F4BA63;line-height:1.5;display:inline-block;transform:scaleX(1.95);transform-origin:center;text-shadow:0 0 4px rgba(244,186,99,.95),0 0 10px rgba(232,162,74,.7),0 0 18px rgba(224,146,44,.5);">'+c+'</span>';}
-    var dhV='<div class="signfk" style="flex:none;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:4px 11px;margin-right:16px;margin-left:6px;background:transparent;border:1px solid rgba(244,186,99,.6);border-radius:9px;box-shadow:0 0 6px -1px rgba(244,186,99,.35),inset 0 0 5px rgba(244,186,99,.15);">'+sgn('동')+sgn('참')+sgn('환')+sgn('영')+'</div>';
     var subBtn='<button data-board="sub" style="flex:none;width:62px;box-sizing:border-box;text-align:center;cursor:pointer;font-size:12px;line-height:1.4;font-weight:900;color:#fff;background:linear-gradient(180deg,#5A8AE0,#3559A6);border:1px solid rgba(150,184,244,.6);padding:2px 0;border-radius:8px;letter-spacing:-.03em;white-space:nowrap;">분과학회</button>';
     var resBtn='<button data-board="research" style="flex:none;width:62px;box-sizing:border-box;text-align:center;cursor:pointer;font-size:12px;line-height:1.4;font-weight:900;color:#fff;background:linear-gradient(180deg,#46C088,#2C8159);border:1px solid rgba(120,224,170,.55);padding:2px 0;border-radius:8px;letter-spacing:-.03em;white-space:nowrap;">연구회</button>';
     var mact='<div style="flex:1;min-width:0;display:flex;align-items:center;">'
@@ -262,7 +260,6 @@ function rbPanel(mob){
         +'<div class="mrk" style="display:flex;align-items:center;gap:11px;flex-wrap:wrap;">'+mlabel('버스대절','linear-gradient(180deg,#E0922C,#B86A18)','rgba(245,205,150,.5)')+__bus.map(buscell).join('')+'</div>'
         +'<div style="display:flex;align-items:center;gap:10px;"><div style="flex:none;display:flex;flex-direction:column;gap:4px;">'+subBtn+resBtn+'</div>'+mact+'</div>'
       +'</div>'
-      +dhV
     +'</div>';
   }
   return '<div style="display:flex;align-items:flex-start;gap:6px;"><div style="flex:none;">'
@@ -271,12 +268,6 @@ function rbPanel(mob){
   +'</div>'
   +'<div style="flex:none;align-self:stretch;width:1px;background:rgba(255,255,255,.16);margin:0 2px;"></div>'
   +__busBlock
-  +'<div class="signfk" style="flex:none;align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;padding:1px 4px;">'
-    +'<span style="font-size:20px;font-weight:900;color:#F4BA63;line-height:1;text-shadow:0 0 4px rgba(244,186,99,.95),0 0 11px rgba(232,162,74,.75),0 0 21px rgba(224,146,44,.5);">동</span>'
-    +'<span style="font-size:20px;font-weight:900;color:#F4BA63;line-height:1;text-shadow:0 0 4px rgba(244,186,99,.95),0 0 11px rgba(232,162,74,.75),0 0 21px rgba(224,146,44,.5);">참</span>'
-    +'<span style="font-size:20px;font-weight:900;color:#F4BA63;line-height:1;text-shadow:0 0 4px rgba(244,186,99,.95),0 0 11px rgba(232,162,74,.75),0 0 21px rgba(224,146,44,.5);">환</span>'
-    +'<span style="font-size:20px;font-weight:900;color:#F4BA63;line-height:1;text-shadow:0 0 4px rgba(244,186,99,.95),0 0 11px rgba(232,162,74,.75),0 0 21px rgba(224,146,44,.5);">영</span>'
-  +'</div>'
   +'<div style="flex:none;align-self:stretch;width:1px;background:rgba(255,255,255,.16);margin:0 2px;"></div>'
   +'<div style="flex:none;align-self:flex-start;display:flex;flex-direction:column;align-items:stretch;gap:5px;"><button data-board="sub" style="flex:none;cursor:pointer;font-size:13px;line-height:1.5;font-weight:900;color:#fff;background:linear-gradient(180deg,#5A8AE0,#3559A6);border:1px solid rgba(150,184,244,.6);padding:3px 12px;border-radius:8px;letter-spacing:-.02em;white-space:nowrap;box-shadow:0 2px 8px -2px rgba(70,120,220,.6);">분과학회</button><button data-board="research" style="flex:none;cursor:pointer;font-size:13px;line-height:1.5;font-weight:900;color:#fff;background:linear-gradient(180deg,#46C088,#2C8159);border:1px solid rgba(120,224,170,.55);padding:3px 12px;border-radius:8px;letter-spacing:-.02em;white-space:nowrap;box-shadow:0 2px 8px -2px rgba(60,180,120,.6);">연구회</button></div>'
   +'</div>';
