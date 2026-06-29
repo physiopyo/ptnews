@@ -1,5 +1,21 @@
 node_modules/
 .DS_Store
 .vercel/
-
 .vercel
+
+# 민감정보 / 키 (절대 커밋 금지) ─ 공개 레포 방어
+*key*.json
+**/*key*.json
+_ga_key.json
+auth.json
+**/auth.json
+*.pem
+*.p12
+*.pfx
+.env
+.env.*
+*token*
+*_secret*
+naver_key.json
+kakao_key.json
+_news/*key*.json
