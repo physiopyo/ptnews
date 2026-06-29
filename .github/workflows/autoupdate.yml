@@ -2,7 +2,7 @@ name: autoupdate
 
 on:
   schedule:
-    - cron: '0 */2 * * *'   # 2시간마다 (UTC 기준 00,02,...,22시)
+    - cron: '17 */2 * * *'   # 2시간마다(:17 UTC) — 정시 과부하 회피로 누락 방지
   workflow_dispatch:        # 수동 실행 버튼
 
 permissions:
@@ -15,6 +15,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Seoul          # 보드 타임스탬프를 한국시간(KST)으로 (datetime.now)
     steps:
       - uses: actions/checkout@v4
 
@@ -45,6 +47,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "변경 없음 — 커밋 생략"
           else
-            git commit -m "auto(ci): 보드 자동 갱신 $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git commit -m "auto(ci): 보드 자동 갱신 $(date +'%Y-%m-%d %H:%M KST')"
             git push
           fi
