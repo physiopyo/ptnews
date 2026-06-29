@@ -291,14 +291,14 @@ const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ptnews.vercel.app">
 <meta property="og:title" content="도수치료 관련 뉴스·청원 상황판">
-<meta property="og:description" content="보도·공지·청원을 한눈에. 6.28 결사 저지, 함께 행동해 주세요.">
-<meta property="og:image" content="https://ptnews.vercel.app/img/og.png?v=9">
+<meta property="og:description" content="보도·공지·청원을 한눈에. 결사 저지, 함께 행동해 주세요.">
+<meta property="og:image" content="https://ptnews.vercel.app/img/og.png?v=10">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="도수치료 관련 뉴스·청원 상황판">
-<meta name="twitter:description" content="보도·공지·청원을 한눈에. 6.28 결사 저지, 함께 행동해 주세요.">
-<meta name="twitter:image" content="https://ptnews.vercel.app/img/og.png?v=9">
+<meta name="twitter:description" content="보도·공지·청원을 한눈에. 결사 저지, 함께 행동해 주세요.">
+<meta name="twitter:image" content="https://ptnews.vercel.app/img/og.png?v=10">
 <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://fastly.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>${CSS}${rollCSS}</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><script src="d3.layout.cloud.min.js"></script></head>

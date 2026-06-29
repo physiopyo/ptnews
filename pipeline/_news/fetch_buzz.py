@@ -107,6 +107,14 @@ def main():
         'source': 'Google Trends + 네이버 자동완성 (키 불필요·무료)',
         'note': '검색 관심도는 상대지수(0~100). 블로그·뉴스·카페 언급량/긍부정은 네이버 검색 오픈API 키 연동 시 추가.',
     }
+    # 네이버(언급량·감성·연관어) 섹션은 fetch_buzz_naver 가 채운다.
+    # 키 없거나 실패해도 이전 buzz.json 의 naver 를 보존(보드 워드맵/감성 유지, 회귀 방지).
+    try:
+        _prev = json.load(open(OUT, encoding='utf-8'))
+        if isinstance(_prev, dict) and _prev.get('naver'):
+            data['naver'] = _prev['naver']
+    except Exception:
+        pass
     json.dump(data, open(OUT, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     days = len(g['dates'])
     print('buzz.json 저장. 시계열 %d일, 키워드 %d개' % (days, len(KEYWORDS)))
