@@ -496,11 +496,16 @@ function buzzOverlay(inline){
     legend='<div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:4px 2px 7px;">'+cchBtns+'</div>';
     chartInner=buzzMultiSVG(cdates, cser, '건', isHr, zoom);
   } else {
-    var srcD,srcV;
-    if(metric==='gidx'){ srcD=gtr.dates||[]; srcV=(gtr.series&&gtr.series[kw])||[]; unit='지수'; }
-    else { srcD=dl.dates||[]; srcV=(dl.series&&dl.series[kw])||[]; unit='지수'; }
-    var ss=Math.max(0, srcD.length-PER[per]);
-    chartInner=buzzChartSVG(srcD.slice(ss), srcV.slice(ss), col, unit, zoom);
+    if(per==='1일'){
+      chartInner='<div style="color:#8A93A6;font-size:13px;padding:34px 16px;text-align:center;line-height:1.6;">구글·네이버 검색 지수는 일(日) 단위 상대지수예요.<br>1일(시간대별) 보기는 지원하지 않아요. 1주일 이상을 선택해 주세요.</div>';
+      unit='지수';
+    } else {
+      var srcD,srcV;
+      if(metric==='gidx'){ srcD=gtr.dates||[]; srcV=(gtr.series&&gtr.series[kw])||[]; unit='지수'; }
+      else { srcD=dl.dates||[]; srcV=(dl.series&&dl.series[kw])||[]; unit='지수'; }
+      var ss=Math.max(0, srcD.length-PER[per]);
+      chartInner=buzzChartSVG(srcD.slice(ss), srcV.slice(ss), col, unit, zoom);
+    }
   }
   var perBtns=availPers.map(function(p){var on=p===per;return '<button data-act="buzzper" data-per="'+p+'" style="flex:none;cursor:pointer;font-size:12px;font-weight:800;padding:4px 10px;border-radius:7px;border:1px solid '+(on?col:'rgba(255,255,255,.14)')+';background:'+(on?'rgba(255,255,255,.07)':'transparent')+';color:'+(on?'#fff':'rgba(255,255,255,.5)')+';">'+p+'</button>';}).join('');
   var metBtns=[['cnt','언급 건수',true],['nidx','네이버 지수',!!(dl.dates&&dl.dates.length)],['gidx','구글 지수',!!(gtr.dates&&gtr.dates.length)]].filter(function(m){return m[2];}).map(function(m){var on=metric===m[0];return '<button data-act="buzzmetric" data-met="'+m[0]+'" style="flex:none;cursor:pointer;font-size:12.5px;font-weight:800;padding:5px 11px;border-radius:7px;border:1px solid '+(on?col:'rgba(255,255,255,.14)')+';background:'+(on?col:'transparent')+';color:'+(on?'#fff':'rgba(255,255,255,.55)')+';">'+m[1]+'</button>';}).join('');
