@@ -19,3 +19,9 @@ auth.json
 naver_key.json
 kakao_key.json
 _news/*key*.json
+pipeline/_news/*key*.json
+
+# 빌드 중간 산출물(레포 루트 index.html/img로 동기화되므로 커밋 불필요)
+pipeline/웹/
+__pycache__/
+*.pyc

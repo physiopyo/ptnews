@@ -1,0 +1,50 @@
+name: autoupdate
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'   # 2시간마다 (UTC 기준 00,02,...,22시)
+  workflow_dispatch:        # 수동 실행 버튼
+
+permissions:
+  contents: write           # 커밋/푸시용 (기본 GITHUB_TOKEN)
+
+concurrency:
+  group: autoupdate
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install python deps
+        run: pip install -r pipeline/requirements.txt
+
+      - name: Run autoupdate
+        env:
+          NAVER_ID: ${{ secrets.NAVER_ID }}
+          NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
+          KAKAO_KEY: ${{ secrets.KAKAO_KEY }}
+        run: python pipeline/autoupdate_ci.py
+
+      - name: Commit & push
+        run: |
+          rm -f pipeline/_news/*key*.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "변경 없음 — 커밋 생략"
+          else
+            git commit -m "auto(ci): 보드 자동 갱신 $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
