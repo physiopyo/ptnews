@@ -2,7 +2,7 @@ name: autoupdate
 
 on:
   schedule:
-    - cron: '17 */2 * * *'   # 2시간마다(:17 UTC) — 정시 과부하 회피로 누락 방지
+    - cron: '17 * * * *'   # 매시 :17 시도. GitHub이 예정 런을 자주 누락·지연해서, 빈도를 올려 2시간 이내 신선도 보장(공개 레포 무제한 무료)
   workflow_dispatch:        # 수동 실행 버튼
 
 permissions:
