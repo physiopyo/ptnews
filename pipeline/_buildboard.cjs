@@ -167,7 +167,7 @@ html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-u
 .hero-img.on{opacity:1}
 .dot{width:7px;height:7px;border-radius:4px;border:none;background:rgba(255,255,255,.5);cursor:pointer;padding:0;transition:width .35s ease,background .35s ease}
 .dot.on{width:24px;background:#fff}
-.heropz{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(20,18,15,.42);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.heropz{width:34px;height:34px;border:none;background:transparent;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;filter:drop-shadow(0 1px 4px rgba(0,0,0,.7))}.heropz svg{width:18px;height:18px}
 .navbtn{display:flex;align-items:center;gap:7px;padding:12px 2px;margin:0 24px -1px 0;border:none;border-bottom:2px solid transparent;background:transparent;color:#a3a3a3;font:600 13.5px 'Noto Sans KR';cursor:pointer;white-space:nowrap}
 .navbtn.active{border-bottom-color:#1a1a1a;color:#1a1a1a;font-weight:700}
 .chip{flex:none;padding:8px 14px;border-radius:19px;border:1px solid #e2ddd3;background:#fff;color:#57534b;font:600 12.5px 'Noto Sans KR';white-space:nowrap;cursor:pointer}
@@ -184,11 +184,11 @@ html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-u
 .gdoc table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px}.gdoc th,.gdoc td{border:1px solid #e2ddd3;padding:7px 9px;text-align:left;vertical-align:top}.gdoc th{background:#f5f2ec}
 .gdoc pre{background:#faf8f4;border:1px solid #ececec;border-radius:6px;padding:12px;white-space:pre-wrap;font-size:12.5px}
 .gdoc hr{border:none;border-top:1px solid #ececec;margin:14px 0}
-@media(max-width:900px){.hero{margin:16px 18px 4px}.herobox{height:300px!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.hero h2{font-size:38px!important;letter-spacing:-1.4px!important}}`;
+@media(max-width:900px){.hero{margin:16px 18px 4px}.herobox{height:150px!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}}`;
 
 const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:0 auto">
   <div id="hero" class="hero">
-    <div class="herobox" style="position:relative;height:470px;overflow:hidden;background:#111;border-radius:18px">
+    <div class="herobox" style="position:relative;height:235px;overflow:hidden;background:#111;border-radius:18px">
       <img class="hero-img on" src="img/hero-1.jpg" alt="전국 물리치료사 총궐기대회" style="object-position:center 60%">
       <img class="hero-img" src="img/hero-2.jpg" alt="" style="object-position:center 52%">
       <img class="hero-img" src="img/hero-3.jpg" alt="" style="object-position:center 62%">
