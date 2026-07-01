@@ -85,14 +85,18 @@ def sync_output():
 def main():
     log('===== CI auto-update start =====')
     os.makedirs(os.path.join(PIPE, '웹', 'board', 'img'), exist_ok=True)
+    skip = bool(os.environ.get('SKIP_FETCH'))
+    if skip:
+        log('SKIP_FETCH=1 → 뉴스·버즈 수집 생략, 빌드만 수행(코드/문구 변경 즉시 반영)')
     write_keys()
     try:
-        run([PY, os.path.join(NEWS, 'fetch_coaction.py')], 'coaction')
-        run([PY, os.path.join(NEWS, 'fetch_press.py')], 'press')
-        run([PY, os.path.join(NEWS, 'fetch_ko.py')], 'ko')
-        run([PY, os.path.join(NEWS, 'fetch_insure.py')], 'insure')
-        run([PY, os.path.join(NEWS, 'fetch_buzz.py')], 'buzz-google')
-        run([PY, os.path.join(NEWS, 'fetch_buzz_naver.py')], 'buzz-naver')
+        if not skip:
+            run([PY, os.path.join(NEWS, 'fetch_coaction.py')], 'coaction')
+            run([PY, os.path.join(NEWS, 'fetch_press.py')], 'press')
+            run([PY, os.path.join(NEWS, 'fetch_ko.py')], 'ko')
+            run([PY, os.path.join(NEWS, 'fetch_insure.py')], 'insure')
+            run([PY, os.path.join(NEWS, 'fetch_buzz.py')], 'buzz-google')
+            run([PY, os.path.join(NEWS, 'fetch_buzz_naver.py')], 'buzz-naver')
         run([NODE, os.path.join(PIPE, '_buildboard.cjs')], 'build', must=True)
         sync_output()
     finally:

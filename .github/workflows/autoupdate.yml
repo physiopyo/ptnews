@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '9 * * * *'   # 매시 :09 (1시간 간격). 네이버/구글 무료 한도 안에서 안전. GitHub 스케줄 누락은 외부핑(cron-job.org)으로 보강 권장
   workflow_dispatch:        # 수동 실행 버튼
+    inputs:
+      skip_fetch:
+        description: '수집 건너뛰고 빌드만 (코드/문구 변경 즉시 반영용)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write           # 커밋/푸시용 (기본 GITHUB_TOKEN)
@@ -23,12 +28,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'                                  # pip 캐시로 kiwipiepy 등 재설치 시간 단축
+          cache-dependency-path: pipeline/requirements.txt
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Install python deps
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_fetch) }}
         run: pip install -r pipeline/requirements.txt
 
       - name: Run autoupdate
@@ -36,6 +44,7 @@ jobs:
           NAVER_ID: ${{ secrets.NAVER_ID }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
           KAKAO_KEY: ${{ secrets.KAKAO_KEY }}
+          SKIP_FETCH: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}
         run: python pipeline/autoupdate_ci.py
 
       - name: Commit & push
