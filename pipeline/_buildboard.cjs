@@ -531,6 +531,10 @@ render();
 
 const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
   + '<title>PT뉴스 — 물리치료 관리급여 대응</title>'
+  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PT뉴스"><meta property="og:url" content="https://ptnews.vercel.app/">'
+  + '<meta property="og:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta property="og:description" content="도수치료 관리급여 정책 대응 상황판. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
+  + '<meta property="og:image" content="https://ptnews.vercel.app/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
+  + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta name="twitter:description" content="도수치료 관리급여 정책 대응 상황판."><meta name="twitter:image" content="https://ptnews.vercel.app/img/hero-1.jpg">'
   + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
   + '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">'
   + '<script src="d3.layout.cloud.min.js"></script>'
