@@ -184,7 +184,7 @@ html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-u
 .gdoc table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px}.gdoc th,.gdoc td{border:1px solid #e2ddd3;padding:7px 9px;text-align:left;vertical-align:top}.gdoc th{background:#f5f2ec}
 .gdoc pre{background:#faf8f4;border:1px solid #ececec;border-radius:6px;padding:12px;white-space:pre-wrap;font-size:12.5px}
 .gdoc hr{border:none;border-top:1px solid #ececec;margin:14px 0}
-@media(max-width:900px){.hero{margin:16px 18px 4px}.herobox{height:150px!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}}`;
+@media(max-width:900px){.hero{margin:16px 18px 4px}.herobox{height:150px!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.herotxt{padding:14px 18px 0!important}.heroctl{left:18px!important;bottom:8px!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}}`;
 
 const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:0 auto">
   <div id="hero" class="hero">
@@ -193,10 +193,10 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
       <img class="hero-img" src="img/hero-2.jpg" alt="" style="object-position:center 52%">
       <img class="hero-img" src="img/hero-3.jpg" alt="" style="object-position:center 62%">
       <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(10,11,14,.6) 0%,rgba(10,11,14,.28) 48%,rgba(10,11,14,.06) 100%)"></div>
-      <div style="position:absolute;inset:0;padding:0 48px;display:flex;flex-direction:column;justify-content:center">
+      <div class="herotxt" style="position:absolute;inset:0;padding:30px 48px 0;display:flex;flex-direction:column;justify-content:flex-start">
         <h2 style="margin:0;font-family:'Noto Serif KR',serif;font-weight:700;font-size:64px;line-height:1.14;letter-spacing:-2.2px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6),0 4px 34px rgba(0,0,0,.35);max-width:600px;word-break:keep-all">환자의 치료권을 지킵니다</h2>
       </div>
-      <div style="position:absolute;left:48px;bottom:28px;display:flex;align-items:center;gap:13px;z-index:3">
+      <div class="heroctl" style="position:absolute;left:48px;bottom:10px;display:flex;align-items:center;gap:13px;z-index:3">
         <button id="heroPause" class="heropz" type="button" aria-label="슬라이드 일시정지"></button>
         <div id="heroDots" style="display:flex;align-items:center;gap:7px"></div>
       </div>
