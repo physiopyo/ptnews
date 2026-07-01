@@ -184,11 +184,11 @@ html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-u
 .gdoc table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px}.gdoc th,.gdoc td{border:1px solid #e2ddd3;padding:7px 9px;text-align:left;vertical-align:top}.gdoc th{background:#f5f2ec}
 .gdoc pre{background:#faf8f4;border:1px solid #ececec;border-radius:6px;padding:12px;white-space:pre-wrap;font-size:12.5px}
 .gdoc hr{border:none;border-top:1px solid #ececec;margin:14px 0}
-@media(max-width:900px){.hero{margin:16px 18px 4px}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{position:static!important;top:auto!important}.hero h2{font-size:40px!important;letter-spacing:-1.4px!important}}`;
+@media(max-width:900px){.hero{margin:16px 18px 4px}.herobox{height:300px!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.hero h2{font-size:38px!important;letter-spacing:-1.4px!important}}`;
 
 const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:0 auto">
   <div id="hero" class="hero">
-    <div style="position:relative;height:470px;overflow:hidden;background:#111;border-radius:18px">
+    <div class="herobox" style="position:relative;height:470px;overflow:hidden;background:#111;border-radius:18px">
       <img class="hero-img on" src="img/hero-1.jpg" alt="전국 물리치료사 총궐기대회" style="object-position:center 60%">
       <img class="hero-img" src="img/hero-2.jpg" alt="" style="object-position:center 52%">
       <img class="hero-img" src="img/hero-3.jpg" alt="" style="object-position:center 62%">
