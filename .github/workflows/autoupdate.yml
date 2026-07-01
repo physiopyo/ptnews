@@ -36,8 +36,13 @@ jobs:
           node-version: '20'
 
       - name: Install python deps
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_fetch) }}
-        run: pip install -r pipeline/requirements.txt
+        run: |
+          if [ -n "${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}" ]; then
+            mkdir -p ~/.cache/pip                        # 캐시 저장 단계 에러 방지(설치 생략 시 폴더 보장)
+            echo "skip_fetch → 의존성 설치 생략"
+          else
+            pip install -r pipeline/requirements.txt
+          fi
 
       - name: Run autoupdate
         env:
@@ -57,5 +62,6 @@ jobs:
             echo "변경 없음 — 커밋 생략"
           else
             git commit -m "auto(ci): 보드 자동 갱신 $(date +'%Y-%m-%d %H:%M KST')"
+            git pull --rebase origin master || true      # 푸시 경합(동시 실행) 방지
             git push
           fi
