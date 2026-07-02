@@ -238,7 +238,7 @@ function ymd(s){var m=String(s).match(/(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})/);if(m
 function sortIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M7 4v15M7 4L4 7M7 4l3 3"/><path d="M17 20V5M17 20l-3-3M17 20l3-3"/></svg>';}
 function sortBtn(sec){var v=(state.sort&&state.sort[sec])||'new';return '<button class="chip" data-sort="'+sec+'" style="flex:none;display:inline-flex;align-items:center;gap:5px">'+sortIcon()+(v==='old'?'오래된순':'최신순')+'</button>';}
 function newsHTML(){
- var list=filtered();var nso=(state.sort&&state.sort.news)||'new';list.sort(function(a,b){return nso==='old'?String(a.dt).localeCompare(String(b.dt)):String(b.dt).localeCompare(String(a.dt));});var lead=list[0];var rest=list.slice(1);
+ var list=filtered();var nso=(state.sort&&state.sort.news)||'new';list.sort(function(a,b){return nso==='old'?String(a.dt).localeCompare(String(b.dt)):String(b.dt).localeCompare(String(a.dt));});var pin=null;list.forEach(function(a){if((a.author||'').indexOf('고영준')>=0&&(!pin||String(a.dt)>String(pin.dt)))pin=a;});var lead,rest;if(pin){lead=pin;rest=list.filter(function(x){return x!==pin;});}else{lead=list[0];rest=list.slice(1);}
  var chips=CHANNELS.map(function(c){return '<button class="chip'+(c.k===state.channel?' active':'')+'" data-chan="'+c.k+'">'+esc(c.l)+'</button>';}).join('');
  var leadHTML='';
  if(lead){
