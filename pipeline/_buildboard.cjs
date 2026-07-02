@@ -194,7 +194,7 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
       <img class="hero-img" src="img/hero-3.jpg" alt="" style="object-position:center 62%">
       <div style="position:absolute;inset:0;background:linear-gradient(100deg,rgba(10,11,14,.6) 0%,rgba(10,11,14,.28) 48%,rgba(10,11,14,.06) 100%)"></div>
       <div class="herotxt" style="position:absolute;inset:0;padding:30px 48px 0;display:flex;flex-direction:column;justify-content:flex-start">
-        <h2 style="margin:0;font-family:'Noto Serif KR',serif;font-weight:700;font-size:64px;line-height:1.14;letter-spacing:-2.2px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6),0 4px 34px rgba(0,0,0,.35);max-width:600px;word-break:keep-all">환자의 치료권을 지킵니다</h2>
+        <h2 style="margin:0;font-family:'Noto Serif KR',serif;font-weight:700;font-size:64px;line-height:1.14;letter-spacing:-2.2px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6),0 4px 34px rgba(0,0,0,.35);max-width:600px;word-break:keep-all">환자의 치료권을<br>지킵니다</h2>
       </div>
       <div class="heroctl" style="position:absolute;left:48px;bottom:10px;display:flex;align-items:center;gap:13px;z-index:3">
         <button id="heroPause" class="heropz" type="button" aria-label="슬라이드 일시정지"></button>
