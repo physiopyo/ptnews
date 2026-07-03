@@ -72,7 +72,8 @@ const docs = [
   { title: '도수치료 관리급여 전환 위한 3종 고시 개정안 행정예고 (고시 원문·질의응답 PDF)', org: '보건복지부 보도자료 · 2026.6.19', url: 'https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1490937&mid=a10503010100' },
   { title: '도수치료 회당 4만원대 수가 적용, 주2회·연간 최대 24회 제한 (제10차 건정심 의결)', org: '보건복지부 보도자료 · 2026.6.4', url: 'https://www.mohw.go.kr/board.es?mid=a10503010100&bid=0027&act=view&list_no=1490729' },
   { title: '도수치료 등 관리급여 적용 항목 선정 (비급여관리정책협의체)', org: '보건복지부 보도자료 · 2025.12.9', url: 'https://www.mohw.go.kr/board.es?mid=a10503000000&bid=0027&list_no=1488167&act=view' },
-  { title: '자동차보험진료수가에 관한 기준 (자보 도수치료 단가·인정기준 원문)', org: '국토교통부 고시 · 국가법령정보센터', url: 'https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000242216' }
+  { title: '자동차보험진료수가에 관한 기준 (자보 도수치료 단가·인정기준 원문)', org: '국토교통부 고시 · 국가법령정보센터', url: 'https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000242216' },
+  { title: '(의료기관 안내용) 도수치료 산재보험 업무처리 방법 안내', org: '근로복지공단 고용·산재보험 토탈서비스 공지 · 2026.6.29', url: 'https://total.comwel.or.kr/' }
 ];
 
 const notices = [
