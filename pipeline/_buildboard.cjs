@@ -29,7 +29,7 @@ function dday(iso) { const ms = new Date(iso + 'T23:59:59+09:00').getTime() - NO
 const nf = n => Number(n || 0).toLocaleString('en-US');
 
 function art(o, ch, outlet, author) {
-  return { title: o.title || '', outlet: outlet || o.chip || '', author: author || '', date: o.disp || o.date || '', ago: relTime(o.dt), img: o.img || '', url: o.url || '#', summary: (o.summary || o.desc || ''), ch: ch, tags: (ch === 'ins' ? ['보험사'] : []), dt: o.dt || '' };
+  return { title: o.title || '', outlet: outlet || o.chip || '', author: author || '', date: o.disp || o.date || '', ago: relTime(o.dt), img: o.img || '', url: o.url || '#', summary: (o.summary || o.desc || ''), ch: ch, tags: (ch === 'ins' ? ['보험사'] : []), pin: !!o.pin, dt: o.dt || '' };
 }
 const articles = [].concat(
   ko.map(o => art(o, 'ko', '서울일보', '고영준')),
@@ -240,12 +240,12 @@ function ymd(s){var m=String(s).match(/(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})/);if(m
 function sortIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M7 4v15M7 4L4 7M7 4l3 3"/><path d="M17 20V5M17 20l-3-3M17 20l3-3"/></svg>';}
 function sortBtn(sec){var v=(state.sort&&state.sort[sec])||'new';return '<button class="chip" data-sort="'+sec+'" style="flex:none;display:inline-flex;align-items:center;gap:5px">'+sortIcon()+(v==='old'?'오래된순':'최신순')+'</button>';}
 function newsHTML(){
- var list=filtered();var nso=(state.sort&&state.sort.news)||'new';list.sort(function(a,b){return nso==='old'?String(a.dt).localeCompare(String(b.dt)):String(b.dt).localeCompare(String(a.dt));});var lead=list[0],rest=list.slice(1);
+ var list=filtered();var nso=(state.sort&&state.sort.news)||'new';list.sort(function(a,b){return nso==='old'?String(a.dt).localeCompare(String(b.dt)):String(b.dt).localeCompare(String(a.dt));});var _pi=list.findIndex(function(a){return a.pin;});if(_pi>0){list.unshift(list.splice(_pi,1)[0]);}var lead=list[0],rest=list.slice(1);
  var chips=CHANNELS.map(function(c){return '<button class="chip'+(c.k===state.channel?' active':'')+'" data-chan="'+c.k+'">'+esc(c.l)+'</button>';}).join('');
  var leadHTML='';
  if(lead){
    var li=lead.img?'<img src="'+lead.img+'" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%">':'';
-   var lb=isNew(lead)?'<span style="position:absolute;left:10px;top:10px;font-size:10px;font-weight:700;color:#fff;background:#d0322a;border-radius:5px;padding:3px 8px;letter-spacing:.5px">NEW</span>':'';
+   var lb=lead.pin?'<span style="position:absolute;left:10px;top:10px;font-size:10px;font-weight:700;color:#fff;background:#1a1a1a;border-radius:5px;padding:3px 8px;letter-spacing:.5px">고정</span>':(isNew(lead)?'<span style="position:absolute;left:10px;top:10px;font-size:10px;font-weight:700;color:#fff;background:#d0322a;border-radius:5px;padding:3px 8px;letter-spacing:.5px">NEW</span>':'');
    leadHTML='<a href="'+esc(lead.url)+'" target="_blank" rel="noopener" style="display:flex;flex-wrap:wrap;gap:22px;padding-bottom:24px;margin-bottom:6px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit">'
     +'<div style="flex:1 1 210px;min-width:190px;max-width:280px;position:relative;border-radius:11px;overflow:hidden;background:#eee;aspect-ratio:16/10">'+li+lb+'</div>'
     +'<div style="flex:1 1 300px;min-width:280px;display:flex;flex-direction:column;justify-content:center;gap:11px">'
