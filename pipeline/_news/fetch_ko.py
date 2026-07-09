@@ -22,7 +22,7 @@ IMGDIRS = [os.path.join(PROJ, '웹', 'board', 'img'), os.path.join(PROJ, 'ptnews
 BASE = 'https://www.seoulilbo.co.kr'
 KEYWORDS = ['도수치료', '물리치료', '관리급여', '실손']
 REPORTER = '고영준'
-TOPIC = ('도수치료', '물리치료', '관리급여', '실손', '체외충격파', '증식치료', '비급여')
+TOPIC = ('도수치료', '물리치료', '관리급여', '실손', '체외충격파', '증식치료', '비급여', '물치협', '물협')
 YEAR = datetime.now().year
 
 LIST_URL = BASE + '/news/articleList.html?sc_area=T&view_type=sm&sc_order_by=E&sc_word='
