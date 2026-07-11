@@ -42,7 +42,8 @@ MAX_TOTAL = 280     # press.json 누적 상한
 KW = ('도수치료', '관리급여', '체외충격파', '물리치료', '비급여')
 AD_BLOCK = ('성형', '할인', '이벤트', '쿠폰', '특가', '프로모션', '제휴', '다이어트', '광고', '클리닉 추천')
 BLOCK_HOST = ('x.com', 'twitter.com', 'facebook.com', 'youtube.com', 'youtu.be',
-              'instagram.com', 'blog.naver.com', 'cafe.naver.com', 'tistory.com', 'brunch.co.kr', 'supple.kr')
+              'instagram.com', 'blog.naver.com', 'cafe.naver.com', 'tistory.com', 'brunch.co.kr', 'supple.kr',
+              'knpp.co.kr')
 TOPIC = ('도수치료', '관리급여', '체외충격파', '물리치료', '증식치료', '비급여', '실손')
 # 제목 1차 필터(넓게) — 제목에 키워드 없어도 본문 관련 기사 포착용
 RELAX = ('도수치료', '관리급여', '체외충격파', '물리치료', '비급여', '척추', '협착',
