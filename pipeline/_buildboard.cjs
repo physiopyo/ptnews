@@ -12,6 +12,9 @@ const press = J('press.json', []);
 const insure = J('insure.json', []);
 const CO = J('coaction.json', {});
 const buzz = J('buzz.json', {});
+const LABOR = J2(__dirname + '/labor-counseling.json', { meta: {}, providers: [], rejectedCorrections: [] });
+const LABOR_WEBSITES = J2(__dirname + '/labor-websites.json', { checkedAt: '', websites: {} });
+const KOREA_MAP = J2(__dirname + '/korea-map-paths.json', { viewBox: '0 0 420 560', regions: [] });
 
 const NOW = Date.now();
 function relTime(dt) {
@@ -168,7 +171,11 @@ const _kw = (buzz.keywords || []).map(function (k) { return { k: k, vol: _vol(k)
 const opinion = { against: 96, forp: 4, rally: '1,000+', petTotal: nf((CO.petition || 0) + (CO.petition2 || 0)), timeframe: (buzz.timeframe === 'today 3-m' ? '최근 3개월' : (buzz.timeframe || '')), buzzUpdated: (buzz.updated || ''), kw: _kw };
 const BUZZ = { keywords: buzz.keywords || [], trend: buzz.trend || {}, related_naver: buzz.related_naver || {}, related_google: buzz.related_google || {}, updated: buzz.updated || '', naver: { datalab: (buzz.naver && buzz.naver.datalab) || {}, totals: (buzz.naver && buzz.naver.totals) || {}, channel_daily: (buzz.naver && buzz.naver.channel_daily) || {}, hourly: (buzz.naver && buzz.naver.hourly) || {}, sentiment: (buzz.naver && buzz.naver.sentiment) || {}, related_weeks: (buzz.naver && buzz.naver.related_weeks) || {} } };
 
-const DATA = { articles, petitions, stmts, docs, notices, guide, opinion, buzz: BUZZ, updated: (CO.updated || '') };
+const LABOR_WITH_WEBSITES = Object.assign({}, LABOR, { providers: (LABOR.providers || []).map(function (provider) {
+  const entry = LABOR_WEBSITES.websites[provider.id];
+  return entry ? Object.assign({}, provider, { website: entry.url }) : provider;
+}) });
+const DATA = { articles, petitions, stmts, docs, notices, guide, opinion, buzz: BUZZ, labor: LABOR_WITH_WEBSITES, koreaMap: KOREA_MAP, updated: (CO.updated || '') };
 
 const CSS = `:root{--accent:#1a1a1a;--ink:#1a1a1a;--sub:#8c8c8c;--line:#ececec;--bg:#ffffff}
 html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -198,7 +205,23 @@ html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-u
 .gdoc table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13px}.gdoc th,.gdoc td{border:1px solid #e2ddd3;padding:7px 9px;text-align:left;vertical-align:top}.gdoc th{background:#f5f2ec}
 .gdoc pre{background:#faf8f4;border:1px solid #ececec;border-radius:6px;padding:12px;white-space:pre-wrap;font-size:12.5px}
 .gdoc hr{border:none;border-top:1px solid #ececec;margin:14px 0}
-@media(max-width:900px){.hero{margin:0 0 4px!important}.herobox{height:150px!important;border-radius:0!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.herotxt{padding:14px 18px 0!important}.heroctl{left:18px!important;bottom:8px!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}.updbar{display:none!important}.updm{display:block!important}}`;
+.labor-view-tabs{display:flex;gap:0;margin:16px 0 0;border-bottom:1px solid #d9d4ca}.labor-view-tab{min-height:42px;border:0;border-bottom:2px solid transparent;background:transparent;color:#6c665d;font:700 13px 'Noto Sans KR';padding:9px 18px;cursor:pointer}.labor-view-tab.active{border-bottom-color:#1a1a1a;color:#1a1a1a}.labor-view-tab:focus-visible{outline:2px solid #1a1a1a;outline-offset:2px}
+.labor-tools{display:flex;align-items:end;margin:16px 0 18px}.labor-tools .labor-field{width:min(100%,220px)}
+.labor-field{display:flex;flex-direction:column;gap:6px}.labor-field label{font-size:11px;font-weight:700;color:#6c665d}
+.labor-select{width:100%;min-height:42px;border:1px solid #d9d4ca;border-radius:8px;background:#fff;color:var(--ink);font:500 13px 'Noto Sans KR';padding:9px 12px;outline:none}
+.labor-select:focus,.labor-filter:focus-visible{border-color:#1a1a1a;box-shadow:0 0 0 2px rgba(26,26,26,.12)}
+.labor-filter{min-height:42px;border:1px solid #d9d4ca;border-radius:8px;background:#fff;color:#57534b;font:700 12px 'Noto Sans KR';padding:8px 11px;cursor:pointer;white-space:nowrap}
+.labor-filter.active{background:#1a1a1a;border-color:#1a1a1a;color:#fff}
+.labor-row{border:1px solid var(--line);border-radius:8px;background:#fff;padding:16px 18px;margin-bottom:10px}.labor-row h2{text-wrap:balance}
+.labor-meta{display:grid;grid-template-columns:88px minmax(0,1fr);gap:5px 12px;font-size:12.5px;line-height:1.6}.labor-meta dt{font-weight:700;color:#6c665d}.labor-meta dd{margin:0;color:#39362f;min-width:0;word-break:keep-all}
+.labor-map-shell{display:grid;grid-template-columns:minmax(440px,540px) minmax(0,1fr);border:1px solid var(--line);border-radius:8px;margin:18px 0;background:#fff;overflow:hidden}
+.labor-map-side{padding:18px;border-right:1px solid var(--line);background:#faf8f4}.labor-map-svg{display:block;width:min(100%,500px);height:auto;aspect-ratio:390/317;margin:12px auto 0;overflow:hidden}
+.labor-map-region{cursor:pointer;outline:none}.labor-map-shape{fill:#fff;stroke:#6c665d;stroke-width:1.15;vector-effect:non-scaling-stroke;pointer-events:none;transform-box:fill-box;transform-origin:center;transition:transform .16s ease,fill .16s ease,stroke-width .16s ease;filter:drop-shadow(0 0 0 rgba(26,26,26,0))}.labor-map-hit{fill:transparent;stroke:transparent;stroke-width:6;vector-effect:non-scaling-stroke;pointer-events:all}
+.labor-map-region:hover .labor-map-shape,.labor-map-region:focus-visible .labor-map-shape{fill:#e7e1d6;stroke:#1a1a1a;stroke-width:2.4;transform:translateY(-10px) scale(1.06);filter:drop-shadow(0 9px 6px rgba(26,26,26,.28))}.labor-map-region:focus-visible .labor-map-shape{stroke-width:3}.labor-map-region.active .labor-map-shape{fill:#1a1a1a;stroke:#1a1a1a;stroke-width:2.4;transform:translateY(-8px) scale(1.05);filter:drop-shadow(0 9px 6px rgba(26,26,26,.3))}.labor-map-region.active:focus-visible .labor-map-shape{stroke:#b42318;stroke-width:3}
+.labor-map-panel{padding:18px;min-width:0;max-height:520px;overflow:auto}.labor-map-office{padding:15px 0;border-top:1px solid var(--line)}.labor-map-office-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;margin-bottom:10px}
+.labor-map-office:first-of-type{border-top:none}.labor-map-office strong{font:700 14px/1.5 serif;word-break:keep-all}.labor-map-office a{font-size:13px;font-weight:800;color:#1a1a1a}.labor-map-office .labor-meta{grid-template-columns:52px minmax(0,1fr);font-size:12px;gap:4px 10px}
+.labor-source{color:#39362f!important;font:inherit!important;font-weight:500!important;text-decoration:none;overflow-wrap:anywhere}.labor-source:hover{text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){.hero{margin:0 0 4px!important}.herobox{height:150px!important;border-radius:0!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.herotxt{padding:14px 18px 0!important}.heroctl{left:18px!important;bottom:8px!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}.updbar{display:none!important}.updm{display:block!important}.labor-tools{grid-template-columns:1fr}.labor-row{padding:14px}.labor-meta{grid-template-columns:76px minmax(0,1fr)}.labor-map-shell{grid-template-columns:1fr}.labor-map-side{border-right:0;border-bottom:1px solid var(--line);padding:14px}.labor-map-svg{width:min(100%,500px);height:auto;aspect-ratio:390/317}.labor-map-panel{padding:14px;max-height:none;overflow:visible}}`;
 
 const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:0 auto">
   <div id="hero" class="hero">
@@ -227,7 +250,9 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
 
 const CLIENT = `(function(){
 "use strict";
-var state={sec:'home',channel:'all',gmode:'clinician',gsub:0,gsec:0,gcols:2,nOpen:{},sort:{news:'new',notice:'new',stmt:'new',docs:'new'},buzzKw:'',buzzView:'all4',buzzMetric:'cnt',buzzPeriod:'3개월',buzzSentCh:'community',buzzCntCh:'all',buzzZoom:1,buzzPanelPer:'3개월',newsN:10,imgLB:null,lb:null};
+var SECTION_KEYS=['home','news','notice','pet','docs','stmt','opin','labor','guide'];
+function sectionFromHash(){var key=location.hash.replace(/^#/,'');return SECTION_KEYS.indexOf(key)>=0?key:'home';}
+var state={sec:sectionFromHash(),channel:'all',gmode:'clinician',gsub:0,gsec:0,gcols:2,nOpen:{},sort:{news:'new',notice:'new',stmt:'new',docs:'new'},buzzKw:'',buzzView:'all4',buzzMetric:'cnt',buzzPeriod:'3개월',buzzSentCh:'community',buzzCntCh:'all',buzzZoom:1,buzzPanelPer:'3개월',newsN:10,imgLB:null,lb:null,laborView:'map',laborRegion:'전체',laborMapRegion:''};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function svg(inner){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" style="width:18px;height:18px">'+inner+'</svg>';}
 function isNew(a){return /(^7\\.)|(^6\\.30)/.test(a.date)||/시간 전|분 전/.test(a.ago);}
@@ -241,6 +266,7 @@ var NAV=[
  {k:'docs',label:'자료실',icon:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'},
  {k:'stmt',label:'성명문',icon:'<path d="M4 5h16v11H9l-4 4z"/>'},
  {k:'opin',label:'여론',icon:'<line x1="6" y1="20" x2="6" y2="12"/><line x1="12" y1="20" x2="12" y2="6"/><line x1="18" y1="20" x2="18" y2="10"/>'},
+ {k:'labor',label:'무료 노무상담',icon:'<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>'},
  {k:'guide',label:'가이드',icon:'<path d="M5 4h11l3 3v13H5z"/><line x1="8" y1="9" x2="15" y2="9"/><line x1="8" y1="13" x2="15" y2="13"/>'}
 ];
 var CHANNELS=[{k:'all',l:'전체보기'},{k:'ko',l:'고영준 기자 · 서울일보'},{k:'press',l:'언론 보도'},{k:'ins',l:'보험사 문제'}];
@@ -460,6 +486,52 @@ function guideHTML(){
   +'<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px">'+subChips+'<span style="flex:1"></span>'+pdfBtn+'</div>'
   +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start">'+imgs+'</div>';
 }
+function laborPhone(p){
+ var label=esc(p);var dial=String(p).replace(/[^0-9]/g,'');
+ if(String(p).indexOf('~')>=0||dial.length<3)return '<strong style="font-size:14px;color:#1a1a1a">'+label+'</strong>';
+ return '<a href="tel:'+dial+'" style="font-size:14px;font-weight:800;color:#1a1a1a;text-decoration:underline;text-underline-offset:3px">'+label+'</a>';
+}
+function laborSourceLink(p){
+ var url=p&&p.website;if(!url)return '';
+ var host=String(url).split('://').pop().split('/')[0];
+ return '<dt>홈페이지</dt><dd><a class="labor-source" data-labor-source="1" href="'+esc(url)+'" target="_blank" rel="noopener">'+esc(host)+'</a></dd>';
+}
+function laborMapPanelHTML(region){
+ if(!region)return '<div style="padding:4px 0 18px"><h2 style="margin:0 0 8px;font:700 19px/1.4 serif">권역을 선택하세요</h2><p style="margin:0;font-size:13px;line-height:1.65;color:#6c665d">지도에서 권역을 선택하면 기관의 전화번호와 상담 정보가 표시됩니다.</p></div>';
+ var mapRows=((DATA.labor&&DATA.labor.providers)||[]).filter(function(p){return p.region===region;});
+ var offices=mapRows.map(function(p){return '<div class="labor-map-office"><div class="labor-map-office-head"><strong>'+esc(p.name)+'</strong><div>'+(p.phones||[]).map(laborPhone).join('<br>')+'</div></div><dl class="labor-meta" style="margin:0"><dt>위치</dt><dd>'+esc(p.address)+'</dd><dt>대상</dt><dd>'+esc(p.eligibility)+'</dd><dt>운영</dt><dd>'+esc(p.hours)+'</dd><dt>상담</dt><dd>'+esc(p.services)+'</dd>'+laborSourceLink(p)+'</dl></div>';}).join('');
+ if(!offices)offices='<p style="margin:18px 0 0;font-size:13px;color:#6c665d">공개 공식자료에서 확인된 기관이 없습니다.</p>';
+ return '<div style="display:flex;align-items:baseline;gap:8px;padding-bottom:9px"><h2 style="margin:0;font:700 19px/1.4 serif">'+esc(region)+' 상담기관</h2><span style="font-size:12px;color:#8c8c8c">'+mapRows.length+'곳</span></div>'+offices;
+}
+function laborHTML(){
+ var labor=DATA.labor||{meta:{},providers:[],rejectedCorrections:[]};var all=labor.providers||[];
+ var regions=['전체'].concat(Array.from(new Set(all.map(function(p){return p.region;}))).sort(function(a,b){if(a==='전국')return -1;if(b==='전국')return 1;return a.localeCompare(b,'ko');}));
+ var rows=all.filter(function(p){
+  if(state.laborRegion!=='전체'&&p.region!==state.laborRegion)return false;
+  return true;
+ });
+ var options=regions.map(function(r){return '<option value="'+esc(r)+'"'+(r===state.laborRegion?' selected':'')+'>'+esc(r)+'</option>';}).join('');
+ var mapLayerOrder=['제주','강원','경기','충북','충남','전북','전남','경북','경남','울산','부산','대구','광주','대전','인천','세종','서울'];
+ var mapRegions=((DATA.koreaMap&&DATA.koreaMap.regions)||[]).slice().sort(function(a,b){return mapLayerOrder.indexOf(a.region)-mapLayerOrder.indexOf(b.region);});
+ var mapPaths=mapRegions.map(function(item){var active=state.laborMapRegion===item.region;return '<g class="labor-map-region'+(active?' active':'')+'" data-labor-map="'+esc(item.region)+'" tabindex="0" role="button" aria-label="'+esc(item.region)+' 상담기관 보기" aria-pressed="'+(active?'true':'false')+'"><title>'+esc(item.region)+'</title><path class="labor-map-shape" d="'+esc(item.d)+'"></path><path class="labor-map-hit" d="'+esc(item.d)+'"></path></g>';}).join('');
+ var mapViewBox=(DATA.koreaMap&&DATA.koreaMap.viewBox)||'0 0 420 560';
+ var mapHTML='<section class="labor-map-shell" aria-label="대한민국 권역별 무료 노무상담 지도"><div class="labor-map-side"><div style="display:flex;align-items:center;gap:8px"><div><strong style="display:block;font-size:14px">권역으로 찾기</strong><span style="font-size:11.5px;color:#6c665d">권역에 마우스를 올리거나 선택하세요.</span></div><span style="flex:1"></span><button type="button" class="labor-filter'+(state.laborMapRegion==='전국'?' active':'')+'" data-labor-map="전국" aria-pressed="'+(state.laborMapRegion==='전국'?'true':'false')+'">전국 공통</button></div><svg class="labor-map-svg" viewBox="'+esc(mapViewBox)+'" role="group" aria-label="대한민국 17개 시도 행정구역">'+mapPaths+'</svg></div><div class="labor-map-panel" id="laborMapPanel" aria-live="polite">'+laborMapPanelHTML(state.laborMapRegion)+'</div></section>';
+ var cards=rows.map(function(p){
+  var phones=(p.phones||[]).map(laborPhone).join('<span style="color:#c7c2b8;margin:0 7px">/</span>');
+  return '<article class="labor-row" data-labor-provider="'+esc(p.id)+'">'
+   +'<div style="font-size:11px;font-weight:700;color:#8c8c8c;margin-bottom:8px">'+esc(p.region)+' · '+esc(p.area)+'</div>'
+   +'<h2 style="margin:0 0 8px;font:700 17px/1.45 serif;word-break:keep-all">'+esc(p.name)+'</h2>'
+   +'<div style="margin-bottom:12px">'+phones+'</div>'
+   +'<dl class="labor-meta" style="margin:0"><dt>위치</dt><dd>'+esc(p.address)+'</dd><dt>대상</dt><dd>'+esc(p.eligibility)+'</dd><dt>운영</dt><dd>'+esc(p.hours)+'</dd><dt>상담</dt><dd>'+esc(p.services)+'</dd>'+laborSourceLink(p)+'</dl></article>';
+ }).join('');
+ if(!cards)cards='<div data-labor-empty="1" style="padding:46px 18px;text-align:center;border-top:1px solid #ececec;border-bottom:1px solid #ececec"><strong style="display:block;font:700 17px serif;margin-bottom:7px">해당 지역의 기관이 없습니다</strong><span style="font-size:12.5px;color:#8c8c8c">다른 지역을 선택해 확인하세요.</span></div>';
+ var tabs='<div class="labor-view-tabs" role="tablist" aria-label="상담기관 찾기 방식"><button id="laborTabMap" type="button" class="labor-view-tab'+(state.laborView==='map'?' active':'')+'" data-labor-view="map" role="tab" aria-selected="'+(state.laborView==='map'?'true':'false')+'" aria-controls="laborPanelMap" tabindex="'+(state.laborView==='map'?'0':'-1')+'">지도로 찾기</button><button id="laborTabList" type="button" class="labor-view-tab'+(state.laborView==='list'?' active':'')+'" data-labor-view="list" role="tab" aria-selected="'+(state.laborView==='list'?'true':'false')+'" aria-controls="laborPanelList" tabindex="'+(state.laborView==='list'?'0':'-1')+'">전체 리스트</button></div>';
+ var listHTML='<div class="labor-tools"><div class="labor-field"><label for="laborRegion">지역</label><select id="laborRegion" class="labor-select" data-labor-region="1">'+options+'</select></div></div><div>'+cards+'</div>';
+ return '<section data-labor-directory="1">'
+  +'<div style="border-bottom:2px solid #1a1a1a;padding-bottom:14px;display:flex;align-items:end;gap:14px"><h1 style="flex:1;margin:0;font:700 24px/1.35 serif;word-break:keep-all">전국 무료 노무상담기관</h1><strong data-labor-count="'+(state.laborView==='list'?rows.length:all.length)+'" style="font-size:22px">'+(state.laborView==='list'?rows.length:all.length)+'건</strong></div>'
+  +tabs+'<div id="laborPanelMap" role="tabpanel" aria-labelledby="laborTabMap"'+(state.laborView==='map'?'':' hidden')+'>'+mapHTML+'</div><div id="laborPanelList" role="tabpanel" aria-labelledby="laborTabList"'+(state.laborView==='list'?'':' hidden')+'>'+listHTML+'</div>'
+  +'</section>';
+}
 function noticeHTML(){
  var so=(state.sort&&state.sort.notice)||'new';
  var arr=DATA.notices.map(function(n,i){return {n:n,i:i};}).sort(function(a,b){var av=ymd(a.n.date),bv=ymd(b.n.date);return so==='old'?av-bv:bv-av;});
@@ -482,7 +554,7 @@ function noticeHTML(){
 }
 function renderCenter(){var s=state.sec,h;
  if(s==='home'||s==='news')h=newsHTML();else if(s==='notice')h=noticeHTML();else if(s==='pet')h=petHTML();else if(s==='docs')h=docsHTML();
- else if(s==='stmt')h=stmtHTML();else if(s==='opin')h=opinHTML();else if(s==='guide')h=guideHTML();else h=newsHTML();
+ else if(s==='stmt')h=stmtHTML();else if(s==='opin')h=opinHTML();else if(s==='labor')h=laborHTML();else if(s==='guide')h=guideHTML();else h=newsHTML();
  document.getElementById('center').innerHTML=h;if(state.sec==='opin'){try{if(window.__renderD3Cloud)window.__renderD3Cloud();}catch(_){}}
 }
 function renderRail(){
@@ -509,14 +581,16 @@ function renderLB(){
   +'<div style="position:sticky;top:0;display:flex;align-items:center;gap:10px;padding:14px 20px;background:rgba(20,18,15,.7);backdrop-filter:blur(6px)"><span style="color:#fff;font-weight:700;font-size:15px">'+esc(s.org)+'</span><span style="flex:1"></span><button data-lbx="1" style="border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:700;padding:7px 15px;border-radius:8px;cursor:pointer">닫기 ✕</button></div>'
   +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 16px">'+imgs+'</div></div>';
 }
-function render(){renderNav();renderCenter();renderRail();renderLB();applyHero();var _g=document.getElementById('grid'),_r=document.getElementById('rail');if(_g&&_r){var _w=(state.sec==='guide');_g.style.gridTemplateColumns=_w?'minmax(0,1fr)':'minmax(0,1fr) 316px';_r.style.display=_w?'none':'';}}
+function render(){renderNav();renderCenter();renderRail();renderLB();applyHero();var _g=document.getElementById('grid'),_r=document.getElementById('rail');if(_g&&_r){var _w=(state.sec==='guide'||state.sec==='labor');_g.style.gridTemplateColumns=_w?'minmax(0,1fr)':'minmax(0,1fr) 316px';_r.style.display=_w?'none':'';}}
 document.addEventListener('click',function(e){
- var t=e.target.closest?e.target.closest('[data-nav],[data-chan],[data-gmode],[data-gsub],[data-gsec],[data-gcols],[data-nopen],[data-sort],[data-more],[data-img],[data-act],[data-lb],[data-lbx]'):null;
+ var t=e.target.closest?e.target.closest('[data-nav],[data-chan],[data-gmode],[data-gsub],[data-gsec],[data-gcols],[data-nopen],[data-sort],[data-more],[data-img],[data-act],[data-lb],[data-lbx],[data-labor-view],[data-labor-map]'):null;
  if(!t)return;
  if(t.hasAttribute('data-lbx')){state.lb=null;state.imgLB=null;renderLB();return;}
  if(t.hasAttribute('data-lb')){e.preventDefault();state.lb=+t.getAttribute('data-lb');renderLB();return;}
  if(t.hasAttribute('data-img')){e.preventDefault();state.imgLB=t.getAttribute('data-img');renderLB();return;}
- if(t.hasAttribute('data-nav')){e.preventDefault();state.sec=t.getAttribute('data-nav');render();return;}
+ if(t.hasAttribute('data-nav')){e.preventDefault();var section=t.getAttribute('data-nav');if(location.hash==='#'+section){state.sec=section;render();}else location.hash=section;return;}
+ if(t.hasAttribute('data-labor-view')){state.laborView=t.getAttribute('data-labor-view');renderCenter();var activeTab=document.querySelector('[data-labor-view="'+state.laborView+'"]');if(activeTab)activeTab.focus();return;}
+ if(t.hasAttribute('data-labor-map')){state.laborMapRegion=t.getAttribute('data-labor-map');[].slice.call(document.querySelectorAll('[data-labor-map]')).forEach(function(b){var active=b.getAttribute('data-labor-map')===state.laborMapRegion;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active?'true':'false');});var panel=document.getElementById('laborMapPanel');if(panel)panel.innerHTML=laborMapPanelHTML(state.laborMapRegion);t.focus();return;}
  if(t.hasAttribute('data-chan')){state.channel=t.getAttribute('data-chan');state.newsN=10;renderCenter();return;}
  if(t.hasAttribute('data-gmode')){state.gmode=t.getAttribute('data-gmode');state.gsub=0;state.gsec=0;renderCenter();return;}
  if(t.hasAttribute('data-gsub')){state.gsub=+t.getAttribute('data-gsub');state.gsec=0;renderCenter();return;}
@@ -537,7 +611,9 @@ document.addEventListener('click',function(e){
   else return;
   renderCenter();return;}
 });
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&(state.lb!=null||state.imgLB)){state.lb=null;state.imgLB=null;renderLB();}});
+document.addEventListener('change',function(e){if(e.target&&e.target.hasAttribute('data-labor-region')){state.laborRegion=e.target.value;renderCenter();}});
+document.addEventListener('keydown',function(e){if(e.target&&e.target.hasAttribute&&e.target.hasAttribute('data-labor-view')&&['ArrowLeft','ArrowRight','Home','End'].indexOf(e.key)>=0){e.preventDefault();var next=e.key==='Home'?'map':(e.key==='End'?'list':(state.laborView==='map'?'list':'map'));state.laborView=next;renderCenter();var tab=document.querySelector('[data-labor-view="'+next+'"]');if(tab)tab.focus();return;}if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.classList&&e.target.classList.contains('labor-map-region')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}));return;}if(e.key==='Escape'&&(state.lb!=null||state.imgLB)){state.lb=null;state.imgLB=null;renderLB();}});
+window.addEventListener('hashchange',function(){state.sec=sectionFromHash();render();});
 render();
 (function(){var hi=[].slice.call(document.querySelectorAll('#hero .hero-img'));if(hi.length<2)return;var dw=document.getElementById('heroDots'),pb=document.getElementById('heroPause');var idx=0,timer=null,playing=true;var PZ='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>';var PL='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5l12 7-12 7z"/></svg>';var dots=hi.map(function(_,i){var b=document.createElement('button');b.className='dot'+(i===0?' on':'');b.type='button';b.setAttribute('aria-label',(i+1)+'번 슬라이드');b.addEventListener('click',function(){go(i);if(playing)start();});return b;});if(dw)dots.forEach(function(d){dw.appendChild(d);});function go(n){hi[idx].classList.remove('on');dots[idx].classList.remove('on');idx=(n+hi.length)%hi.length;hi[idx].classList.add('on');dots[idx].classList.add('on');}function start(){stop();timer=setInterval(function(){go(idx+1);},5000);}function stop(){if(timer){clearInterval(timer);timer=null;}}if(pb){pb.innerHTML=PZ;pb.addEventListener('click',function(){if(playing){playing=false;stop();pb.innerHTML=PL;pb.setAttribute('aria-label','슬라이드 재생');}else{playing=true;start();pb.innerHTML=PZ;pb.setAttribute('aria-label','슬라이드 일시정지');}});}start();})();
 (function(){var tipEl=document.createElement('div');tipEl.style.cssText='position:fixed;z-index:250;pointer-events:none;background:#0B0E16;color:#EDEFF5;font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.2);box-shadow:0 10px 26px rgba(0,0,0,.6);white-space:nowrap;opacity:0;transition:opacity .12s ease;display:none;left:0;top:0;';document.body.appendChild(tipEl);var curT=null;function show(t){var tip=t.getAttribute('data-tip');if(!tip)return;curT=t;tipEl.textContent=tip;tipEl.style.display='block';var r=t.getBoundingClientRect(),tw=tipEl.offsetWidth,th=tipEl.offsetHeight;var left=r.left+r.width/2-tw/2;left=Math.max(8,Math.min(left,window.innerWidth-tw-8));var top=r.bottom+8;if(top+th>window.innerHeight-8)top=r.top-th-8;if(top<8)top=8;tipEl.style.left=Math.round(left)+'px';tipEl.style.top=Math.round(top)+'px';requestAnimationFrame(function(){tipEl.style.opacity='1';});}function hide(){curT=null;tipEl.style.opacity='0';tipEl.style.display='none';}document.addEventListener('mouseover',function(e){var t=e.target.closest&&e.target.closest('[data-tip]');if(t&&t!==curT)show(t);});document.addEventListener('mouseout',function(e){var t=e.target.closest&&e.target.closest('[data-tip]');if(t)hide();});})();
@@ -550,6 +626,7 @@ const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta n
   + '<meta property="og:image" content="https://ptnews.vercel.app/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
   + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta name="twitter:description" content="도수치료 관리급여 정책 대응 상황판."><meta name="twitter:image" content="https://ptnews.vercel.app/img/hero-1.jpg">'
   + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+  + '<link rel="icon" href="data:,">'
   + '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">'
   + '<script src="d3.layout.cloud.min.js"></script>'
   + '<style>' + CSS + '</style></head><body>' + BODY
