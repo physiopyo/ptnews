@@ -43,18 +43,18 @@ KW = ('도수치료', '관리급여', '체외충격파', '물리치료', '비급
 AD_BLOCK = ('성형', '할인', '이벤트', '쿠폰', '특가', '프로모션', '제휴', '다이어트', '광고', '클리닉 추천')
 BLOCK_HOST = ('x.com', 'twitter.com', 'facebook.com', 'youtube.com', 'youtu.be',
               'instagram.com', 'blog.naver.com', 'cafe.naver.com', 'tistory.com', 'brunch.co.kr', 'supple.kr',
-              'knpp.co.kr')
+              'inven.co.kr', 'knpp.co.kr')
 TOPIC = ('도수치료', '관리급여', '체외충격파', '물리치료', '증식치료', '비급여', '실손')
-# 제목 1차 필터(넓게) — 제목에 키워드 없어도 본문 관련 기사 포착용
+# 후보 수집은 넓게 하되 최종 채택은 아래 DIRECT_TITLE/ARTICLE_DESC_CORE로 엄격하게 판정한다.
 RELAX = ('도수치료', '관리급여', '체외충격파', '물리치료', '비급여', '척추', '협착',
          '재활', '실손', '수기', '도수', '물치', '관절', '디스크', '근골격', '증식치료')
-# 최종 관련성 게이트(제목+본문) — 핵심 주제어 1개 이상 있어야 채택
-GATE = ('도수치료', '관리급여', '체외충격파', '물리치료', '도수재활', '증식치료', '비급여')
+DIRECT_TITLE = ('도수치료', '관리급여', '체외충격파', '물리치료사', '물리치료',
+                '도수재활', '증식치료', '도수의학')
+ARTICLE_DESC_CORE = DIRECT_TITLE
+OPTICAL_BLOCK = ('안경', '렌즈', '시력')
+BAD_PAGE_TITLE = ('Attention Required!', 'Access Denied', 'Just a moment...')
 # 정치 기사 차단: 제목에 정치 신호어가 있고 의료 핵심 주제어가 전혀 없으면 제외
 POL_BLOCK = ('국민의힘', '더불어민주당', '민주당', '정의당', '조국혁신당', '의회 독재', '기강확립', '당대표', '원내대표', '탄핵', '대선', '총선', '개헌', '특검', '내란', '정점식', '장동혁')
-TITLE_TOPIC = ('도수치료', '관리급여', '체외충격파', '물리치료', '비급여', '도수', '물치', '재활', '실손', '증식치료', '수가', '건정심', '심평원', '도수의학', '근골격', '척추', '관절', '디스크', '협착')
-# 본문전용 채택 핵심어: 제목에 주제어 없으면 본문에 이 중 하나가 반드시 있어야 함(넓은 비급여/물리치료로 본문통과 차단)
-CORE = ('도수치료', '관리급여', '체외충격파', '도수재활', '증식치료', '도수의학')
 HAIR_ANCHOR = ('관리급여', '도수치료', '체외충격파', '근골격', '과잉진료', '비급여', '물리치료')  # '탈모' 제목은 이 정책어가 함께 있어야 채택(없으면 off-topic으로 제외)
 
 # 시위·집회 기사: 같은 사안이라도 매체별 현장 보도는 버리지 않고 모두 수집(제목중복 제외에서 면제)
@@ -162,8 +162,10 @@ def resolve_chip(host, site, desc='', title=''):
 
 
 def urlkey(u):
-    p = urlparse(u)
+    p = urlparse(html.unescape(u or ''))
     host = p.netloc.replace('www.', '')
+    if host == 'm.news.nate.com':
+        host = 'news.nate.com'
     qs = parse_qs(p.query)
     for idk in ('idxno', 'wr_id', 'aid', 'articleId', 'no', 'artid', 'art_id', 'contid', 'idx'):
         if idk in qs:
@@ -173,6 +175,26 @@ def urlkey(u):
 
 def titlekey(t):
     return re.sub(r'[^0-9가-힣a-zA-Z]', '', t or '')
+
+def is_relevant_article(title, desc='', url=''):
+    """제목·기사요약에 PT뉴스 핵심 의제가 직접 드러나는 기사만 허용한다."""
+    title = clean_title(title)
+    desc = re.sub(r'\s+', ' ', desc or '').strip()
+    host = urlparse(html.unescape(url or '')).netloc.replace('www.', '')
+    if any(blocked in host for blocked in BLOCK_HOST):
+        return False
+    if not title or title in BAD_PAGE_TITLE:
+        return False
+    if title.startswith('[') and ']' not in title:
+        return False
+    if any(term in title for term in DIRECT_TITLE):
+        return True
+    if '도수' in title and not any(term in title for term in OPTICAL_BLOCK):
+        return True
+    if '관리급여' in desc or '도수치료 급여화' in desc:
+        return True
+    desc_hits = sum(desc.count(term) for term in ARTICLE_DESC_CORE)
+    return desc_hits >= 2
 
 
 def imgname(key):
@@ -479,13 +501,12 @@ def main():
             continue
         if '탈모' in ftitle and not any(a in ftitle for a in HAIR_ANCHOR):
             continue
-        if any(b in ftitle for b in BRIEF_BLOCK) and not any(c in ftitle for c in CORE):
+        if any(b in ftitle for b in BRIEF_BLOCK) and not any(c in ftitle for c in DIRECT_TITLE):
             continue
-        title_has_topic = any(tw in ftitle for tw in TITLE_TOPIC)
-        hay = ftitle + ' ' + (meta.get('desc') or '') + ' ' + c['title']
-        if not title_has_topic and not any(t in hay for t in CORE):
+        desc = meta.get('desc') or ''
+        if not is_relevant_article(ftitle, desc, c['url']):
             continue
-        if any(pw in ftitle for pw in POL_BLOCK) and not any(tw in ftitle for tw in TITLE_TOPIC):
+        if any(pw in ftitle for pw in POL_BLOCK) and not any(tw in ftitle for tw in DIRECT_TITLE):
             continue
         img_rel = ''
         if meta.get('img'):
@@ -501,7 +522,7 @@ def main():
         press.append({
             'date': date, 'dt': dt, 'disp': date[2:].replace('-', '.'),
             'chip': chip, 'title': ftitle, 'url': c['url'], 'img': img_rel,
-            'desc': meta.get('desc') or '',
+            'desc': desc,
         })
         have.add(k)
         added += 1
