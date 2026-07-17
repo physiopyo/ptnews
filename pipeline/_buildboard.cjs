@@ -42,7 +42,8 @@ const articles = [].concat(
 
 const petitions = [
   { dl: '7.17(금) 마감', dday: dday('2026-07-17'), count: CO.petition ? nf(CO.petition) : '3,165', pct: (CO.petitionPct != null ? CO.petitionPct : 6), title: '도수치료 관리급여화 고시 및 체외충격파 횟수 제한 정책 철회·시행유예 촉구', desc: '국민의 치료 선택권과 물리치료사의 생존권을 위협하는 관리급여 고시의 철회 및 충분한 사회적 논의를 요구합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/527DFB9D4A5222D7E064ECE7A7064E8B' },
-  { dl: '7.20(월) 마감', dday: dday('2026-07-20'), count: CO.petition2 ? nf(CO.petition2) : '1,202', pct: (CO.petition2Pct != null ? CO.petition2Pct : 2), title: '안면마비 재활 분야 관리급여 기준 철회 및 산정 특례 적용 요청', desc: '획일적 기준으로 재활 치료가 필요한 환자가 배제되지 않도록, 안면마비 등 특수 재활 영역의 별도 산정을 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/52523590A2A26BDEE064B49691C6967B' }
+  { dl: '7.20(월) 마감', dday: dday('2026-07-20'), count: CO.petition2 ? nf(CO.petition2) : '1,202', pct: (CO.petition2Pct != null ? CO.petition2Pct : 2), title: '안면마비 재활 분야 관리급여 기준 철회 및 산정 특례 적용 요청', desc: '획일적 기준으로 재활 치료가 필요한 환자가 배제되지 않도록, 안면마비 등 특수 재활 영역의 별도 산정을 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/52523590A2A26BDEE064B49691C6967B' },
+  { dl: '8.9(일) 마감', dday: dday('2026-08-09'), count: CO.petition3 ? nf(CO.petition3) : '1,019', pct: (CO.petition3Pct != null ? CO.petition3Pct : 2), title: '도수치료·체외충격파 관리급여 제도 개선 및 기존 실손보험 가입자 권리 보호에 관한 청원', desc: '의학적 필요성이 인정되는 치료의 예외 적용과 기존 실손보험 가입자의 계약상 권리 보호를 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/54AE53B119FF0C5DE064ECE7A7064E8B' },
 ];
 
 const stmts = [
@@ -168,7 +169,7 @@ const _bt = (buzz.naver && buzz.naver.totals) || buzz.totals || {};
 function _vol(k) { const t = _bt[k] || {}; return (t.blog || 0) + (t.news || 0) + (t.cafe || 0) + (t.daumcafe || 0); }
 function _spark(series) { if (!Array.isArray(series) || !series.length) return []; const mx = Math.max.apply(null, series) || 1; const step = Math.max(1, Math.round(series.length / 46)); const out = []; for (let i = 0; i < series.length; i += step) out.push(Math.round((Number(series[i]) || 0) / mx * 100)); return out; }
 const _kw = (buzz.keywords || []).map(function (k) { return { k: k, vol: _vol(k), rel: ((buzz.related_naver && buzz.related_naver[k]) || []).slice(0, 7), spark: _spark(buzz.trend && buzz.trend.series && buzz.trend.series[k]) }; }).sort(function (a, b) { return b.vol - a.vol; });
-const opinion = { against: 96, forp: 4, rally: '1,000+', petTotal: nf((CO.petition || 0) + (CO.petition2 || 0)), timeframe: (buzz.timeframe === 'today 3-m' ? '최근 3개월' : (buzz.timeframe || '')), buzzUpdated: (buzz.updated || ''), kw: _kw };
+const opinion = { against: 96, forp: 4, rally: '1,000+', petTotal: nf((CO.petition || 0) + (CO.petition2 || 0) + (CO.petition3 || 0)), timeframe: (buzz.timeframe === 'today 3-m' ? '최근 3개월' : (buzz.timeframe || '')), buzzUpdated: (buzz.updated || ''), kw: _kw };
 const BUZZ = { keywords: buzz.keywords || [], trend: buzz.trend || {}, related_naver: buzz.related_naver || {}, related_google: buzz.related_google || {}, updated: buzz.updated || '', naver: { datalab: (buzz.naver && buzz.naver.datalab) || {}, totals: (buzz.naver && buzz.naver.totals) || {}, channel_daily: (buzz.naver && buzz.naver.channel_daily) || {}, hourly: (buzz.naver && buzz.naver.hourly) || {}, sentiment: (buzz.naver && buzz.naver.sentiment) || {}, related_weeks: (buzz.naver && buzz.naver.related_weeks) || {} } };
 
 const LABOR_WITH_WEBSITES = Object.assign({}, LABOR, { providers: (LABOR.providers || []).map(function (provider) {

@@ -24,6 +24,7 @@ HISTORY = os.path.join(HERE, 'coaction_history.json')
 EPEOPLE = {}
 PETIT_ID = '527DFB9D4A5222D7E064ECE7A7064E8B'
 PETIT_ID2 = '52523590A2A26BDEE064B49691C6967B'  # 안면마비 재활 도수치료 관리급여 기준 철회 청원(2026.7.20 마감)
+PETIT_ID3 = '54AE53B119FF0C5DE064ECE7A7064E8B'  # 도수치료·체외충격파 관리급여 개선 및 기존 실손보험 권리 보호 청원(2026.8.9 마감)
 
 
 def epeople_sum(reg):
@@ -61,7 +62,7 @@ def append_history(out):
         hist = json.load(open(HISTORY, encoding='utf-8')) if os.path.exists(HISTORY) else []
     except Exception:
         hist = []
-    row = {k: out.get(k) for k in ['updatedAt','updated','yoyang','yoyang_fa','yoyang_op','yoyang_et','seonbyeol','seonbyeol_fa','seonbyeol_op','seonbyeol_et','sangdae','sangdae_fa','sangdae_op','sangdae_et','petition','petitionPct','petition2','petition2Pct']}
+    row = {k: out.get(k) for k in ['updatedAt','updated','yoyang','yoyang_fa','yoyang_op','yoyang_et','seonbyeol','seonbyeol_fa','seonbyeol_op','seonbyeol_et','sangdae','sangdae_fa','sangdae_op','sangdae_et','petition','petitionPct','petition2','petition2Pct','petition3','petition3Pct']}
     if row.get('updatedAt') and not any(x.get('updatedAt') == row.get('updatedAt') for x in hist):
         hist.append(row)
         hist.sort(key=lambda x: x.get('updatedAt') or '')
@@ -99,6 +100,12 @@ def main():
         out['petition2Pct'] = pct2
     except Exception as ex:
         errs.append('petition2: %s' % ex)
+    try:
+        agree3, pct3 = petition(PETIT_ID3)
+        out['petition3'] = agree3
+        out['petition3Pct'] = pct3
+    except Exception as ex:
+        errs.append('petition3: %s' % ex)
 
     now = datetime.now()
     out['updated'] = '%d.%d %d시 기준' % (now.month, now.day, now.hour)
