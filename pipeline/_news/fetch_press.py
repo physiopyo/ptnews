@@ -94,10 +94,33 @@ DOMAIN_MAP = {
 def clean_title(t):
     t = html.unescape((t or '').strip()).lstrip('\ufeff\u200b ')
     t = re.sub(r'^(MEDI:?GATE NEWS|MEDIGATE NEWS|메디게이트뉴스)\s+', '', t, flags=re.I)
-    for sep in (' - ', ' | ', ' :: ', ' < ', ' ‹ ', ' · '):
-        i = t.rfind(sep)
-        if i > 10 and (len(t) - i) <= 16:
-            t = t[:i].strip()
+    # 선행 깨진문자/불릿 제거
+    t = re.sub(r'^[\uFFFD?▶●■◆·\s]+', '', t)
+    # 세로줄류 문자( ㅣU+3163, ｜U+FF5C, │U+2502, ∣U+2223 )를 파이프로 정규화
+    t = re.sub(r'[\u3163\uFF5C\u2502\u2223]', '|', t)
+    # 선행 매체명 접두 제거 (예: "중도일보 - ...", "OOO뉴스 | ...")
+    t = re.sub(r'^[가-힣A-Za-z0-9.]{1,12}?(?:뉴스|신문|일보|경제신문|타임스|타임즈|투데이|미디어|데일리|저널)\s*[-|:‹]\s*', '', t).strip()
+    # 링크 접근성 문구 '새 창 열림' 제거
+    t = re.sub(r'\s*새\s*창\s*열림\s*$', '', t).strip()
+    # 끝단 사이트명/섹션 접미 반복 제거 (구분자 - : | ‹ < · 뒤 짧은 꼬리)
+    _PT = ('네이트 뉴스', '네이트뉴스', '네이트', '다음 뉴스', '다음뉴스', '다음', '네이버 뉴스', '네이버뉴스', '네이버', 'Nate', 'Daum', 'NAVER')
+    _SC = ('사회', '경제', '정치', '종합', '국제', '문화', '스포츠', 'IT/과학', '건강', '오피니언', '생활', '연예')
+    prev = None
+    while prev != t:
+        prev = t
+        m = re.search(r'^(.{10,}?)\s*[-:|‹<·]\s*([^-:|‹<·]{1,24})\s*$', t)
+        if not m:
+            break
+        tail = m.group(2).strip()
+        if (tail in _PT or tail in _SC
+                or re.search(r'(뉴스|신문|일보|경제|타임스|타임즈|투데이|방송|미디어|닷컴|저널|데일리|헬스|메디|Biz|Pn)$', tail)
+                or re.match(r'^[A-Za-z0-9][\w.\- ]*\.(co\.kr|com|net|kr|org)$', tail)
+                or re.match(r'^[A-Za-z0-9.\-]+$', tail)):
+            t = m.group(1).strip()
+        else:
+            break
+    # 남은 끝단 구분자/파이프 제거
+    t = re.sub(r'[\s|:·\-‹<]+$', '', t).strip()
     return t
 
 
@@ -390,14 +413,32 @@ def fetch_meta(sess, url):
     return {'img': img, 'site': site, 'date': date, 'title': title, 'ptitle': ptitle, 'desc': desc, 'press': press}
 
 
+def _looks_body(t):
+    """검색 스니펫/본문이 제목으로 잘못 들어온 경우 탐지."""
+    if not t:
+        return True
+    if '새 창 열림' in t or '새창열림' in t:
+        return True
+    if t.count('다.') >= 2:
+        return True
+    tt = t.rstrip()
+    if len(tt) >= 58 and (tt.endswith('...') or tt.endswith('…')):
+        return True
+    return False
+
+
 def best_title(otitle, ptitle, fallback):
     for cand in (otitle, ptitle, fallback):
         if not cand:
+            continue
+        if _looks_body(cand):
             continue
         t = clean_title(re.split(r'\s+[<|‹]\s+', cand.strip())[0])
         if len(t) < 8:
             continue
         if re.match(r'^(뉴스|기사|보도|홈|main|index|home)$', t, re.I):
+            continue
+        if _looks_body(t):
             continue
         return t
     return None
