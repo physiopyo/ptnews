@@ -41,9 +41,9 @@ const articles = [].concat(
 ).sort((a, b) => String(b.dt).localeCompare(String(a.dt)));
 
 const petitions = [
-  { dl: '7.17(금) 마감', dday: dday('2026-07-17'), count: CO.petition ? nf(CO.petition) : '3,165', pct: (CO.petitionPct != null ? CO.petitionPct : 6), title: '도수치료 관리급여화 고시 및 체외충격파 횟수 제한 정책 철회·시행유예 촉구', desc: '국민의 치료 선택권과 물리치료사의 생존권을 위협하는 관리급여 고시의 철회 및 충분한 사회적 논의를 요구합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/527DFB9D4A5222D7E064ECE7A7064E8B' },
-  { dl: '7.20(월) 마감', dday: dday('2026-07-20'), count: CO.petition2 ? nf(CO.petition2) : '1,202', pct: (CO.petition2Pct != null ? CO.petition2Pct : 2), title: '안면마비 재활 분야 관리급여 기준 철회 및 산정 특례 적용 요청', desc: '획일적 기준으로 재활 치료가 필요한 환자가 배제되지 않도록, 안면마비 등 특수 재활 영역의 별도 산정을 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/52523590A2A26BDEE064B49691C6967B' },
-  { dl: '8.9(일) 마감', dday: dday('2026-08-09'), count: CO.petition3 ? nf(CO.petition3) : '1,019', pct: (CO.petition3Pct != null ? CO.petition3Pct : 2), title: '도수치료·체외충격파 관리급여 제도 개선 및 기존 실손보험 가입자 권리 보호에 관한 청원', desc: '의학적 필요성이 인정되는 치료의 예외 적용과 기존 실손보험 가입자의 계약상 권리 보호를 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/54AE53B119FF0C5DE064ECE7A7064E8B' },
+  { dl: '7.17(금) 마감', deadline: '2026.7.17', dday: dday('2026-07-17'), count: CO.petition ? nf(CO.petition) : '3,165', pct: (CO.petitionPct != null ? CO.petitionPct : 6), title: '도수치료 관리급여화 고시 및 체외충격파 횟수 제한 정책 철회·시행유예 촉구', desc: '국민의 치료 선택권과 물리치료사의 생존권을 위협하는 관리급여 고시의 철회 및 충분한 사회적 논의를 요구합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/527DFB9D4A5222D7E064ECE7A7064E8B' },
+  { dl: '7.20(월) 마감', deadline: '2026.7.20', dday: dday('2026-07-20'), count: CO.petition2 ? nf(CO.petition2) : '1,202', pct: (CO.petition2Pct != null ? CO.petition2Pct : 2), title: '안면마비 재활 분야 관리급여 기준 철회 및 산정 특례 적용 요청', desc: '획일적 기준으로 재활 치료가 필요한 환자가 배제되지 않도록, 안면마비 등 특수 재활 영역의 별도 산정을 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/52523590A2A26BDEE064B49691C6967B' },
+  { dl: '8.9(일) 마감', deadline: '2026.8.9', dday: dday('2026-08-09'), count: CO.petition3 ? nf(CO.petition3) : '1,019', pct: (CO.petition3Pct != null ? CO.petition3Pct : 2), title: '도수치료·체외충격파 관리급여 제도 개선 및 기존 실손보험 가입자 권리 보호에 관한 청원', desc: '의학적 필요성이 인정되는 치료의 예외 적용과 기존 실손보험 가입자의 계약상 권리 보호를 요청합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/54AE53B119FF0C5DE064ECE7A7064E8B' },
 ];
 
 const stmts = [
@@ -81,7 +81,7 @@ const docs = [
 ];
 
 const notices = [
-  { badge: '촛불 집회', color: '#D8483A', date: '7.19', title: '청와대 앞 촛불집회', body: `일시 : 2026년 7월 19일(일) 오후 7시 ~ 오후 10시
+  { badge: '촛불 집회', color: '#D8483A', date: '7.19', title: '청와대 앞 촛불집회', link: 'https://pt-vote.web.app/', linkLabel: '집회 참석 신청 →', body: `일시 : 2026년 7월 19일(일) 오후 7시 ~ 오후 10시
 장소 : 청와대 인근 (네비 주소 : 청운효자동 주민센터·청운파출소 입력)
 준비물 : LED 전자촛불, 직접 제작한 피켓(원하시는 분), 앉을 방석(작은 의자), 우산·우비, 생수
 주의사항 : 과격한 행동과 고함 금지, 질서관리인의 안내에 따라주세요.
@@ -286,6 +286,7 @@ function applyHero(){document.getElementById('hero').classList.toggle('collapsed
 function thumb(a){if(!a.img)return '';return '<div style="flex:none;width:90px;height:62px;border-radius:8px;overflow:hidden;background:#eee"><img src="'+a.img+'" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 32%"></div>';}
 function ymd(s){var m=String(s).match(/(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})/);if(m)return (+m[1])*10000+(+m[2])*100+(+m[3]);var m2=String(s).match(/(\\d{1,2})\\.(\\d{1,2})/);if(m2)return 20260000+(+m2[1])*100+(+m2[2]);return 0;}
 function _nvis(n){if(n&&n.always)return true;var d=new Date();var tN=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();var v=ymd(n.date);return !v||v>=tN;}
+function _pvis(p){if(!p||!p.deadline)return true;var d=new Date();var tN=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();var v=ymd(p.deadline);return !v||v>=tN;}
 function sortIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M7 4v15M7 4L4 7M7 4l3 3"/><path d="M17 20V5M17 20l-3-3M17 20l3-3"/></svg>';}
 function sortBtn(sec){var v=(state.sort&&state.sort[sec])||'new';return '<button class="chip" data-sort="'+sec+'" style="flex:none;display:inline-flex;align-items:center;gap:5px">'+sortIcon()+(v==='old'?'오래된순':'최신순')+'</button>';}
 function newsHTML(){
@@ -545,7 +546,7 @@ function laborHTML(){
 }
 function noticeHTML(){
  var so=(state.sort&&state.sort.notice)||'new';
- var arr=DATA.notices.map(function(n,i){return {n:n,i:i};}).sort(function(a,b){if(a.n.always&&!b.n.always)return 1;if(b.n.always&&!a.n.always)return -1;var av=ymd(a.n.date),bv=ymd(b.n.date);return so==='old'?av-bv:bv-av;});
+ var arr=DATA.notices.map(function(n,i){return {n:n,i:i};}).sort(function(a,b){if(a.n.always&&!b.n.always)return -1;if(b.n.always&&!a.n.always)return 1;var av=ymd(a.n.date),bv=ymd(b.n.date);return so==='old'?av-bv:bv-av;});
  var cards=arr.map(function(o,pos){
   var n=o.n,i=o.i,open=!!state.nOpen[i];
   var head='<button type="button" data-nopen="'+i+'" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:16px 20px;display:flex;align-items:flex-start;gap:10px">'
@@ -560,7 +561,7 @@ function noticeHTML(){
    var lnk=n.link?'<a href="'+esc(n.link)+'" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;font-size:13.5px;font-weight:700;color:#fff;background:var(--accent);border-radius:10px;padding:10px 20px;text-decoration:none">'+esc(n.linkLabel||'바로가기 →')+'</a>':'';
    body='<div style="padding:0 20px 18px;border-top:1px solid #f4f2ec">'+bodyText+img+lnk+'</div>';
   }
-  return '<div style="background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden'+(pos<arr.length-1?';margin-bottom:10px':'')+'">'+head+body+'</div>';
+  return '<div style="'+(n.always?'background:#eef7f1;border:1.5px solid #2E7D5A':'background:#fff;border:1px solid var(--line)')+';border-radius:14px;overflow:hidden'+(pos<arr.length-1?';margin-bottom:10px':'')+'">'+head+body+'</div>';
  }).join('');
  return '<div style="display:flex;margin-bottom:10px">'+sortBtn('notice')+'</div>'+cards;
 }
@@ -570,8 +571,8 @@ function renderCenter(){var s=state.sec,h;
  document.getElementById('center').innerHTML=h;if(state.sec==='opin'){try{if(window.__renderD3Cloud)window.__renderD3Cloud();}catch(_){}}
 }
 function renderRail(){
- var pets=DATA.petitions.map(function(p,i){var strong=i===0;
-  return '<a href="'+esc(p.url)+'" target="_blank" rel="noopener" style="display:block;padding:10px 0'+(i<DATA.petitions.length-1?';border-bottom:1px solid #f1efe9':'')+';text-decoration:none;color:inherit">'
+ var VP=(DATA.petitions||[]).filter(_pvis);var pets=VP.map(function(p,i){var strong=i===0;
+  return '<a href="'+esc(p.url)+'" target="_blank" rel="noopener" style="display:block;padding:10px 0'+(i<VP.length-1?';border-bottom:1px solid #f1efe9':'')+';text-decoration:none;color:inherit">'
    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;'+(strong?'color:#fff;background:var(--accent)':'color:#7a746c;background:#f0ece5')+'">D-'+p.dday+'</span><span style="font-size:11px;color:var(--sub)">'+esc(p.count)+'명 · '+p.pct+'%</span></div>'
    +'<p style="margin:0 0 7px;font-size:12px;line-height:1.45;font-weight:500">'+esc(p.title)+'</p>'
    +'<div style="height:4px;border-radius:3px;background:#ededed;overflow:hidden"><div style="width:'+p.pct+'%;height:100%;background:'+(strong?'var(--accent)':'#8a857c')+'"></div></div></a>';}).join('');
