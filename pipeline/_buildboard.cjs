@@ -81,6 +81,10 @@ const docs = [
 ];
 
 const notices = [
+  { badge: '실시간 투표', color: '#C0392B', date: '7.18', title: '전국임상물리치료사연대 실시간 투표·단체 가입·연판장 참여', link: 'https://pt-vote.web.app/', linkLabel: '실시간 투표 바로가기 →', body: `요지 : 전국임상물리치료사연대의 실시간 투표 페이지에서 단체명 추천 투표, 정관(초안) 열람, 단체 가입신청, 연판장 작성 등에 참여할 수 있습니다.
+진행 단계 : 발의·접수(S0) → 온라인 의견수렴(S1) → 임원 의결(S2), 단체 가입신청·연판장은 계속 접수 중
+참여 : 아래 '실시간 투표 바로가기'에서 단계별로 참여
+주소 : https://pt-vote.web.app/` },
   { badge: '국회 청원', color: '#3A6EA5', date: '7.2', title: '국회 국민동의청원 「중증장애인 등 환자 치료권 보장 위한 도수치료 관리급여 정책 재검토 요청」', body: `요지 : 도수치료 주 2회·연간 최대 24회 제한이 중증장애인·희귀질환자의 재활 연속성을 침해한다고 보고, 상병코드별 예외 조항 도입과 정책 전면 재검토를 요구
 소관위원회 : 보건복지위원회
 청원 진행 기간 : 2026년 7월 2일 ~ 8월 1일
@@ -548,7 +552,8 @@ function noticeHTML(){
   if(open){
    var bodyText=esc(n.body||'').split('\\n\\n').map(function(para){return '<p style="margin:0 0 10px;font-size:13.5px;line-height:1.78;color:#4a463f">'+para.split('\\n').join('<br>')+'</p>';}).join('');
    var img=n.img?'<a href="'+esc(n.img)+'" target="_blank" rel="noopener" style="display:block;margin-top:8px"><img src="'+esc(n.img)+'" alt="" loading="lazy" style="max-width:420px;width:100%;height:auto;border-radius:10px;border:1px solid #ececec"></a>':'';
-   body='<div style="padding:0 20px 18px;border-top:1px solid #f4f2ec">'+bodyText+img+'</div>';
+   var lnk=n.link?'<a href="'+esc(n.link)+'" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;font-size:13.5px;font-weight:700;color:#fff;background:var(--accent);border-radius:10px;padding:10px 20px;text-decoration:none">'+esc(n.linkLabel||'바로가기 →')+'</a>':'';
+   body='<div style="padding:0 20px 18px;border-top:1px solid #f4f2ec">'+bodyText+img+lnk+'</div>';
   }
   return '<div style="background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden'+(pos<arr.length-1?';margin-bottom:10px':'')+'">'+head+body+'</div>';
  }).join('');
@@ -577,8 +582,8 @@ function renderRail(){
   +'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="#fff" style="width:20px;height:20px;margin-left:2px"><path d="M8 5v14l11-7z"/></svg></span></span>'
   +'</a></div>':'';
  document.getElementById('rail').innerHTML=
-  '<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px"><div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><h3 style="margin:0;font-weight:700;font-size:13px">진행 중 청원</h3></div>'+pets+'</div>'
-  +ytBox
+  ytBox
+  +'<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px"><div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><h3 style="margin:0;font-weight:700;font-size:13px">진행 중 청원</h3></div>'+pets+'</div>'
   +'<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px"><h3 style="margin:0'+(noticeRows?' 0 6px':'')+';font-weight:700;font-size:13px">공지사항</h3>'+noticeRows+'</div>';
 }
 function renderLB(){
