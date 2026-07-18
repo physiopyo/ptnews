@@ -578,9 +578,8 @@ function renderRail(){
    +'<div style="height:4px;border-radius:3px;background:#ededed;overflow:hidden"><div style="width:'+p.pct+'%;height:100%;background:'+(strong?'var(--accent)':'#8a857c')+'"></div></div></a>';}).join('');
  var NN=(DATA.notices||[]).filter(_nvis).slice(0,5);
  var noticeRows=NN.length?NN.map(function(n,i){return '<a href="#" data-nav="notice" style="display:flex;align-items:flex-start;gap:8px;padding:9px 0'+(i<NN.length-1?';border-bottom:1px solid #f1efe9':'')+';text-decoration:none;color:inherit">'
-   +(/\\d/.test(n.date)?'<span style="flex:none;font-size:11px;font-weight:700;color:#1a1a1a;line-height:1.6;white-space:nowrap">'+esc(n.date)+'</span>':'')
    +'<span style="flex:none;width:54px;box-sizing:border-box;text-align:center;white-space:nowrap;font-size:10px;font-weight:700;color:#fff;background:'+esc(n.color||'#555')+';border-radius:4px;padding:2px 4px;line-height:1.5">'+esc(n.badge)+'</span>'
-   +'<span style="flex:1;min-width:0;font-size:12px;line-height:1.5;color:#3a372f">'+esc(n.title).split('\\n').join('<br>')+'</span></a>';}).join(''):'';
+   +'<span style="flex:1;min-width:0;font-size:12px;line-height:1.5;color:#3a372f">'+(/\\d/.test(n.date)?'<b style="color:#1a1a1a">'+esc(n.date)+'</b> ':'')+esc(n.title).split('\\n').join('<br>')+'</span></a>';}).join(''):'';
  var yt=DATA.youtube;
  var ytBox=yt&&yt.url?'<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px">'
   +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><span style="width:6px;height:6px;border-radius:50%;background:#e23b2e"></span><h3 style="margin:0;font-weight:700;font-size:13px">'+esc(yt.title||'관리급여 관련 유튜브')+'</h3></div>'
