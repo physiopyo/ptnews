@@ -81,83 +81,14 @@ const docs = [
 ];
 
 const notices = [
-  { badge: '실시간 투표', color: '#C0392B', date: '7.18', title: '전국임상물리치료사연대 실시간 투표·단체 가입·연판장 참여', link: 'https://pt-vote.web.app/', linkLabel: '실시간 투표 바로가기 →', body: `요지 : 전국임상물리치료사연대의 실시간 투표 페이지에서 단체명 추천 투표, 정관(초안) 열람, 단체 가입신청, 연판장 작성 등에 참여할 수 있습니다.
-진행 단계 : 발의·접수(S0) → 온라인 의견수렴(S1) → 임원 의결(S2), 단체 가입신청·연판장은 계속 접수 중
-참여 : 아래 '실시간 투표 바로가기'에서 단계별로 참여
-주소 : https://pt-vote.web.app/` },
-  { badge: '국회 청원', color: '#3A6EA5', date: '7.2', title: '국회 국민동의청원 「중증장애인 등 환자 치료권 보장 위한 도수치료 관리급여 정책 재검토 요청」', body: `요지 : 도수치료 주 2회·연간 최대 24회 제한이 중증장애인·희귀질환자의 재활 연속성을 침해한다고 보고, 상병코드별 예외 조항 도입과 정책 전면 재검토를 요구
-소관위원회 : 보건복지위원회
-청원 진행 기간 : 2026년 7월 2일 ~ 8월 1일
-참여 방법 : 국회 국민동의청원(petitions.assembly.go.kr) 온라인 동의·의견 등록
-참고 : 별도의 「도수치료 관리급여 재검토·제도개선」 청원은 6월 말 6만여 명 동의로 5만 명 요건을 넘어 소관 상임위 회부 단계
-출처 : 동아경제신문 2026.07.02, 뉴스1·청년의사 2026.06.30` },
-  { badge: '국회 입법', color: '#2E7D5A', date: '4.21', title: '방문재활·통합돌봄 관련 의료기사법 개정안 국회 계류', body: `요지 : 물리치료사 업무의 '의사 지도하' 규정을 '지도 또는 처방'으로 확대해 병원 밖 방문재활을 제도권에서 수행하도록 하는 의료기사법 개정안
-발의 : 남인순(더불어민주당)·최보윤(국민의힘) 공동, 2025년 10월
-소관위원회 : 보건복지위원회(계류)
-경과 : 2026년 4월 21일 국회 소통관에서 노인·장애인·환자·의료기사 단체가 통과 촉구 기자회견. 2026년 3월 전국 시행된 통합돌봄과 연계한 방문재활 제도화 필요성 제기
-쟁점 : 의료계는 안전성·의사 지도 원칙을 들어 이견, 국회 대치
-출처 : 이투데이 2026.04.21, 세계일보 2026.02.26` },
-  { badge: '국회 일정', color: '#3A6EA5', date: '6.30', title: '국회토론회 「중증질환자 피해사례로 본 실손보험·관리급여 제도의 문제점 및 개선방안」', img: 'img/notice_assembly2.jpg', body: `일시 : 2026년 6월 30일(화) 10:00~12:00
-장소 : 국회의원회관 제1세미나실
-주최 : 국회의원 이주영(개혁신당)
-주관 : 대한의사협회, 한국중증질환연합회
-좌장 : 이태연, 사회 : 안치현 (대한의사협회 보험이사)
-발제1 : 관리급여 추진의 문제점과 바람직한 비급여 관리 대안 (이봉근)
-발제2 : 중증질환자 피해사례로 본 실손보험 제도의 문제점 및 개선안 (최태형 변호사)
-이후 환자 피해사례 발표, 지정토론(의료계·환자단체·보험업계·금융계·정부), 질의응답` },
-  { badge: '국회 일정', color: '#3A6EA5', date: '6.30', title: '「지역사회통합돌봄, 성인지 관점에서의 대안모색」 토론회', img: 'img/notice_assembly1.jpg', body: `일시 : 2026년 6월 30일(화) 오전 10시
-장소 : 국회 의원회관 제8간담회실
-주최 : 국회부의장 남인순, 한국여성연구소, 한국여성단체연합
-좌장 : 김희강(고려대 행정학과 교수)
-발표 : 송다영(인천대), 최나리(젠더로 다시 여는 연구소), 백경흔(이화여대)
-토론 : 장수정, 허민숙, 이정아
-안건 : 의료·요양 등 지역 돌봄 통합지원에 관한 법률의 성인지 분석과 개선 방안` },
-  { badge: '집회 확정', color: '#D8483A', date: '6.22', title: "6.28 집회 'Plan A' 최종 확정 (경복궁 동십자각 14:00)", body: `안녕하세요. 대한물리치료사협회(이하 '대물협') 및 회원 대표 운영진에서 알려드립니다.
-
-대물협과 의협의 논의 끝에, 의협은 의협대로 대물협은 대물협대로 같은 날 각자의 장소에서 목소리를 내기로 최종 결정되었습니다.
-
-이에 저희 집회는 6월 28일 경복궁 동십자각에서 이전에 공지드린 [Plan A]로 진행됩니다.
-
-모두 많이 기다리셨을 텐데, 빠르게 다음 공지 올리겠습니다. 감사합니다.
-
-[Plan A] 우리의 힘으로 진행한다
-날짜 : 2026년 6월 28일(일)
-장소 : 경복궁 동십자각
-시간 : 14:00 ~ 16:00
-수용 인원 : 1,000명` },
-  { badge: '자유방', color: '#3E9E78', date: '6.22', title: '각 시도회 도수치료 관리급여 대응 현황 제보 요청', body: `각 지역에 계신 물리치료사 회원 여러분께 알려드립니다.
-
-관리급여로 인한 치료사 생존권 위협이 턱 앞까지 다가왔습니다. 우리 생존권을 두고 각 시도 물리치료사회가 회원을 지켜주고 있는지, [도수치료 관리급여]에 대한 각 시도회의 활동 현황을 파악하고자 합니다.
-
-회원님들께서 가입되어 계신 각 지역 밴드·인스타그램·페이스북 등 SNS에 올라온 협회의 활동 소식이나 공지가 있다면 적극적인 제보 부탁드립니다.
-
-제보 내용 : 각 시도회 밴드·인스타 등 SNS의 도수치료 관리급여 관련 활동/공지 캡쳐본, 또는 내부 분위기·내부 관계자 제보 (철저한 익명 보장)
-
-제보 방법 : '바보' 방장에게 개인 카톡
-
-각 시도 물리치료사회가 우리 권익을 위해 어떤 도움을 주고 있는지 파악하려는 취지입니다. 감사합니다.` },
-  { badge: '중앙협회', color: '#8C72D6', date: '6.22', title: '대한물리치료사협회 고용위기대응센터 : 권고사직·고용피해 안내', img: 'img/notice_kpta.jpg', body: '대한물리치료사협회 고용위기대응센터 안내입니다. 권고사직·사직서(자진퇴사) 작성 주의, 도수치료 관리급여 고용피해 전문가(노무사) 상담 안내. 노무사 류시나 010-3704-8756.' },
-  { badge: '집회 공지', color: '#D8483A', date: '6.21', title: '6.28 총궐기 1차 확정안 (Plan A·B) 안내', body: `안녕하세요. 대한물리치료사협회(이하 '대물협') 및 회원 대표 운영진에서 알려드립니다.
-
-회원 여러분, 많이 기다리셨습니다. 조금 더 빨리 확정된 소식을 전해드리지 못해 죄송합니다. 협회장님과 긴밀히 논의한 끝에 1차 확정안을 먼저 공유드립니다.
-
-[Plan A] 우리의 힘으로 진행한다 : 6월 28일(일) 14:00~16:00, 경복궁 동십자각, 수용 인원 1,000명
-
-[Plan B] 대한의사협회(이하 '의협')와의 연대 : 6월 28일(일) 16:00~18:00, 대한문 일대, 수용 인원 미정
-
-요약 : Plan A 또는 Plan B로 진행 예정
-
-[협회장님 의견] "목소리를 더 크고 효과적으로 전달할 수 있다면, 수용 인원 등을 확인한 후 의협과 연대하는 방향도 고려해 보자"는 제안을 주셨습니다.
-
-내일(6월 22일, 월) 대물협과 의협이 직접 만나 구체적인 논의를 진행합니다. 연대가 성사되면 시너지를 위해 시간이나 장소가 일부 조정될 수 있으며, 불가피할 경우 Plan A 장소에서 진행합니다.
-
-회원님들께 드리는 약속 : 주말이라 오늘 의협의 최종 확답을 받기는 어렵습니다. 하지만 분명히 약속드립니다. 내일 의협과의 논의 끝에 동행이 안 된다면, Plan A(6월 28일 14시, 경복궁 동십자각)는 틀림없이 진행됩니다.
-
-이번 집회는 우리의 정당한 권리를 찾기 위한 필수 과정입니다. 답답하셨을 텐데도 믿고 기다려 주신 회원 여러분께 진심으로 감사드립니다. 내일 최종 조율이 끝나는 대로 가장 먼저 공지 올리겠습니다.
-
-우선 6월 28일(일) 일정 비워두시고 조금만 더 지켜봐 주시기 바랍니다. 감사합니다.
-
-김동현 비대위원장 올림` }
+  { badge: '촛불 집회', color: '#D8483A', date: '7.19', title: '청와대 앞 촛불집회', body: `일시 : 2026년 7월 19일(일) 오후 7시 ~ 오후 10시
+장소 : 청와대 인근 (네비 주소 : 청운효자동 주민센터·청운파출소 입력)
+준비물 : LED 전자촛불, 직접 제작한 피켓(원하시는 분), 앉을 방석(작은 의자), 우산·우비, 생수
+주의사항 : 과격한 행동과 고함 금지, 질서관리인의 안내에 따라주세요.
+안내 : 잠깐 들렀다 가셔도 됩니다(부분 참석 환영). 모자·마스크 착용 자유. 혼자 오기 어색하면 동료 한 분과 함께 오세요.` },
+  { badge: '상시', color: '#2E7D5A', date: '상시', always: true, title: '전국임상물리치료사연대\n단체 가입·연판장 참여', link: 'https://pt-vote.web.app/', linkLabel: '단체 가입·연판장 참여 →', body: `단체 가입 : 전국임상물리치료사연대 가입 신청을 상시 접수합니다.
+연판장 참여 : 도수치료 관리급여 정책 대응 연판장 서명에 상시 참여할 수 있습니다.
+아래 버튼에서 단체 가입과 연판장 작성에 함께해 주세요.` }
 ];
 
 const guide = {
@@ -281,6 +212,7 @@ function renderNav(){var btns=NAV.map(function(n){return '<button class="navbtn'
 function applyHero(){document.getElementById('hero').classList.toggle('collapsed',state.sec!=='home');}
 function thumb(a){if(!a.img)return '';return '<div style="flex:none;width:90px;height:62px;border-radius:8px;overflow:hidden;background:#eee"><img src="'+a.img+'" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 32%"></div>';}
 function ymd(s){var m=String(s).match(/(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})/);if(m)return (+m[1])*10000+(+m[2])*100+(+m[3]);var m2=String(s).match(/(\\d{1,2})\\.(\\d{1,2})/);if(m2)return 20260000+(+m2[1])*100+(+m2[2]);return 0;}
+function _nvis(n){if(n&&n.always)return true;var d=new Date();var tN=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();var v=ymd(n.date);return !v||v>=tN;}
 function sortIcon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:13px;height:13px"><path d="M7 4v15M7 4L4 7M7 4l3 3"/><path d="M17 20V5M17 20l-3-3M17 20l3-3"/></svg>';}
 function sortBtn(sec){var v=(state.sort&&state.sort[sec])||'new';return '<button class="chip" data-sort="'+sec+'" style="flex:none;display:inline-flex;align-items:center;gap:5px">'+sortIcon()+(v==='old'?'오래된순':'최신순')+'</button>';}
 function newsHTML(){
@@ -540,13 +472,13 @@ function laborHTML(){
 }
 function noticeHTML(){
  var so=(state.sort&&state.sort.notice)||'new';
- var arr=DATA.notices.map(function(n,i){return {n:n,i:i};}).sort(function(a,b){var av=ymd(a.n.date),bv=ymd(b.n.date);return so==='old'?av-bv:bv-av;});
+ var arr=DATA.notices.map(function(n,i){return {n:n,i:i};}).filter(function(o){return _nvis(o.n);}).sort(function(a,b){if(a.n.always&&!b.n.always)return 1;if(b.n.always&&!a.n.always)return -1;var av=ymd(a.n.date),bv=ymd(b.n.date);return so==='old'?av-bv:bv-av;});
  var cards=arr.map(function(o,pos){
   var n=o.n,i=o.i,open=!!state.nOpen[i];
   var head='<button type="button" data-nopen="'+i+'" style="width:100%;text-align:left;background:none;border:none;cursor:pointer;padding:16px 20px;display:flex;align-items:flex-start;gap:10px">'
    +'<span style="flex:none;width:72px;box-sizing:border-box;text-align:center;white-space:nowrap;font-size:11px;font-weight:700;color:#fff;background:'+esc(n.color||'#555')+';border-radius:6px;padding:3px 4px;line-height:1.55">'+esc(n.badge)+'</span>'
    +'<span style="flex:none;width:34px;font-size:12px;color:var(--sub);line-height:1.85">'+esc(n.date)+'</span>'
-   +'<span style="flex:1;min-width:0;font-family:\\'Noto Serif KR\\',serif;font-weight:700;font-size:15.5px;line-height:1.45;color:var(--ink)">'+esc(n.title)+'</span>'
+   +'<span style="flex:1;min-width:0;font-family:\\'Noto Serif KR\\',serif;font-weight:700;font-size:15.5px;line-height:1.45;color:var(--ink)">'+esc(n.title).split('\\n').join('<br>')+'</span>'
    +'<span style="flex:none;color:var(--sub);font-size:11px">'+(open?'▲':'▼')+'</span></button>';
   var body='';
   if(open){
@@ -570,10 +502,10 @@ function renderRail(){
    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><span style="font-size:10px;font-weight:700;border-radius:4px;padding:2px 6px;'+(strong?'color:#fff;background:var(--accent)':'color:#7a746c;background:#f0ece5')+'">D-'+p.dday+'</span><span style="font-size:11px;color:var(--sub)">'+esc(p.count)+'명 · '+p.pct+'%</span></div>'
    +'<p style="margin:0 0 7px;font-size:12px;line-height:1.45;font-weight:500">'+esc(p.title)+'</p>'
    +'<div style="height:4px;border-radius:3px;background:#ededed;overflow:hidden"><div style="width:'+p.pct+'%;height:100%;background:'+(strong?'var(--accent)':'#8a857c')+'"></div></div></a>';}).join('');
- var NN=(DATA.notices||[]).slice(0,5);
+ var NN=(DATA.notices||[]).filter(_nvis).slice(0,5);
  var noticeRows=NN.length?NN.map(function(n,i){return '<a href="#" data-nav="notice" style="display:flex;align-items:flex-start;gap:9px;padding:9px 0'+(i<NN.length-1?';border-bottom:1px solid #f1efe9':'')+';text-decoration:none;color:inherit">'
    +'<span style="flex:none;width:54px;box-sizing:border-box;text-align:center;white-space:nowrap;font-size:10px;font-weight:700;color:#fff;background:'+esc(n.color||'#555')+';border-radius:4px;padding:2px 4px;line-height:1.5">'+esc(n.badge)+'</span>'
-   +'<span style="flex:1;min-width:0;font-size:12px;line-height:1.5;color:#3a372f">'+esc(n.title)+'</span></a>';}).join(''):'';
+   +'<span style="flex:1;min-width:0;font-size:12px;line-height:1.5;color:#3a372f">'+esc(n.title).split('\\n').join('<br>')+'</span></a>';}).join(''):'';
  var yt=DATA.youtube;
  var ytBox=yt&&yt.url?'<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px">'
   +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><span style="width:6px;height:6px;border-radius:50%;background:#e23b2e"></span><h3 style="margin:0;font-weight:700;font-size:13px">'+esc(yt.title||'관리급여 관련 유튜브')+'</h3></div>'
