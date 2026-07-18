@@ -642,7 +642,7 @@ render();
 
 const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
   + '<title>PT뉴스 — 물리치료 관리급여 대응</title>'
-  + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-JE9VYLGJ1H"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-JE9VYLGJ1H\');</script>'
+  + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
   + '<meta property="og:type" content="website"><meta property="og:site_name" content="PT뉴스"><meta property="og:url" content="https://ptnews.pages.dev/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta property="og:description" content="도수치료 관리급여 정책 대응 상황판. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
   + '<meta property="og:image" content="https://ptnews.pages.dev/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
