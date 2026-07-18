@@ -176,7 +176,8 @@ const LABOR_WITH_WEBSITES = Object.assign({}, LABOR, { providers: (LABOR.provide
   const entry = LABOR_WEBSITES.websites[provider.id];
   return entry ? Object.assign({}, provider, { website: entry.url }) : provider;
 }) });
-const DATA = { articles, petitions, stmts, docs, notices, guide, opinion, buzz: BUZZ, labor: LABOR_WITH_WEBSITES, koreaMap: KOREA_MAP, updated: (CO.updated || '') };
+const youtube = { id: '4k17IjvFGEc', title: '관리급여 관련 유튜브', url: 'https://youtu.be/4k17IjvFGEc', thumb: 'https://img.youtube.com/vi/4k17IjvFGEc/hqdefault.jpg' };
+const DATA = { articles, petitions, stmts, docs, notices, guide, opinion, buzz: BUZZ, labor: LABOR_WITH_WEBSITES, koreaMap: KOREA_MAP, youtube, updated: (CO.updated || '') };
 
 const CSS = `:root{--accent:#1a1a1a;--ink:#1a1a1a;--sub:#8c8c8c;--line:#ececec;--bg:#ffffff}
 html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -568,8 +569,16 @@ function renderRail(){
  var noticeRows=NN.length?NN.map(function(n,i){return '<a href="#" data-nav="notice" style="display:flex;align-items:flex-start;gap:9px;padding:9px 0'+(i<NN.length-1?';border-bottom:1px solid #f1efe9':'')+';text-decoration:none;color:inherit">'
    +'<span style="flex:none;width:54px;box-sizing:border-box;text-align:center;white-space:nowrap;font-size:10px;font-weight:700;color:#fff;background:'+esc(n.color||'#555')+';border-radius:4px;padding:2px 4px;line-height:1.5">'+esc(n.badge)+'</span>'
    +'<span style="flex:1;min-width:0;font-size:12px;line-height:1.5;color:#3a372f">'+esc(n.title)+'</span></a>';}).join(''):'';
+ var yt=DATA.youtube;
+ var ytBox=yt&&yt.url?'<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px">'
+  +'<div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><span style="width:6px;height:6px;border-radius:50%;background:#e23b2e"></span><h3 style="margin:0;font-weight:700;font-size:13px">'+esc(yt.title||'관리급여 관련 유튜브')+'</h3></div>'
+  +'<a href="'+esc(yt.url)+'" target="_blank" rel="noopener" style="display:block;position:relative;border-radius:10px;overflow:hidden;text-decoration:none">'
+  +'<img src="'+esc(yt.thumb)+'" alt="'+esc(yt.title||'')+'" loading="lazy" style="display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#000">'
+  +'<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="#fff" style="width:20px;height:20px;margin-left:2px"><path d="M8 5v14l11-7z"/></svg></span></span>'
+  +'</a></div>':'';
  document.getElementById('rail').innerHTML=
   '<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px"><div style="display:flex;align-items:center;gap:7px;margin-bottom:10px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span><h3 style="margin:0;font-weight:700;font-size:13px">진행 중 청원</h3></div>'+pets+'</div>'
+  +ytBox
   +'<div style="background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px"><h3 style="margin:0'+(noticeRows?' 0 6px':'')+';font-weight:700;font-size:13px">공지사항</h3>'+noticeRows+'</div>';
 }
 function renderLB(){
