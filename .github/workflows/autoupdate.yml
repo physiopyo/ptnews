@@ -65,3 +65,28 @@ jobs:
             git pull --rebase origin master || true      # 푸시 경합(동시 실행) 방지
             git push
           fi
+
+      - name: Check Cloudflare token
+        id: cfck
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -n "$CF_TOKEN" ]; then
+            echo "ready=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=0" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare 토큰(CLOUDFLARE_API_TOKEN) 없음 — CF Pages 배포 생략"
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.cfck.outputs.ready == '1'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          rm -rf cfdist && mkdir cfdist
+          cp index.html cfdist/
+          if [ -f d3.layout.cloud.min.js ]; then cp d3.layout.cloud.min.js cfdist/; fi
+          cp -r img cfdist/
+          cp -r guide cfdist/
+          npx --yes wrangler@4 pages deploy cfdist --project-name=ptnews --branch=main --commit-dirty=true
