@@ -417,6 +417,9 @@ def _looks_body(t):
     """검색 스니펫/본문이 제목으로 잘못 들어온 경우 탐지."""
     if not t:
         return True
+    # 차단/오류 페이지 제목(수집 불가 페이지)
+    if re.match(r'^\s*(Attention Required|Just a moment|Access Denied|403 Forbidden|404|Error|robot|captcha)', t, re.I):
+        return True
     if '새 창 열림' in t or '새창열림' in t:
         return True
     if t.count('다.') >= 2:
@@ -459,6 +462,12 @@ def main():
     press = json.load(open(PRESS, encoding='utf-8'))
     have = set(urlkey(it['url']) for it in press)
     have_tk = set(titlekey(it.get('title', '')) for it in press)
+    # 고영준(ko.json) 채널과 크로스 중복 방지: 같은 제목이면 press에 안 담음(포털 재전송 포함)
+    try:
+        for _x in json.load(open(os.path.join(HERE, 'ko.json'), encoding='utf-8')):
+            have_tk.add(titlekey(_x.get('title', '')))
+    except Exception:
+        pass
     os.makedirs(IMGDIR, exist_ok=True)
     sess = requests.Session(); sess.headers.update(H)
 

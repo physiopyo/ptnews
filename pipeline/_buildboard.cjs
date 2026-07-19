@@ -34,15 +34,25 @@ const nf = n => Number(n || 0).toLocaleString('en-US');
 function art(o, ch, outlet, author) {
   return { title: o.title || '', outlet: outlet || o.chip || '', author: author || '', date: o.disp || o.date || '', ago: relTime(o.dt), img: o.img || '', url: o.url || '#', summary: (o.summary || o.desc || ''), ch: ch, tags: (ch === 'ins' ? ['보험사'] : []), pin: !!o.pin, dt: o.dt || '' };
 }
+const _tkn = t => String(t || '').replace(/[^0-9A-Za-z가-힣]/g, '');
+const _koT = new Set(ko.map(o => _tkn(o.title)));
 const _articlesRaw = [].concat(
   ko.map(o => art(o, 'ko', '서울일보', '고영준')),
-  press.map(o => art(o, 'press', o.chip, '')),
-  insure.map(o => art(o, 'ins', o.chip, ''))
+  press.filter(o => !_koT.has(_tkn(o.title))).map(o => art(o, 'press', o.chip, '')),
+  insure.filter(o => !_koT.has(_tkn(o.title))).map(o => art(o, 'ins', o.chip, ''))
 );
 // 같은 기사가 ko/press/ins에 중복 수집된 경우 하나만 유지(ko 큐레이션 우선). idxno 다르면 별개(포토 시리즈 유지)
 function _dkey(a) { const m = (a.url || '').match(/idxno=(\d+)/); return m ? 'id:' + m[1] : 'u:' + String(a.url || '').split('#')[0].split('?')[0]; }
 const _dseen = {};
-const articles = _articlesRaw.filter(function (a) { const k = _dkey(a); if (_dseen[k]) return false; _dseen[k] = 1; return true; })
+const _tseen = {};
+const articles = _articlesRaw.filter(function (a) {
+  const k = _dkey(a); if (_dseen[k]) return false; _dseen[k] = 1;
+  if (a.ch !== 'ko') {  // 비-ko 채널: 제목 같으면(재전송·포털 복제) 최신 1개만. ko 포토시리즈는 예외
+    const t = _tkn(a.title);
+    if (t) { if (_tseen[t]) return false; _tseen[t] = 1; }
+  }
+  return true;
+})
   .sort((a, b) => String(b.dt).localeCompare(String(a.dt)));
 
 const petitions = [
