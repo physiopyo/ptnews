@@ -108,8 +108,6 @@ def main():
             rep = it.get('reporter', '')
             if rep and REPORTER not in rep:
                 continue
-            if not any(k in it['title'] for k in TOPIC):
-                continue
             if it['idxno'] in seen:
                 continue
             seen[it['idxno']] = it
@@ -129,14 +127,19 @@ def main():
         else:
             now = datetime.now(); date = now.strftime('%Y-%m-%d'); disp = '%d.%d' % (now.month, now.day)
         ogimg = ''
+        _body = ''
         try:
             _ah = sess.get('%s/news/articleView.html?idxno=%s' % (BASE, it['idxno']), timeout=20).text
             _pm = re.search(r'article:published_time"\s*content="([^"]+)"', _ah)
             dt = _pm.group(1) if _pm else (date + 'T09:00:00+09:00')
             _om = re.search(r'og:image"\s*content="([^"]+)"', _ah)
             ogimg = _om.group(1) if _om else ''
+            _body = re.sub(r'<[^>]+>', ' ', _ah)
         except Exception:
             dt = date + 'T09:00:00+09:00'
+        # 관련성: 제목 또는 본문에 주제 키워드가 있어야 수집(제목만으로 놓치던 기사 보완, 일반뉴스 제외)
+        if not (any(k in it['title'] for k in TOPIC) or any(k in _body for k in TOPIC)):
+            continue
         img = download(it['idxno'], it['thumb'] or ogimg)
         entry = {'date': date, 'dt': dt, 'disp': disp, 'title': it['title'],
                  'url': '%s/news/articleView.html?idxno=%s' % (BASE, it['idxno']),

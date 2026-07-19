@@ -34,11 +34,16 @@ const nf = n => Number(n || 0).toLocaleString('en-US');
 function art(o, ch, outlet, author) {
   return { title: o.title || '', outlet: outlet || o.chip || '', author: author || '', date: o.disp || o.date || '', ago: relTime(o.dt), img: o.img || '', url: o.url || '#', summary: (o.summary || o.desc || ''), ch: ch, tags: (ch === 'ins' ? ['보험사'] : []), pin: !!o.pin, dt: o.dt || '' };
 }
-const articles = [].concat(
+const _articlesRaw = [].concat(
   ko.map(o => art(o, 'ko', '서울일보', '고영준')),
   press.map(o => art(o, 'press', o.chip, '')),
   insure.map(o => art(o, 'ins', o.chip, ''))
-).sort((a, b) => String(b.dt).localeCompare(String(a.dt)));
+);
+// 같은 기사가 ko/press/ins에 중복 수집된 경우 하나만 유지(ko 큐레이션 우선). idxno 다르면 별개(포토 시리즈 유지)
+function _dkey(a) { const m = (a.url || '').match(/idxno=(\d+)/); return m ? 'id:' + m[1] : 'u:' + String(a.url || '').split('#')[0].split('?')[0]; }
+const _dseen = {};
+const articles = _articlesRaw.filter(function (a) { const k = _dkey(a); if (_dseen[k]) return false; _dseen[k] = 1; return true; })
+  .sort((a, b) => String(b.dt).localeCompare(String(a.dt)));
 
 const petitions = [
   { dl: '7.17(금) 마감', deadline: '2026.7.17', dday: dday('2026-07-17'), count: CO.petition ? nf(CO.petition) : '3,165', pct: (CO.petitionPct != null ? CO.petitionPct : 6), title: '도수치료 관리급여화 고시 및 체외충격파 횟수 제한 정책 철회·시행유예 촉구', desc: '국민의 치료 선택권과 물리치료사의 생존권을 위협하는 관리급여 고시의 철회 및 충분한 사회적 논의를 요구합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/527DFB9D4A5222D7E064ECE7A7064E8B' },
