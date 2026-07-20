@@ -111,19 +111,19 @@ def clean_title(t):
     prev = None
     while prev != t:
         prev = t
-        m = re.search(r'^(.{10,}?)\s*[-:|‹<·]\s*([^-:|‹<·]{1,24})\s*$', t)
+        m = re.search(r'^(.{10,}?)\s*[-:|‹<>·]\s*([^-:|‹<>·]{1,24})\s*$', t)
         if not m:
             break
         tail = m.group(2).strip()
         if (tail in _PT or tail in _SC
-                or re.search(r'(뉴스|신문|일보|경제|타임스|타임즈|투데이|방송|미디어|닷컴|저널|데일리|헬스|메디|Biz|Pn)$', tail)
+                or re.search(r'(뉴스\d*|신문|일보|경제|타임스|타임즈|투데이|방송|미디어|닷컴|저널|데일리|헬스|메디|뉴시스|헬스조선|Biz|Pn)$', tail)
                 or re.match(r'^[A-Za-z0-9][\w.\- ]*\.(co\.kr|com|net|kr|org)$', tail)
                 or re.match(r'^[A-Za-z0-9.\-]+$', tail)):
             t = m.group(1).strip()
         else:
             break
     # 남은 끝단 구분자/파이프 제거
-    t = re.sub(r'[\s|:·\-‹<]+$', '', t).strip()
+    t = re.sub(r'[\s|:·\-‹<>]+$', '', t).strip()
     return t
 
 
