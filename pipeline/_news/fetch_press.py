@@ -416,6 +416,18 @@ def fetch_meta(sess, url):
         if mdt:
             published = html.unescape(mdt.group(1)).strip()
             break
+    if not published:
+        # OG/JSON-LD가 없는 매체는 기사 본문의 '입력·승인·등록' 시각을 사용한다.
+        plain = re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', ' ', t)))
+        visible = re.search(
+            r'(?:입력|승인|등록|발행|작성|게재)\s*[:：]?\s*'
+            r'(20\d{2})[.\-/](\d{1,2})[.\-/](\d{1,2})'
+            r'(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?',
+            plain)
+        if visible:
+            yy, mo, dd = map(int, visible.group(1, 2, 3))
+            hh, mm, ss = int(visible.group(4) or 9), int(visible.group(5) or 0), int(visible.group(6) or 0)
+            published = '%04d-%02d-%02dT%02d:%02d:%02d+09:00' % (yy, mo, dd, hh, mm, ss)
     date = None
     dt = None
     if published:
