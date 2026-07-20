@@ -22,7 +22,7 @@ IMGDIRS = [os.path.join(PROJ, '웹', 'board', 'img'), os.path.join(PROJ, 'ptnews
 BASE = 'https://www.seoulilbo.co.kr'
 KEYWORDS = ['도수치료', '물리치료', '관리급여', '실손']
 REPORTER = '고영준'
-TOPIC = ('도수치료', '물리치료', '관리급여', '실손', '체외충격파', '증식치료', '비급여', '물치협', '물협')
+TOPIC = ('도수치료', '물리치료', '관리급여', '실손', '체외충격파', '증식치료', '비급여', '물치협', '물협', '대한물리치료사협회')
 YEAR = datetime.now().year
 
 LIST_URL = BASE + '/news/articleList.html?sc_area=T&view_type=sm&sc_order_by=E&sc_word='
@@ -31,6 +31,15 @@ LIST_URL = BASE + '/news/articleList.html?sc_area=T&view_type=sm&sc_order_by=E&s
 def clean(t):
     t = re.sub(r'<[^>]+>', '', t)
     return html.unescape(t).strip()
+
+def article_text(htmltext):
+    """기사 본문만 추출한다. 관련기사·최신뉴스 키워드가 본문으로 섞이는 것을 막는다."""
+    m = re.search(r'<div[^>]+id=["\']article-view-content-div["\'][^>]*>(.*?)</div>\s*</div>', htmltext, re.S | re.I)
+    if not m:
+        m = re.search(r'<div[^>]+class=["\'][^"\']*article-veiw-body[^"\']*["\'][^>]*>(.*?)</div>', htmltext, re.S | re.I)
+    if not m:
+        return ''
+    return clean(re.sub(r'<(?:script|style)[^>]*>.*?</(?:script|style)>', ' ', m.group(1), flags=re.S | re.I))
 
 
 def parse_list(htmltext):
@@ -134,11 +143,12 @@ def main():
             dt = _pm.group(1) if _pm else (date + 'T09:00:00+09:00')
             _om = re.search(r'og:image"\s*content="([^"]+)"', _ah)
             ogimg = _om.group(1) if _om else ''
-            _body = re.sub(r'<[^>]+>', ' ', _ah)
+            _body = article_text(_ah)
         except Exception:
             dt = date + 'T09:00:00+09:00'
-        # 관련성: 제목 또는 본문에 주제 키워드가 있어야 수집(제목만으로 놓치던 기사 보완, 일반뉴스 제외)
-        if not (any(k in it['title'] for k in TOPIC) or any(k in _body for k in TOPIC)):
+        # 제목 또는 실제 기사 본문에 주제어가 있어야 수집한다.
+        # 페이지 전체를 검사하면 관련기사·최신뉴스 때문에 일반 기사가 섞인다.
+        if not (any(k in it['title'] for k in TOPIC) or sum(_body.count(k) for k in TOPIC) >= 2):
             continue
         img = download(it['idxno'], it['thumb'] or ogimg)
         entry = {'date': date, 'dt': dt, 'disp': disp, 'title': it['title'],

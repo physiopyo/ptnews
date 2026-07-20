@@ -51,6 +51,9 @@ RELAX = ('도수치료', '관리급여', '체외충격파', '물리치료', '비
 DIRECT_TITLE = ('도수치료', '관리급여', '체외충격파', '물리치료사', '물리치료',
                 '도수재활', '증식치료', '도수의학')
 ARTICLE_DESC_CORE = DIRECT_TITLE
+POLICY_CONTEXT = ('관리급여', '급여화', '비급여', '실손', '보험', '보건복지부', '복지부', '수가',
+                  '본인부담', '치료권', '환자 부담', '국회', '정책', '제도', '개편', '시행',
+                  '철회', '반대', '집회', '궐기', '고용', '해고', '권고사직', '협회')
 OPTICAL_BLOCK = ('안경', '렌즈', '시력')
 BAD_PAGE_TITLE = ('Attention Required!', 'Access Denied', 'Just a moment...')
 # 정치 기사 차단: 제목에 정치 신호어가 있고 의료 핵심 주제어가 전혀 없으면 제외
@@ -200,7 +203,7 @@ def titlekey(t):
     return re.sub(r'[^0-9가-힣a-zA-Z]', '', t or '')
 
 def is_relevant_article(title, desc='', url=''):
-    """제목·기사요약에 PT뉴스 핵심 의제가 직접 드러나는 기사만 허용한다."""
+    """치료 소개·병원 홍보가 아니라 PT뉴스의 정책 의제를 직접 다루는 기사만 허용한다."""
     title = clean_title(title)
     desc = re.sub(r'\s+', ' ', desc or '').strip()
     host = urlparse(html.unescape(url or '')).netloc.replace('www.', '')
@@ -210,14 +213,18 @@ def is_relevant_article(title, desc='', url=''):
         return False
     if title.startswith('[') and ']' not in title:
         return False
-    if any(term in title for term in DIRECT_TITLE):
+
+    if any(term in title for term in ('퍼포먼스 의료', '새로운 패러다임', '장비 도입', '시술 바로알기')):
+        return False
+    if '관리급여' in title:
         return True
-    if '도수' in title and not any(term in title for term in OPTICAL_BLOCK):
-        return True
-    if '관리급여' in desc or '도수치료 급여화' in desc:
-        return True
-    desc_hits = sum(desc.count(term) for term in ARTICLE_DESC_CORE)
-    return desc_hits >= 2
+    if ('도수치료' in title or '도수재활' in title or '도수의학' in title):
+        return any(term in title for term in POLICY_CONTEXT)
+    if '물리치료사' in title or '물리치료' in title:
+        return any(term in title for term in POLICY_CONTEXT)
+    if '체외충격파' in title or '증식치료' in title:
+        return any(term in title for term in ('관리급여', '급여화', '비급여', '실손', '보험', '정책', '제도', '본인부담'))
+    return False
 
 
 def imgname(key):
@@ -399,10 +406,37 @@ def fetch_meta(sess, url):
     desc = re.sub(r'\s+', ' ', (desc or '')).strip()[:400]
     mtt = re.search(r'<title[^>]*>(.*?)</title>', t, re.S)
     ptitle = html.unescape(mtt.group(1)).strip() if mtt else None
+    published = None
+    for pat in (
+            r'article:published_time["\'][^>]+content=["\']([^"\']+)',
+            r'content=["\']([^"\']+)["\'][^>]+article:published_time',
+            r'"datePublished"\s*:\s*"([^"]+)"',
+            r'(?:datePublished|article_date|publish_date)["\'][^>]+content=["\']([^"\']+)'):
+        mdt = re.search(pat, t, re.I)
+        if mdt:
+            published = html.unescape(mdt.group(1)).strip()
+            break
     date = None
-    mdt = re.search(r'article:published_time["\'][^>]+content=["\']([0-9]{4}-[0-9]{2}-[0-9]{2})', t)
-    if mdt:
-        date = mdt.group(1)
+    dt = None
+    if published:
+        try:
+            parsed = datetime.fromisoformat(published.replace('Z', '+00:00'))
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone(timedelta(hours=9)))
+            kst = parsed.astimezone(timezone(timedelta(hours=9)))
+            date = kst.strftime('%Y-%m-%d')
+            dt = kst.strftime('%Y-%m-%dT%H:%M:%S+09:00')
+        except ValueError:
+            md = re.search(r'(\d{4})[.\-/](\d{1,2})[.\-/](\d{1,2})', published)
+            if md:
+                date = '%04d-%02d-%02d' % tuple(map(int, md.groups()))
+                mt = re.search(r'[T\s](\d{1,2}):(\d{2})(?::(\d{2}))?', published)
+                if mt:
+                    hh, mm, ss = int(mt.group(1)), int(mt.group(2)), int(mt.group(3) or 0)
+                    dt = '%sT%02d:%02d:%02d+09:00' % (date, hh, mm, ss)
+    if date and date < '2000-01-01':
+        date = None
+        dt = None
     press = ''
     try:
         _host = urlparse(url).netloc.replace('www.', '')
@@ -410,7 +444,7 @@ def fetch_meta(sess, url):
             press = outlet_from_html(t)
     except Exception:
         press = ''
-    return {'img': img, 'site': site, 'date': date, 'title': title, 'ptitle': ptitle, 'desc': desc, 'press': press}
+    return {'img': img, 'site': site, 'date': date, 'dt': dt, 'title': title, 'ptitle': ptitle, 'desc': desc, 'press': press}
 
 
 def _looks_body(t):
@@ -431,10 +465,9 @@ def _looks_body(t):
 
 
 def best_title(otitle, ptitle, fallback):
+    valid = []
     for cand in (otitle, ptitle, fallback):
-        if not cand:
-            continue
-        if _looks_body(cand):
+        if not cand or _looks_body(cand):
             continue
         t = clean_title(re.split(r'\s+[<|‹]\s+', cand.strip())[0])
         if len(t) < 8:
@@ -443,8 +476,9 @@ def best_title(otitle, ptitle, fallback):
             continue
         if _looks_body(t):
             continue
-        return t
-    return None
+        valid.append(t)
+    # 일부 매체의 OG 제목은 앞부분만 잘려 있다. 유효 후보 중 가장 완전한 제목을 쓴다.
+    return max(valid, key=len) if valid else None
 
 
 def dl_img(sess, img_url, dest, referer):
@@ -544,8 +578,13 @@ def main():
             break
         meta = fetch_meta(sess, c['url']) or {}
         host = urlparse(c['url']).netloc.replace('www.', '')
-        date = c.get('date') or meta.get('date') or today.strftime('%Y-%m-%d')
-        dt = c.get('dt') or (date + 'T09:00:00+09:00')
+        if host == 'seoulilbo.co.kr':
+            continue  # 고영준 전용 채널에서 수집하므로 언론보도 채널 중복을 막는다.
+        # 원문 메타가 있으면 검색포털/RSS 수집 시각보다 원문 발행일을 우선한다.
+        date = meta.get('date') or c.get('date') or today.strftime('%Y-%m-%d')
+        dt = meta.get('dt') or (c.get('dt') if c.get('date') == date else None) or (date + 'T09:00:00+09:00')
+        if date < (today - timedelta(days=45)).strftime('%Y-%m-%d'):
+            continue  # 검색엔진이 다시 띄운 오래된 기사를 신규 기사로 오인하지 않는다.
         ftitle = best_title(meta.get('title'), meta.get('ptitle'), c['title'])
         if not ftitle:
             continue
@@ -578,8 +617,7 @@ def main():
         added += 1
 
     press.sort(key=lambda x: x.get('dt') or x.get('date', ''), reverse=True)
-    if len(press) > MAX_TOTAL:
-        press = press[:MAX_TOTAL]
+    # 과거 기사를 찾을 수 있도록 누적 데이터를 자르지 않는다.
     json.dump(press, open(PRESS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('press total=%d, added=%d (구글RSS+네이버)' % (len(press), added))
 

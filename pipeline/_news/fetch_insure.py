@@ -180,8 +180,11 @@ def main():
             break
         meta = fp.fetch_meta(sess, c['url']) or {}
         host = urlparse(c['url']).netloc.replace('www.', '')
-        date = c.get('date') or meta.get('date') or today.strftime('%Y-%m-%d')
-        dt = c.get('dt') or (date + 'T09:00:00+09:00')
+        # 원문 메타가 있으면 검색포털/RSS 수집 시각보다 원문 발행일을 우선한다.
+        date = meta.get('date') or c.get('date') or today.strftime('%Y-%m-%d')
+        dt = meta.get('dt') or (c.get('dt') if c.get('date') == date else None) or (date + 'T09:00:00+09:00')
+        if date < (today - timedelta(days=45)).strftime('%Y-%m-%d'):
+            continue  # 검색엔진이 다시 띄운 오래된 기사를 신규 기사로 오인하지 않는다.
         ftitle = fp.best_title(meta.get('title'), meta.get('ptitle'), c['title'])
         if not ftitle:
             continue
@@ -205,8 +208,7 @@ def main():
         added += 1
 
     insure.sort(key=lambda x: x.get('dt') or x.get('date', ''), reverse=True)
-    if len(insure) > MAX_TOTAL:
-        insure = insure[:MAX_TOTAL]
+    # 과거 기사를 찾을 수 있도록 누적 데이터를 자르지 않는다.
     json.dump(insure, open(INSURE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('insure total=%d, added=%d' % (len(insure), added))
 
