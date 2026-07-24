@@ -89,4 +89,4 @@ jobs:
           if [ -f d3.layout.cloud.min.js ]; then cp d3.layout.cloud.min.js cfdist/; fi
           cp -r img cfdist/
           cp -r guide cfdist/
-          npx --yes wrangler@4 pages deploy cfdist --project-name=ptnews --branch=main --commit-dirty=true
+          npx --yes wrangler@4 pages deploy cfdist --project-name=ptnews --branch=master --commit-dirty=true
