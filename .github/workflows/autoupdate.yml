@@ -2,7 +2,10 @@ name: autoupdate
 
 on:
   schedule:
-    - cron: '9 * * * *'   # 매시 :09 (1시간 간격). 네이버/구글 무료 한도 안에서 안전. GitHub 스케줄 누락은 외부핑(cron-job.org)으로 보강 권장
+    # 평시 갱신은 외부 핑(cron-job.org)이 매시 정각에 workflow_dispatch로 돌린다.
+    # GitHub 스케줄은 외부 핑이 죽었을 때를 대비한 안전망이라 하루 한 번만 둔다.
+    # 매시 실행하면 외부 핑과 겹쳐 같은 일을 두 번 하게 된다.
+    - cron: '40 19 * * *'   # 매일 04:40 KST (UTC 19:40)
   workflow_dispatch:        # 수동 실행 버튼
     inputs:
       skip_fetch:
