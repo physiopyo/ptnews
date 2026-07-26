@@ -77,8 +77,26 @@ def naver_autocomplete(kw):
         return []
 
 
+def trend_is_fresh():
+    """이미 받아둔 트렌드가 어제 이후 날짜까지 있으면 새로 부르지 않는다.
+    구글 트렌드 일간 지수는 하루 한 번만 갱신되는데 매시간 호출하면 429로 튕긴다."""
+    try:
+        prev = json.load(open(OUT, encoding='utf-8'))
+        ds = (prev.get('trend') or {}).get('dates') or []
+        if not ds:
+            return False
+        last = datetime.strptime(ds[-1], '%Y-%m-%d').date()
+        return (datetime.now().date() - last).days <= 1
+    except Exception:
+        return False
+
+
 def main():
-    g = google_trends()
+    if trend_is_fresh():
+        print('google_trends: 최신 데이터 보유, 호출 생략')
+        g = {'dates': [], 'series': {}, 'related': {}}
+    else:
+        g = google_trends()
     nav = {}
     for k in KEYWORDS:
         nav[k] = naver_autocomplete(k)
