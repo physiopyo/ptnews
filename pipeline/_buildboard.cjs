@@ -252,7 +252,7 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
   <div id="hero" class="hero">
     <div class="herobox" style="position:relative;height:235px;overflow:hidden;background:#111;border-radius:18px">
       <img class="hero-img on" src="img/hero-0a.jpg" alt="2026년 7월 23일 정청래 전 더불어민주당 대표 면담" style="object-position:center 48%">
-      <img class="hero-img" src="img/hero-0b.jpg" alt="도수치료 관리급여 즉각 철회 현수막" style="object-position:center 81%">
+      <img class="hero-img" src="img/hero-0b.jpg" alt="도수치료 관리급여 즉각 철회 현수막" style="object-position:center 47%">
       <img class="hero-img" src="img/hero-1.jpg" alt="전국 물리치료사 총궐기대회" style="object-position:center 60%">
       <img class="hero-img" src="img/hero-2.jpg" alt="" style="object-position:center 52%">
       <img class="hero-img" src="img/hero-3.jpg" alt="" style="object-position:center 62%">
