@@ -26,6 +26,20 @@ PETIT_ID = '527DFB9D4A5222D7E064ECE7A7064E8B'
 PETIT_ID2 = '52523590A2A26BDEE064B49691C6967B'  # 안면마비 재활 도수치료 관리급여 기준 철회 청원(2026.7.20 마감)
 PETIT_ID3 = '54AE53B119FF0C5DE064ECE7A7064E8B'  # 도수치료·체외충격파 관리급여 개선 및 기존 실손보험 권리 보호 청원(2026.8.9 마감)
 
+# 청원별 동의 마감일. 마감이 지나면 호출하지 않고 마지막 집계값을 그대로 둔다.
+PETIT_DEADLINE = {
+    PETIT_ID: '2026-07-17',
+    PETIT_ID2: '2026-07-20',
+    PETIT_ID3: '2026-08-09',
+}
+
+
+def petit_closed(pid):
+    dl = PETIT_DEADLINE.get(pid)
+    if not dl:
+        return False
+    return datetime.now().date() > datetime.strptime(dl, '%Y-%m-%d').date()
+
 
 def epeople_sum(reg):
     s = requests.Session(); s.headers.update(H)
@@ -88,24 +102,16 @@ def main():
             out[k + '_et'] = r['et']   # 기타
         except Exception as ex:
             errs.append('%s: %s' % (k, ex))
-    try:
-        agree, pct = petition()
-        out['petition'] = agree
-        out['petitionPct'] = pct
-    except Exception as ex:
-        errs.append('petition: %s' % ex)
-    try:
-        agree2, pct2 = petition(PETIT_ID2)
-        out['petition2'] = agree2
-        out['petition2Pct'] = pct2
-    except Exception as ex:
-        errs.append('petition2: %s' % ex)
-    try:
-        agree3, pct3 = petition(PETIT_ID3)
-        out['petition3'] = agree3
-        out['petition3Pct'] = pct3
-    except Exception as ex:
-        errs.append('petition3: %s' % ex)
+    for key, pid in (('petition', PETIT_ID), ('petition2', PETIT_ID2), ('petition3', PETIT_ID3)):
+        if petit_closed(pid):
+            print('%s: 동의 마감(%s) 지나 수집 생략' % (key, PETIT_DEADLINE[pid]))
+            continue
+        try:
+            agree, pct = petition(pid)
+            out[key] = agree
+            out[key + 'Pct'] = pct
+        except Exception as ex:
+            errs.append('%s: %s' % (key, ex))
 
     now = datetime.now()
     out['updated'] = '%d.%d %d시 기준' % (now.month, now.day, now.hour)

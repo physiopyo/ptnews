@@ -62,8 +62,16 @@ jobs:
             echo "변경 없음 — 커밋 생략"
           else
             git commit -m "auto(ci): 보드 자동 갱신 $(date +'%Y-%m-%d %H:%M KST')"
-            git pull --rebase origin master || true      # 푸시 경합(동시 실행) 방지
-            git push
+            # 동시 실행이 겹치면 생성 파일에서 충돌이 난다.
+            # 방금 만든 쪽이 최신이므로 충돌은 우리 결과로 덮는다.
+            git fetch origin master
+            if ! git rebase -X theirs origin/master; then
+              git rebase --abort || true
+              echo "리베이스 실패 — 원격 위에 현재 결과를 다시 얹는다"
+              git reset --soft origin/master
+              git commit -m "auto(ci): 보드 자동 갱신 $(date +'%Y-%m-%d %H:%M KST') (재적용)"
+            fi
+            git push origin HEAD:master
           fi
 
       - name: Check Cloudflare token
