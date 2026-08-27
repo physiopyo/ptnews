@@ -22,6 +22,7 @@ IMGDIRS = [os.path.join(PROJ, '웹', 'board', 'img'), os.path.join(PROJ, 'ptnews
 BASE = 'https://www.seoulilbo.co.kr'
 KEYWORDS = ['도수치료', '물리치료', '관리급여', '실손']
 REPORTER = '고영준'
+OUTLET = '서울일보'
 TOPIC = ('도수치료', '물리치료', '관리급여', '실손', '체외충격파', '증식치료', '비급여', '물치협', '물협', '대한물리치료사협회')
 YEAR = datetime.now().year
 
@@ -159,6 +160,22 @@ def main():
         print('추가:', it['idxno'], it['date'], it['title'][:40])
 
     ko.sort(key=lambda x: x.get('dt') or x.get('date', ''), reverse=True)
+
+    # 메인 핀은 항상 최신 기사 1건만 붙인다. 새 기사가 들어오면 이전 핀은 자동 해제된다.
+    # 특정 기사를 계속 고정하고 싶으면 ko.json의 그 항목에 "pinLock": true 를 넣는다.
+    # pinLock이 하나라도 있으면 자동 이동을 건너뛰므로 수동 고정이 덮이지 않는다.
+    if ko and not any(a.get('pinLock') for a in ko):
+        moved = [a for a in ko[1:] if a.pop('pin', None)]
+        top = ko[0]
+        was = bool(top.get('pin'))
+        top['pin'] = True
+        top.setdefault('by', REPORTER)
+        top.setdefault('chip', OUTLET)
+        if moved or not was:
+            print('핀 이동: %s %s' % (top.get('date'), top.get('title', '')[:44]))
+            for a in moved:
+                print('  핀 해제:', a.get('title', '')[:44])
+
     json.dump(ko, open(KO, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('ko 갱신 완료. 신규 %d건, 총 %d건' % (added, len(ko)))
 
