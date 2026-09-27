@@ -38,7 +38,7 @@ def write_keys():
             json.dump({'id': nid, 'secret': nsec}, f)
         log('naver_key.json 생성(env)')
     else:
-        log('NAVER 시크릿 없음 -> datalab 생략(buzz 언급량 미갱신, 나머지 정상)')
+        log('NAVER 시크릿 없음 -> 네이버 검색 API·데이터랩 생략(공개 RSS·자동완성은 계속)')
     kk = os.environ.get('KAKAO_KEY', '')
     if kk:
         with open(os.path.join(NEWS, 'kakao_key.json'), 'w', encoding='utf-8') as f:
@@ -88,13 +88,14 @@ def main():
     skip = bool(os.environ.get('SKIP_FETCH'))
     if skip:
         log('SKIP_FETCH=1 → 뉴스·버즈 수집 생략, 빌드만 수행(코드/문구 변경 즉시 반영)')
-    write_keys()
     try:
+        write_keys()
         if not skip:
             run([PY, os.path.join(NEWS, 'fetch_coaction.py')], 'coaction')
             run([PY, os.path.join(NEWS, 'fetch_press.py')], 'press')
             run([PY, os.path.join(NEWS, 'fetch_ko.py')], 'ko')
             run([PY, os.path.join(NEWS, 'fetch_insure.py')], 'insure')
+            run([PY, os.path.join(NEWS, 'fetch_allied.py')], 'allied-news')
             run([PY, os.path.join(NEWS, 'fetch_buzz.py')], 'buzz-google')
             run([PY, os.path.join(NEWS, 'fetch_buzz_naver.py')], 'buzz-naver')
         run([NODE, os.path.join(PIPE, '_buildboard.cjs')], 'build', must=True)

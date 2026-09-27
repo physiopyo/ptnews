@@ -1,45 +1,28 @@
 # -*- coding: utf-8 -*-
-"""네이버 검색 오픈API + 데이터랩으로 버즈 데이터 수집 → buzz.json 병합.
-- 블로그/뉴스/카페 누적 언급 건수(total)
-- 데이터랩 검색어트렌드: 일별 상대지수(90일)
-- 본문(제목+요약) 형태소 분석으로 연관어 Top (kiwipiepy)
-- 매일 스냅샷을 buzz_naver_history.json에 누적(향후 실건수 일별 그래프용)
-키: _news/naver_key.json {id, secret}
+"""Bounded, resumable Naver/Kakao samples, Datalab and Google News RSS.
+
+Credentials and Kiwi are loaded inside execution, never at import. Canonical
+provider totals are not an alias union. Storage has no age/count retention cut.
 """
-import os, sys, json, time, re, html
-import xml.etree.ElementTree as ET
-from urllib.parse import quote
-from datetime import datetime, timedelta
+import argparse
 from collections import Counter
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
+import hashlib
+import html
+import math
+from pathlib import Path
+import re
+import xml.etree.ElementTree as ET
+from urllib.parse import urldefrag
+
 import requests
-try:
-    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-except Exception:
-    pass
+import buzz_config as config
+from buzz_history import HistoryArchive, digest, observed_at
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-KEYF = os.path.join(ROOT, 'naver_key.json')
-BUZZ = os.path.join(ROOT, 'buzz.json')
-HIST = os.path.join(ROOT, 'buzz_naver_history.json')
-RWHIST = os.path.join(ROOT, 'buzz_related_weeks.json')
-KNUF = os.path.join(ROOT, 'knu_senti.json')
-NDHIST = os.path.join(ROOT, 'buzz_news_daily.json')
-CDHIST = os.path.join(ROOT, 'buzz_channel_daily.json')
-KEYWORDS = ['도수치료', '관리급여', '실손보험', '체외충격파', '물리치료사']
-
-_k = json.load(open(KEYF, encoding='utf-8'))
-H = {'X-Naver-Client-Id': _k['id'], 'X-Naver-Client-Secret': _k['secret'], 'User-Agent': 'Mozilla/5.0'}
-
-KAKAOF = os.path.join(ROOT, 'kakao_key.json')
-DCHIST = os.path.join(ROOT, 'buzz_daum_daily.json')
-HHIST = os.path.join(ROOT, 'buzz_hourly.json')
-try:
-    _kk = (json.load(open(KAKAOF, encoding='utf-8')) or {}).get('rest_api_key', '')
-except Exception:
-    _kk = ''
-HK = {'Authorization': 'KakaoAK ' + _kk} if _kk else None
-
-# 연관어 불용어(질의어 조각 + 일반어)
+ROOT = Path(__file__).resolve().parent
+KST = timezone(timedelta(hours=9))
+CHANNELS = {'blog': 'blog', 'news': 'news', 'cafe': 'cafearticle'}
 STOP = set('''도수 치료 도수치료 관리 급여 관리급여 실손 보험 실손보험 체외 충격 충격파 체외충격파 물리 치료사 물리치료사 의료 병원 환자
 경우 정도 사용 제품 가능 진행 시작 관련 내용 방법 정보 생각 이야기 이번 우리 가지 사람 자신 부분 문제 때문
 다양 최근 다음 오늘 하나 모두 위해 통해 이상 이하 정말 제일 추천 후기 블로그 포스팅 사진 이용 확인 소개 운영
@@ -47,404 +30,579 @@ STOP = set('''도수 치료 도수치료 관리 급여 관리급여 실손 보�
 때문 이때 동안 이후 이전 현재 today 그것 무엇 어디 누구 정말 진짜 완전 그냥 약간 조금 거의 매우'''.split())
 
 
-def tag(s):
-    return re.sub(r'<[^>]+>', '', html.unescape(s or '')).strip()
+class CollectionError(Exception):
+    """Only controlled codes leave the HTTP boundary; no response/auth text."""
+
+    def __init__(self, code):
+        super().__init__(code)
+        self.code = code
 
 
-def total_count(kind, q):
-    try:
-        r = requests.get('https://openapi.naver.com/v1/search/%s.json' % kind,
-                         params={'query': q, 'display': 1}, headers=H, timeout=12)
-        return int(r.json().get('total', 0)) if r.status_code == 200 else 0
-    except Exception:
-        return 0
+class RequestBudget:
+    def __init__(self, client, collection, limit, now):
+        self.client, self.collection = client, collection
+        self.limit, self.now, self.used = limit, now, 0
+        self.stopped = set()
 
+    @staticmethod
+    def key(provider, kind):
+        return f'{"rss" if provider == "google_news" else "mentions"}:{kind}:{provider}'
 
-def daum_cafe_total(q):
-    if not HK:
-        return 0
-    try:
-        r = requests.get('https://dapi.kakao.com/v2/search/cafe',
-                         params={'query': q, 'size': 1}, headers=HK, timeout=12)
-        return int(r.json().get('meta', {}).get('total_count', 0)) if r.status_code == 200 else 0
-    except Exception:
-        return 0
-
-
-def daum_cafe_collect(q, pages=8, size=50):
-    """다음카페 최근글 → (텍스트목록, {date:count}). datetime 기반 실제 일별 집계."""
-    texts, daily = [], {}
-    if not HK:
-        return texts, daily
-    for page in range(1, pages + 1):
+    def request(self, provider, method, url, **kwargs):
+        key = self.key(provider, 'provider')
+        state = self.collection.get(key, {})
+        if provider in self.stopped or state.get('retry_after_at', 0) > self.now:
+            raise CollectionError('provider_stopped')
+        if self.used >= self.limit:
+            raise CollectionError('request_budget_exhausted')
+        self.used += 1
+        stamp = observed_at(self.now)
+        counters = self.collection.setdefault(self.key(provider, 'requests'), {})
+        for zone in ('utc', 'kst'):
+            day = stamp[zone][:10]
+            daily = counters.setdefault(zone, {})
+            daily[day] = daily.get(day, 0) + 1
+        counters['total'] = counters.get('total', 0) + 1
         try:
-            r = requests.get('https://dapi.kakao.com/v2/search/cafe',
-                             params={'query': q, 'sort': 'recency', 'size': size, 'page': page},
-                             headers=HK, timeout=12)
+            response = getattr(self.client, method)(url, **kwargs)
         except Exception:
-            break
-        if r.status_code != 200:
-            break
-        j = r.json()
-        for d in j.get('documents', []):
-            texts.append(tag(d.get('title', '')) + ' ' + tag(d.get('contents', '')))
-            dt = (d.get('datetime', '') or '')[:10]
-            if len(dt) == 10:
-                daily[dt] = daily.get(dt, 0) + 1
-        if j.get('meta', {}).get('is_end'):
-            break
-        time.sleep(0.15)
-    return texts, daily
-
-
-def collect_text(q, per=100):
-    """채널별(뉴스/블로그/카페) 최근 글 제목+요약 텍스트."""
-    out = {'news': [], 'blog': [], 'cafe': []}
-    kmap = {'blog': 'blog', 'news': 'news', 'cafearticle': 'cafe'}
-    for kind in ('blog', 'news', 'cafearticle'):
-        try:
-            r = requests.get('https://openapi.naver.com/v1/search/%s.json' % kind,
-                             params={'query': q, 'display': per, 'sort': 'date'}, headers=H, timeout=12)
-            if r.status_code == 200:
-                for it in r.json().get('items', []):
-                    out[kmap[kind]].append(tag(it.get('title', '')) + ' ' + tag(it.get('description', '')))
-        except Exception:
-            pass
-        time.sleep(0.25)
-    return out
-
-
-def related_words(kiwi, texts, qfrag):
-    cnt = Counter()
-    for t in texts:
-        for tok in kiwi.tokenize(t):
-            if tok.tag in ('NNG', 'NNP') and len(tok.form) >= 2:
-                w = tok.form
-                if w in STOP or w in qfrag:
-                    continue
-                cnt[w] += 1
-    return [{'w': w, 'c': c} for w, c in cnt.most_common(24)]
-
-
-def sentiment(kiwi, texts, knu, qfrag):
-    """본문 토큰을 KNU 감성사전에 매칭 → 긍/부정/중립 단어 빈도."""
-    cnt = Counter()
-    pol = {}
-    for t in texts:
-        for tok in kiwi.tokenize(t):
-            w = None
-            if tok.tag in ('NNG', 'NNP') and len(tok.form) >= 2:
-                w = tok.form
-            elif tok.tag in ('VA', 'VV') and len(tok.form) >= 1:
-                w = tok.form + '다'
-            if not w or w in qfrag or w in STOP:
-                continue
-            if w in knu:
-                cnt[w] += 1
-                pol[w] = knu[w]
-    return [{'w': w, 'c': c, 'p': pol[w]} for w, c in cnt.most_common(50)]
-
-
-def week_label(d):
-    mon = d - timedelta(days=d.weekday())
-    sun = mon + timedelta(days=6)
-    return mon.isoformat(), '%d.%d~%d.%d' % (mon.month, mon.day, sun.month, sun.day)
-
-
-_MON = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
-        'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12}
-
-
-def daily_counts(q, pages=10):
-    """블로그+뉴스 글의 작성일 버킷팅 → 일별 실제 언급 건수(최근 구간)."""
-    cnt = Counter()
-    for kind in ('blog', 'news'):
-        for st in range(1, pages * 100 + 1, 100):
+            raise CollectionError('transport_error') from None
+        if response.status_code == 429:
+            retry = response.headers.get('Retry-After', '')
+            retry_at = self.now + config.SIX_HOURS
             try:
-                r = requests.get('https://openapi.naver.com/v1/search/%s.json' % kind,
-                                 params={'query': q, 'display': 100, 'start': st, 'sort': 'date'},
-                                 headers=H, timeout=12)
-            except Exception:
-                break
-            if r.status_code != 200:
-                break
-            its = r.json().get('items', [])
-            for it in its:
-                d = ''
-                if kind == 'blog':
-                    pd = it.get('postdate', '')
-                    if len(pd) == 8:
-                        d = '%s-%s-%s' % (pd[:4], pd[4:6], pd[6:])
-                else:
-                    m = re.search(r'(\d{1,2}) (\w{3}) (\d{4})', it.get('pubDate', ''))
-                    if m and m.group(2) in _MON:
-                        d = '%s-%02d-%02d' % (m.group(3), _MON[m.group(2)], int(m.group(1)))
-                if d:
-                    cnt[d] += 1
-            if len(its) < 100:
-                break
-            time.sleep(0.12)
-    return [{'date': d, 'c': cnt[d]} for d in sorted(cnt)]
+                retry_at = self.now + max(0, int(retry))
+            except (TypeError, ValueError):
+                try:
+                    retry_at = max(self.now, parsedate_to_datetime(retry).timestamp())
+                except (TypeError, ValueError, OverflowError):
+                    pass
+            self.stopped.add(provider)
+            self.collection[key] = {**state, 'status': 'rate_limited',
+                                    'observed_at': stamp, 'retry_after_at': retry_at}
+            raise CollectionError('http_429')
+        if response.status_code != 200:
+            raise CollectionError(f'http_{response.status_code}')
+        if state.get('status') == 'rate_limited':
+            self.collection[key] = {**state, 'status': 'ok'}
+        return response
 
 
-def gnews_count(q, d1, d2):
-    """구글뉴스 RSS 날짜범위 쿼리 → 해당 일자 뉴스 건수."""
-    u = 'https://news.google.com/rss/search?q=%s&hl=ko&gl=KR&ceid=KR:ko' % quote('%s after:%s before:%s' % (q, d1, d2))
+def response_json(response):
     try:
-        r = requests.get(u, headers={'User-Agent': 'Mozilla/5.0'}, timeout=15)
-        root = ET.fromstring(r.content)
-        return len(root.findall('.//item'))
+        value = response.json()
     except Exception:
-        return None
+        raise CollectionError('invalid_json') from None
+    if not isinstance(value, dict):
+        raise CollectionError('invalid_response')
+    return value
 
 
-def news_daily(q, prev, days=30, refresh=6):
-    """일별 뉴스 건수(구글뉴스). 최근 refresh일은 항상 갱신, 과거일은 없을 때만 조회(히스토리 캐시)."""
-    res = dict(prev or {})
-    today = datetime.now().date()
-    for i in range(days):
-        d = today - timedelta(days=i)
-        ds = d.isoformat()
-        if i < refresh or ds not in res:
-            n = gnews_count(q, ds, (d + timedelta(days=1)).isoformat())
-            if n is not None:
-                res[ds] = n
-            time.sleep(0.45)
-    cut = (today - timedelta(days=days)).isoformat()
-    return {k: v for k, v in res.items() if k >= cut}
+def tag(value):
+    if value is not None and not isinstance(value, str):
+        raise CollectionError('invalid_search_document')
+    return re.sub(r'<[^>]+>', '', html.unescape(value or '')).strip()
 
 
-def accumulate_channels(q, state, pages=10):
-    """크롤-포워드 누적: 새 블로그(작성일별)·카페(신규수, 오늘 귀속) dedupe 집계.
-    state = {'daily': {date: {blog, cafe}}, 'sb': [블로그링크...], 'sc': [카페링크...]}"""
-    daily = state.get('daily', {})
-    sb_list = state.get('sb', []); sb = set(sb_list)
-    sc_list = state.get('sc', []); sc = set(sc_list)
-    cafe_seed = (len(sc_list) == 0)
-    today = datetime.now().strftime('%Y-%m-%d')
-    for st in range(1, pages * 100 + 1, 100):
-        try:
-            r = requests.get('https://openapi.naver.com/v1/search/blog.json',
-                             params={'query': q, 'display': 100, 'start': st, 'sort': 'date'}, headers=H, timeout=12)
-        except Exception:
-            break
-        if r.status_code != 200:
-            break
-        its = r.json().get('items', [])
-        for it in its:
-            link = it.get('link', '')
-            if not link or link in sb:
-                continue
-            sb.add(link); sb_list.append(link)
-            pd = it.get('postdate', '')
-            d = (pd[:4] + '-' + pd[4:6] + '-' + pd[6:]) if len(pd) == 8 else today
-            daily.setdefault(d, {})
-            daily[d]['blog'] = daily[d].get('blog', 0) + 1
-        if len(its) < 100:
-            break
-        time.sleep(0.1)
-    for st in range(1, pages * 100 + 1, 100):
-        try:
-            r = requests.get('https://openapi.naver.com/v1/search/cafearticle.json',
-                             params={'query': q, 'display': 100, 'start': st, 'sort': 'date'}, headers=H, timeout=12)
-        except Exception:
-            break
-        if r.status_code != 200:
-            break
-        its = r.json().get('items', [])
-        for it in its:
-            link = it.get('link', '')
-            if not link or link in sc:
-                continue
-            sc.add(link); sc_list.append(link)
-            if not cafe_seed:
-                daily.setdefault(today, {})
-                daily[today]['cafe'] = daily[today].get('cafe', 0) + 1
-        if len(its) < 100:
-            break
-        time.sleep(0.1)
-    cut = (datetime.now().date() - timedelta(days=120)).isoformat()
-    state['daily'] = {d: v for d, v in daily.items() if d >= cut}
-    state['sb'] = sb_list[-5000:]
-    state['sc'] = sc_list[-5000:]
-    return state
+def terms_for(spec):
+    return list(dict.fromkeys([spec['keyword'], *spec['terms']]))
 
-def datalab(keywords):
-    end = datetime.now().date()
-    start = end - timedelta(days=365)
-    body = {'startDate': start.isoformat(), 'endDate': end.isoformat(), 'timeUnit': 'date',
-            'keywordGroups': [{'groupName': k, 'keywords': [k]} for k in keywords]}
-    out = {'dates': [], 'series': {}}
+
+def published_at(item, source):
     try:
-        r = requests.post('https://openapi.naver.com/v1/datalab/search',
-                          headers={**H, 'Content-Type': 'application/json'},
-                          data=json.dumps(body), timeout=20)
-        if r.status_code == 200:
-            res = r.json().get('results', [])
-            dates = None
-            for g in res:
-                pts = g.get('data', [])
-                if dates is None:
-                    dates = [p['period'] for p in pts]
-                    out['dates'] = dates
-                # 날짜 정합 위해 dict 매핑
-                m = {p['period']: round(p['ratio'], 2) for p in pts}
-                out['series'][g['title']] = [m.get(d, 0) for d in out['dates']]
-        else:
-            print('datalab HTTP', r.status_code, r.text[:120], file=sys.stderr)
-    except Exception as e:
-        print('datalab ERR', str(e)[:100], file=sys.stderr)
-    return out
+        if source == 'blog':
+            return datetime.strptime(item.get('postdate', ''), '%Y%m%d').date().isoformat()
+        if source == 'news':
+            return parsedate_to_datetime(item.get('pubDate', '')).isoformat()
+        if source == 'daumcafe':
+            return datetime.fromisoformat(item.get('datetime', '').replace('Z', '+00:00')).isoformat()
+    except (AttributeError, TypeError, ValueError, OverflowError):
+        pass
+    return None
 
 
-def main():
-    from kiwipiepy import Kiwi
-    kiwi = Kiwi()
-    qfrag = set()
-    for k in KEYWORDS:
-        for tok in kiwi.tokenize(k):
-            qfrag.add(tok.form)
+def search_sample(http, spec, source, headers):
+    """First pages supply both totals/text; history reuses the same documents.
 
-    knu = {}
+    All-seen URLs never terminate pagination: only provider end/short pages do.
+    """
+    provider = 'kakao' if source == 'daumcafe' else 'naver'
+    size, pages = (50, 2) if provider == 'kakao' else (100, 1 if source == 'news' else 3)
+    documents, totals, missing_urls = {}, {}, 0
+    for term in terms_for(spec):
+        for page in range(1, pages + 1):
+            if provider == 'kakao':
+                url = 'https://dapi.kakao.com/v2/search/cafe'
+                params = {'query': term, 'size': size, 'page': page, 'sort': 'recency'}
+            else:
+                url = f'https://openapi.naver.com/v1/search/{CHANNELS[source]}.json'
+                params = {'query': term, 'display': size, 'start': (page - 1) * size + 1, 'sort': 'date'}
+            data = response_json(http.request(provider, 'get', url, params=params,
+                                              headers=headers, timeout=15))
+            if provider == 'kakao':
+                items, meta = data.get('documents'), data.get('meta', {})
+                total = meta.get('total_count') if isinstance(meta, dict) else None
+            else:
+                items, total = data.get('items'), data.get('total')
+            if not isinstance(items, list) or type(total) is not int or total < 0:
+                raise CollectionError('invalid_search_response')
+            if page == 1:
+                totals[term] = total
+            for item in items:
+                if not isinstance(item, dict):
+                    raise CollectionError('invalid_search_document')
+                raw_url = item.get('url' if provider == 'kakao' else 'link')
+                if not isinstance(raw_url, str) or not raw_url:
+                    missing_urls += 1
+                    continue
+                try:
+                    url = urldefrag(raw_url)[0]
+                except ValueError:
+                    raise CollectionError('invalid_search_document') from None
+                if url in documents:
+                    continue
+                text = tag(item.get('title', '')) + ' ' + tag(item.get('contents' if provider == 'kakao' else 'description', ''))
+                documents[url] = {'url': url, 'provider': provider,
+                                  'channel': 'cafe' if source == 'daumcafe' else source,
+                                  'published_at': published_at(item, source), 'text': text,
+                                  'content_hash': hashlib.sha256(text.encode('utf-8')).hexdigest()}
+            if len(items) < size or (provider == 'kakao' and meta.get('is_end') is True):
+                break
+    return list(documents.values()), totals, missing_urls
+
+
+class Analyzer:
+    def __init__(self, kiwi, lexicon, specs):
+        self.kiwi, self.lexicon, self.specs = kiwi, lexicon, specs
+        self.fragments = None
+
+    def analyze(self, documents):
+        if not documents:
+            return []
+        if self.kiwi is None:
+            from kiwipiepy import Kiwi
+            self.kiwi = Kiwi()
+        if self.fragments is None:
+            self.fragments = {token.form for spec in self.specs for term in terms_for(spec)
+                              for token in self.kiwi.tokenize(term)}
+        result = []
+        for document in documents:
+            nouns, sentiment, tokens = Counter(), Counter(), Counter()
+            for token in self.kiwi.tokenize(document['text']):
+                tokens[(token.form, token.tag)] += 1
+                noun = token.tag in ('NNG', 'NNP') and len(token.form) >= 2
+                word = token.form if noun else token.form + '다' if token.tag in ('VA', 'VV') else None
+                if not word or word in STOP or word in self.fragments:
+                    continue
+                if noun:
+                    nouns[word] += 1
+                if word in self.lexicon:
+                    sentiment[word] += 1
+            result.append({key: value for key, value in document.items() if key != 'text'} |
+                          {'tokens': [{'form': form, 'tag': tag_, 'c': count}
+                                      for (form, tag_), count in tokens.items()],
+                           'related': dict(nouns), 'sentiment': {
+                              word: {'c': count, 'p': self.lexicon[word]} for word, count in sentiment.items()}})
+        return result
+
+
+def set_status(collection, key, success, now, error=None, attempted=True):
+    previous = collection.get(key, {})
+    if not attempted:
+        # A skipped request must not replace the last actual collection result.
+        collection[key] = {**previous, 'last_deferred': {'at': now, 'reason': error}}
+        if not previous:
+            collection[key]['status'] = 'deferred'
+    else:
+        collection[key] = config.record(previous, success, error=error, now=now)
+        if error == 'missing_credentials':
+            collection[key]['status'] = 'missing'
+
+
+def due(collection, key, interval, now, force):
+    return force or config.due(collection.get(key, {}), interval, now=now)
+
+
+def week_label(day):
+    monday = day - timedelta(days=day.weekday())
+    sunday = monday + timedelta(days=6)
+    return monday.isoformat(), f'{monday.month}.{monday.day}~{sunday.month}.{sunday.day}'
+
+
+def update_daily(source, keyword, documents, channel_history, daum_history, today):
+    if source == 'daumcafe':
+        # Legacy counts have no URL identities; do not add new samples to them.
+        dates = Counter((doc.get('published_at') or today)[:10] for doc in documents)
+        daily = daum_history.setdefault(keyword, {})
+        dates.setdefault(today, 0)
+        for date, count in dates.items():
+            daily[date] = max(daily.get(date) or 0, count)
+        return
+    if source not in ('blog', 'cafe'):
+        return
+    state = channel_history.setdefault(keyword, {})
+    seen_list = state.setdefault('sb' if source == 'blog' else 'sc', [])
+    seen = set(seen_list)
+    daily = state.setdefault('daily', {})
+    daily.setdefault(today, {}).setdefault(source, 0)
+    for document in documents:
+        if document['url'] in seen:
+            continue
+        seen.add(document['url'])
+        seen_list.append(document['url'])
+        date = (document.get('published_at') or today)[:10] if source == 'blog' else today
+        values = daily.setdefault(date, {})
+        values[source] = (values.get(source) or 0) + 1
+    state['basis'] = {'blog': 'published_date_when_known_else_first_seen', 'cafe': 'first_seen'}
+
+
+def rss_count(http, spec, day):
+    query = '(' + ' OR '.join('"' + term.replace('"', '') + '"' for term in terms_for(spec)) + ')'
+    query += f' after:{day.isoformat()} before:{(day + timedelta(days=1)).isoformat()}'
+    response = http.request('google_news', 'get', 'https://news.google.com/rss/search',
+                            params={'q': query, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'},
+                            headers={'User-Agent': 'Mozilla/5.0'}, timeout=15)
     try:
-        knu = json.load(open(KNUF, encoding='utf-8'))
-    except Exception:
-        knu = {}
-    totals = {}
-    related = {}
-    senti = {}
-    daily = {}
-    ndh = {}
-    if os.path.exists(NDHIST):
+        root = ET.fromstring(response.content)
+    except (ET.ParseError, TypeError):
+        raise CollectionError('invalid_rss') from None
+    if root.tag != 'rss' or root.find('channel') is None:
+        raise CollectionError('invalid_rss')
+    identities = set()
+    for item in root.findall('./channel/item'):
+        identity = item.findtext('link') or item.findtext('guid') or item.findtext('title')
+        if not identity:
+            raise CollectionError('invalid_rss_item')
+        identities.add(identity)
+    return len(identities)
+
+
+def collect_rss(http, spec, history, archive, now, force):
+    keyword, key = spec['keyword'], 'rss:' + spec['keyword']
+    day = datetime.fromtimestamp(now, KST).date()
+    prior = history.setdefault(keyword, {})
+    missing = [day - timedelta(days=i) for i in range(2, 365)
+               if prior.get((day - timedelta(days=i)).isoformat()) is None][:2]
+    changed = False
+    for status_key, interval, targets in (
+            (key, config.SIX_HOURS, [day, day - timedelta(days=1)]),
+            (key + ':backfill', config.DAY, missing)):
+        if not targets or not due(http.collection, status_key, interval, now, force):
+            continue
+        before, error = http.used, None
+        for target in targets:
+            try:
+                count = rss_count(http, spec, target)
+            except CollectionError as exc:
+                error = exc.code
+                if error in ('http_429', 'provider_stopped', 'request_budget_exhausted'):
+                    break
+                continue
+            prior[target.isoformat()] = count
+            archive.snapshot('rss', keyword, 'google_news',
+                             {'date': target.isoformat(), 'count': count, 'basis': 'rss_date_query'}, now)
+            changed = True
+        set_status(http.collection, status_key, error is None, now, error, attempted=http.used != before)
+    return changed
+
+
+def collect_datalab(http, specs, headers, naver, archive, now, force):
+    day = datetime.fromtimestamp(now, KST).date()
+    for group in config.batches(specs):
+        group_id = digest([[s['keyword'], terms_for(s)] for s in group])[:16]
+        key = 'datalab:' + group_id
+        if not due(http.collection, key, config.DAY, now, force):
+            continue
+        if not headers:
+            set_status(http.collection, key, False, now, 'missing_credentials')
+            continue
+        body = {'startDate': (day - timedelta(days=365)).isoformat(), 'endDate': day.isoformat(),
+                'timeUnit': 'date', 'keywordGroups': [
+                    {'groupName': spec['keyword'], 'keywords': terms_for(spec)} for spec in group]}
+        before = http.used
         try:
-            ndh = json.load(open(NDHIST, encoding='utf-8'))
-        except Exception:
-            ndh = {}
-    news_d = {}
-    cd = {}
-    if os.path.exists(CDHIST):
-        try:
-            cd = json.load(open(CDHIST, encoding='utf-8'))
-        except Exception:
-            cd = {}
-    chan = {}
-    dch = {}
-    if os.path.exists(DCHIST):
-        try:
-            dch = json.load(open(DCHIST, encoding='utf-8'))
-        except Exception:
-            dch = {}
-    for k in KEYWORDS:
-        totals[k] = {'blog': total_count('blog', k), 'news': total_count('news', k),
-                     'cafe': total_count('cafearticle', k), 'daumcafe': daum_cafe_total(k)}
-        texts_by = collect_text(k)
-        dcafe_texts, dcafe_daily = daum_cafe_collect(k)
-        texts_by['cafe'] = texts_by['cafe'] + dcafe_texts
-        dprev = dch.get(k, {})
-        for _dt, _c in dcafe_daily.items():
-            dprev[_dt] = max(dprev.get(_dt, 0), _c)
-        dch[k] = dprev
-        texts_all = texts_by['news'] + texts_by['blog'] + texts_by['cafe']
-        texts_comm = texts_by['blog'] + texts_by['cafe']
-        related[k] = related_words(kiwi, texts_all, qfrag)
-        # 감성(긍·부정)은 여론 채널(블로그+카페)만 — 뉴스는 보도체라 제외
-        senti[k] = {
-            'community': sentiment(kiwi, texts_comm, knu, qfrag),
-            'blog': sentiment(kiwi, texts_by['blog'], knu, qfrag),
-            'cafe': sentiment(kiwi, texts_by['cafe'], knu, qfrag),
+            data = response_json(http.request('naver', 'post', 'https://openapi.naver.com/v1/datalab/search',
+                                              headers={**headers, 'Content-Type': 'application/json'},
+                                              json=body, timeout=20))
+            results = data.get('results')
+            if not isinstance(results, list):
+                raise CollectionError('invalid_datalab_response')
+            points = {}
+            expected = {spec['keyword'] for spec in group}
+            for item in results:
+                if not isinstance(item, dict) or not isinstance(item.get('data'), list):
+                    raise CollectionError('invalid_datalab_response')
+                title = item.get('title')
+                if not isinstance(title, str) or title not in expected or title in points:
+                    raise CollectionError('invalid_datalab_response')
+                values = {}
+                for point in item['data']:
+                    if not isinstance(point, dict):
+                        raise CollectionError('invalid_datalab_point')
+                    period, ratio = point.get('period'), point.get('ratio')
+                    if (not isinstance(period, str) or type(ratio) not in (int, float)
+                            or not math.isfinite(ratio) or not 0 <= ratio <= 100):
+                        raise CollectionError('invalid_datalab_point')
+                    try:
+                        datetime.strptime(period, '%Y-%m-%d')
+                    except ValueError:
+                        raise CollectionError('invalid_datalab_point') from None
+                    values[period] = round(ratio, 2)
+                points[title] = values
+            if any(spec['keyword'] not in points for spec in group):
+                raise CollectionError('missing_datalab_group')
+        except CollectionError as exc:
+            set_status(http.collection, key, False, now, exc.code, attempted=http.used != before)
+            continue
+        previous = naver.setdefault('datalab', {'dates': [], 'series': {}})
+        maps = {keyword: {date: value for date, value in zip(previous.get('dates', []), values)
+                          if value is not None}
+                for keyword, values in previous.get('series', {}).items()}
+        for keyword, values in points.items():
+            # A rolling request renormalizes every point. Do not splice its
+            # ratios into a previous independently normalized request window.
+            maps[keyword] = values
+        dates = sorted({date for values in maps.values() for date in values})
+        previous['dates'] = dates
+        previous['series'] = {keyword: [values.get(date) for date in dates] for keyword, values in maps.items()}
+        previous.setdefault('groups', {})[group_id] = {
+            'keywords': [spec['keyword'] for spec in group], 'observed_at': observed_at(now),
+            'normalization': 'within_request_group_and_date_range',
+            'start_date': body['startDate'], 'end_date': body['endDate']}
+        archive.snapshot('datalab', None, 'naver', {'group': group_id, 'request': body, 'points': points}, now)
+        set_status(http.collection, key, True, now)
+
+
+def add_known(values):
+    return sum(values) if all(value is not None for value in values) else None
+
+
+def channels_for(keyword, naver, channel_history, daum_history, news_history, today,
+                 kakao_configured):
+    rows = {row['date']: dict(row) for row in naver.get('channel_daily', {}).get(keyword, [])}
+    channel = channel_history.get(keyword, {}).get('daily', {})
+    daum, news = daum_history.get(keyword, {}), news_history.get(keyword, {})
+    dates = set(rows) | set(channel) | set(daum) | set(news)
+    dates.update((today - timedelta(days=i)).isoformat() for i in range(365))
+    for date in dates:
+        row = rows.setdefault(date, {'date': date})
+        blog = channel.get(date, {}).get('blog')
+        cafe_sources = {'naver': channel.get(date, {}).get('cafe'), 'kakao': daum.get(date)}
+        cafe_observed = [source for source, value in cafe_sources.items() if value is not None]
+        cafe_expected = ['naver']
+        if kakao_configured or cafe_sources['kakao'] is not None:
+            cafe_expected.append('kakao')
+        cafe = sum(cafe_sources[source] for source in cafe_observed) if cafe_observed else None
+        cafe_complete = set(cafe_expected) <= set(cafe_observed)
+        values = {'news': news.get(date), 'blog': blog, 'cafe': cafe}
+        for name, value in values.items():
+            if value is not None or name not in row:
+                row[name] = value
+        total = add_known([row.get(name) for name in ('news', 'blog', 'cafe')])
+        if total is not None or 'total' not in row:
+            row['total'] = total
+        row['scope'] = {
+            'cafe': {'expected': cafe_expected, 'observed': cafe_observed,
+                     'components': cafe_sources,
+                     'status': 'complete' if cafe_complete else 'partial' if cafe_observed else 'unknown'},
+            'total': {'status': 'complete' if total is not None and cafe_complete else
+                                'partial' if total is not None else 'unknown'},
         }
-        cd[k] = accumulate_channels(k, cd.get(k, {}))
-        news_d[k] = news_daily(k, ndh.get(k))
-        print('  %s: 블로그 %d 뉴스 %d 카페 %d / 연관어 %d' % (
-            k, totals[k]['blog'], totals[k]['news'], totals[k]['cafe'], len(related[k])))
-        time.sleep(0.3)
+    return [rows[date] for date in sorted(rows)]
 
-    dl = datalab(KEYWORDS)
-    today = datetime.now().strftime('%Y-%m-%d')
 
-    # 히스토리 누적(중복일 갱신)
-    hist = []
-    if os.path.exists(HIST):
-        try:
-            hist = json.load(open(HIST, encoding='utf-8'))
-        except Exception:
-            hist = []
-    hist = [h for h in hist if h.get('date') != today]
-    hist.append({'date': today, 'totals': totals})
-    hist = hist[-120:]
-    json.dump(hist, open(HIST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    for k in KEYWORDS:
-        ndh[k] = news_d.get(k, {})
-    json.dump(ndh, open(NDHIST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    json.dump(cd, open(CDHIST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    _dcut = (datetime.now().date() - timedelta(days=90)).isoformat()
-    for _dk in list(dch.keys()):
-        dch[_dk] = {d: c for d, c in dch[_dk].items() if d >= _dcut}
-    json.dump(dch, open(DCHIST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    win = [(datetime.now().date() - timedelta(days=i)).isoformat() for i in range(89, -1, -1)]
-    for k in KEYWORDS:
-        ndk = news_d.get(k, {})
-        cdk = (cd.get(k, {}) or {}).get('daily', {})
-        ddk = dch.get(k, {})
-        chan[k] = [{'date': d, 'news': ndk.get(d, 0),
-                    'blog': cdk.get(d, {}).get('blog', 0),
-                    'cafe': cdk.get(d, {}).get('cafe', 0) + ddk.get(d, 0),
-                    'total': ndk.get(d, 0) + cdk.get(d, {}).get('blog', 0) + cdk.get(d, {}).get('cafe', 0) + ddk.get(d, 0)} for d in win]
-    # 1일 시간별 스냅샷 (자동갱신 주기=2h 해상도, 오늘 채널별 누적)
-    hh = {}
-    if os.path.exists(HHIST):
-        try:
-            hh = json.load(open(HHIST, encoding='utf-8'))
-        except Exception:
-            hh = {}
-    _now = datetime.now().strftime('%Y-%m-%d %H:%M')
-    _hcut = (datetime.now() - timedelta(hours=26)).strftime('%Y-%m-%d %H:%M')
-    for k in KEYWORDS:
-        last = chan[k][-1] if chan[k] else {}
-        lst = [x for x in (hh.get(k) or []) if x.get('t', '') >= _hcut]
-        lst.append({'t': _now, 'news': last.get('news', 0), 'blog': last.get('blog', 0), 'cafe': last.get('cafe', 0)})
-        hh[k] = lst[-16:]
-    json.dump(hh, open(HHIST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    # 주간 연관어 순위 히스토리
-    wkey, wlabel = week_label(datetime.now().date())
-    rweeks = {}
-    if os.path.exists(RWHIST):
-        try:
-            rweeks = json.load(open(RWHIST, encoding='utf-8'))
-        except Exception:
-            rweeks = {}
-    related_weeks = {}
-    for k in KEYWORDS:
-        lst = [w for w in (rweeks.get(k) or []) if w.get('key') != wkey]
-        lst.append({'key': wkey, 'label': wlabel, 'items': related[k][:20]})
-        lst = sorted(lst, key=lambda x: x['key'])[-8:]
-        rweeks[k] = lst
-        related_weeks[k] = lst[-3:]
-    json.dump(rweeks, open(RWHIST, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+def refresh_words(naver, archive, keyword):
+    samples = naver.get('samples', {}).get(keyword, {})
+    identifiers = [identifier for sample in samples.values() for identifier in sample['document_ids']]
+    summary = archive.sample(identifiers)
+    coverage = {sample['channel'] for sample in samples.values()}
+    for channel in ('blog', 'news', 'cafe'):
+        if channel not in coverage:
+            summary['documents'][channel] = None
+            summary['channels'][channel] = None
+    related = naver.setdefault('related', {})
+    if coverage == {'news', 'blog', 'cafe'} or related.get(keyword) is None:
+        related[keyword] = summary['related']
+    sentiment = naver.setdefault('sentiment', {}).setdefault(keyword, {})
+    for channel in ('blog', 'cafe'):
+        if channel in coverage:
+            sentiment[channel] = summary['sentiment'][channel]
+    if {'blog', 'cafe'} <= coverage or (
+            coverage.intersection({'blog', 'cafe'}) and sentiment.get('community') is None):
+        sentiment['community'] = summary['sentiment']['community']
+    for channel in ('community', 'blog', 'cafe'):
+        sentiment.setdefault(channel, None)
+    naver.setdefault('word_counts', {})[keyword] = {
+        **summary, 'coverage': sorted(coverage),
+        'observed_at': {source: sample['observed_at'] for source, sample in samples.items()},
+        'basis': 'latest_successful_deduplicated_sample'}
 
-    # buzz.json 병합
-    buzz = {}
-    if os.path.exists(BUZZ):
-        try:
-            buzz = json.load(open(BUZZ, encoding='utf-8'))
-        except Exception:
-            buzz = {}
-    buzz['updated'] = datetime.now().strftime('%Y-%m-%d %H:%M')
-    buzz['keywords'] = KEYWORDS
-    buzz['naver'] = {
-        'datalab': dl,
-        'totals': totals,
-        'related': related,
-        'related_weeks': related_weeks,
-        'sentiment': senti,
-        'channel_daily': chan,
-        'hourly': hh,
-        'news_daily': {k: [{'date': d, 'c': news_d.get(k, {})[d]} for d in sorted(news_d.get(k, {}))] for k in KEYWORDS},
-        'history': hist,
-    }
-    buzz['source'] = 'Google Trends + 네이버 검색 API · 데이터랩 + 다음(카카오) 카페 검색 (블로그·뉴스·카페[네이버+다음] + 검색트렌드)'
-    json.dump(buzz, open(BUZZ, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
-    print('buzz.json 병합 완료. 데이터랩 %d일, 히스토리 %d일' % (len(dl['dates']), len(hist)))
+
+def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, max_requests=1000, force=False):
+    if max_requests < 0:
+        raise ValueError('max_requests must be non-negative')
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    if max_requests == 0:
+        return config.load(str(output_dir / 'buzz.json'), {}), 0
+    archive = HistoryArchive(output_dir)
+    archive.preserve_legacy()
+    buzz = config.load(str(output_dir / 'buzz.json'), {})
+    naver = buzz.setdefault('naver', {})
+    collection = buzz.setdefault('collection', {})
+    histories = {name: config.load(str(output_dir / filename), default) for name, filename, default in (
+        ('totals', 'buzz_naver_history.json', []), ('weeks', 'buzz_related_weeks.json', {}),
+        ('news', 'buzz_news_daily.json', {}), ('channels', 'buzz_channel_daily.json', {}),
+        ('daum', 'buzz_daum_daily.json', {}), ('hourly', 'buzz_hourly.json', {}))}
+    http = RequestBudget(client, collection, max_requests, now)
+    analyzer = Analyzer(kiwi, lexicon or {}, specs)
+    day = datetime.fromtimestamp(now, KST).date()
+    today, stamp = day.isoformat(), observed_at(now)
+    naver_key, kakao_key = credentials.get('naver') or {}, credentials.get('kakao') or {}
+    headers = ({'X-Naver-Client-Id': naver_key['id'], 'X-Naver-Client-Secret': naver_key['secret'],
+                'User-Agent': 'Mozilla/5.0'} if naver_key.get('id') and naver_key.get('secret') else None)
+    kakao_headers = ({'Authorization': 'KakaoAK ' + kakao_key['rest_api_key']}
+                     if kakao_key.get('rest_api_key') else None)
+    successes = set()
+    for spec in specs:
+        keyword = spec['keyword']
+        for source in ('blog', 'news', 'cafe', 'daumcafe'):
+            key = f'mentions:{keyword}:{source}'
+            if not due(collection, key, config.SIX_HOURS, now, force):
+                continue
+            source_headers = kakao_headers if source == 'daumcafe' else headers
+            if not source_headers:
+                set_status(collection, key, False, now, 'missing_credentials')
+                continue
+            before = http.used
+            try:
+                documents, totals, missing_urls = search_sample(http, spec, source, source_headers)
+                try:
+                    documents = analyzer.analyze(documents)
+                except Exception:
+                    raise CollectionError('analysis_unavailable') from None
+            except CollectionError as exc:
+                set_status(collection, key, False, now, exc.code, attempted=http.used != before)
+                continue
+            identifiers = archive.observe(keyword, documents, now)
+            sample = {'channel': 'cafe' if source == 'daumcafe' else source,
+                      'document_ids': identifiers, 'documents': len(identifiers),
+                      'observed_at': stamp, 'canonical_query': keyword,
+                      'canonical_total': totals[keyword],
+                      'alias_totals': {term: value for term, value in totals.items() if term != keyword},
+                      'basis': 'url_deduplicated_search_sample', 'skipped_missing_url': missing_urls,
+                      'word_counts': archive.sample(identifiers)['channels']}
+            archive.snapshot('mentions', keyword, source, sample, now)
+            naver.setdefault('samples', {}).setdefault(keyword, {})[source] = sample
+            naver.setdefault('totals', {}).setdefault(keyword, {})[source] = totals[keyword]
+            naver.setdefault('totals_metadata', {}).setdefault(keyword, {})[source] = {
+                'query': keyword, 'aliases': sample['alias_totals'], 'observed_at': stamp,
+                'basis': 'canonical_provider_total_not_unique_alias_union'}
+            update_daily(source, keyword, documents, histories['channels'], histories['daum'], today)
+            set_status(collection, key, True, now)
+            successes.add(keyword)
+        if keyword in successes:
+            refresh_words(naver, archive, keyword)
+        collect_rss(http, spec, histories['news'], archive, now, force)
+    collect_datalab(http, specs, headers, naver, archive, now, force)
+    for spec in specs:
+        keyword = spec['keyword']
+        totals = naver.setdefault('totals', {}).setdefault(keyword, {})
+        for source in ('blog', 'news', 'cafe', 'daumcafe'):
+            totals.setdefault(source, None)
+        naver.setdefault('related', {}).setdefault(keyword, None)
+        naver.setdefault('sentiment', {}).setdefault(keyword, {'community': None, 'blog': None, 'cafe': None})
+        channel_rows = channels_for(keyword, naver, histories['channels'], histories['daum'],
+                                    histories['news'], day, kakao_configured=bool(kakao_headers))
+        naver.setdefault('channel_daily', {})[keyword] = channel_rows
+        old_news = {row['date']: row for row in naver.get('news_daily', {}).get(keyword, [])}
+        for row in channel_rows:
+            date = row['date']
+            if histories['news'].get(keyword, {}).get(date) is not None:
+                old_news[date] = {'date': date, 'c': histories['news'][keyword][date]}
+            else:
+                old_news.setdefault(date, {'date': date, 'c': None})
+        naver.setdefault('news_daily', {})[keyword] = [old_news[date] for date in sorted(old_news)]
+        # Never invent timestamps for legacy words. Only new document observations
+        # populate period buckets; all old latest values remain in legacy archive.
+        words = {row['date']: row for row in naver.get('word_daily', {}).get(keyword, [])}
+        words.update({row['date']: row for row in archive.word_daily(keyword)})
+        naver.setdefault('word_daily', {})[keyword] = [words[date] for date in sorted(words)]
+        if keyword not in successes:
+            continue
+        wkey, label = week_label(day)
+        if isinstance(naver['related'][keyword], list):
+            histories['weeks'].setdefault(keyword, []).append({
+                'key': wkey, 'label': label, 'items': naver['related'][keyword], 'observed_at': stamp})
+        latest = next(row for row in channel_rows if row['date'] == today)
+        histories['hourly'].setdefault(keyword, []).append({
+            't': datetime.fromtimestamp(now, KST).strftime('%Y-%m-%d %H:%M'),
+            **{name: latest.get(name) for name in ('news', 'blog', 'cafe')},
+            'interval_hours': 6, 'observed_at': stamp,
+            'state': {source: collection.get(f'mentions:{keyword}:{source}', {}).get('status', 'missing')
+                      for source in ('blog', 'news', 'cafe', 'daumcafe')}})
+    if successes:
+        histories['totals'].append({'date': today, 'observed_at': stamp,
+                                    'totals': {keyword: dict(naver['totals'][keyword]) for keyword in successes}})
+    # Existing independently stored histories are retained in full; no slicing.
+    for section, name in (('history', 'totals'), ('related_weeks', 'weeks'), ('hourly', 'hourly')):
+        old = naver.get(section)
+        current = histories[name]
+        if isinstance(current, list):
+            for value in old or []:
+                if value not in current:
+                    current.append(value)
+        elif isinstance(old, dict):
+            for keyword, values in old.items():
+                target = current.setdefault(keyword, [])
+                for value in values:
+                    if value not in target:
+                        target.append(value)
+        naver[section] = current
+    naver['hourly_interval_hours'] = 6
+    naver.setdefault('datalab', {'dates': [], 'series': {}})
+    naver['word_history_metadata'] = {
+        'basis': 'unique_url_first_seen_kst', 'retention': 'permanent',
+        'legacy_word_timestamps': 'unknown; preserved byte-for-byte, not assigned to periods',
+        'related_channels': ['news', 'blog', 'cafe'], 'sentiment_channels': ['blog', 'cafe']}
+    buzz['keywords'], buzz['subjects'], buzz['config'] = config.KEYWORDS, config.SUBJECTS, config.metadata()
+    buzz['updated'] = datetime.fromtimestamp(now, KST).strftime('%Y-%m-%d %H:%M')
+    archive.save()
+    for name, filename in (('totals', 'buzz_naver_history.json'), ('weeks', 'buzz_related_weeks.json'),
+                           ('news', 'buzz_news_daily.json'), ('channels', 'buzz_channel_daily.json'),
+                           ('daum', 'buzz_daum_daily.json'), ('hourly', 'buzz_hourly.json')):
+        config.save(str(output_dir / filename), histories[name])
+    config.save(str(output_dir / 'buzz.json'), buzz)
+    return buzz, http.used
+
+
+def main(argv=None, *, client=None, clock=None, kiwi=None, credentials=None, lexicon=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output-dir', type=Path, default=ROOT)
+    parser.add_argument('--keywords', nargs='+', help='Canonical keywords; spaces are quoted, commas also accepted')
+    parser.add_argument('--max-requests', type=int, default=1000)
+    args = parser.parse_args(argv)
+    if args.max_requests < 0:
+        parser.error('--max-requests must be non-negative')
+    selected = {term for value in args.keywords or [] for term in value.split(',')}
+    if selected - set(config.KEYWORDS):
+        parser.error('Unknown canonical keyword')
+    specs = [spec for spec in config.SPECS if not selected or spec['keyword'] in selected]
+    if credentials is None:
+        credentials = {}
+        for provider, filename in (('naver', 'naver_key.json'), ('kakao', 'kakao_key.json')):
+            try:
+                value = config.load(str(ROOT / filename), {})
+                credentials[provider] = value if isinstance(value, dict) else {}
+            except (OSError, ValueError):
+                credentials[provider] = {}
+    if lexicon is None:
+        lexicon = config.load(str(ROOT / 'knu_senti.json'), {})
+    now = clock() if clock else datetime.now(timezone.utc).timestamp()
+    result, used = run(args.output_dir, specs, credentials, client if client is not None else requests,
+                       now, kiwi=kiwi, lexicon=lexicon, max_requests=args.max_requests)
+    print(f'Collection complete; HTTP requests: {used}/{args.max_requests}')
+    return result
 
 
 if __name__ == '__main__':

@@ -1,0 +1,10 @@
+{
+  "name": "ptnews-pipeline-tests",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/test-buzz-view.cjs && node scripts/test-buzz-chart.cjs && node scripts/test-allied-board.cjs && node scripts/test-buzz-board-runtime.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

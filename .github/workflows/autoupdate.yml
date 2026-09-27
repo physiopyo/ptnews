@@ -37,6 +37,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: pipeline/package-lock.json
 
       - name: Install python deps
         run: |
@@ -47,7 +49,19 @@ jobs:
             pip install -r pipeline/requirements.txt
           fi
 
+      - name: Verify board offline
+        run: |
+          npm ci --prefix pipeline --ignore-scripts
+          npm test --prefix pipeline
+
+      - name: Verify collectors offline
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.skip_fetch) }}
+        run: |
+          python -B -m unittest discover -s pipeline/_news -p 'test_*.py'
+          python -B -m unittest discover -s pipeline/scripts -p 'test_*.py'
+
       - name: Run autoupdate
+        id: update
         env:
           NAVER_ID: ${{ secrets.NAVER_ID }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
@@ -55,27 +69,15 @@ jobs:
           SKIP_FETCH: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}
         run: python pipeline/autoupdate_ci.py
 
-      - name: Commit & push
-        run: |
-          rm -f pipeline/_news/*key*.json
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "변경 없음 — 커밋 생략"
-          else
-            git commit -m "auto(ci): 보드 자동 갱신 $(date +'%Y-%m-%d %H:%M KST')"
-            # 동시 실행이 겹치면 생성 파일에서 충돌이 난다.
-            # 방금 만든 쪽이 최신이므로 충돌은 우리 결과로 덮는다.
-            git fetch origin master
-            if ! git rebase -X theirs origin/master; then
-              git rebase --abort || true
-              echo "리베이스 실패 — 원격 위에 현재 결과를 다시 얹는다"
-              git reset --soft origin/master
-              git commit -m "auto(ci): 보드 자동 갱신 $(date +'%Y-%m-%d %H:%M KST') (재적용)"
-            fi
-            git push origin HEAD:master
-          fi
+      - name: Remove temporary credentials
+        if: always()
+        run: rm -f pipeline/_news/naver_key.json pipeline/_news/kakao_key.json
+
+      - name: Persist collection and build results
+        if: ${{ always() && steps.update.outcome != 'skipped' && steps.update.outcome != '' }}
+        env:
+          BUILD_OK: ${{ steps.update.outcome == 'success' && '1' || '0' }}
+        run: bash pipeline/scripts/persist-ci-results.sh
 
       - name: Check Cloudflare token
         id: cfck
