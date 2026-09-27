@@ -49,6 +49,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertIn('rm -f pipeline/_news/naver_key.json pipeline/_news/kakao_key.json', workflow)
         self.assertNotIn('rebase -X', workflow)
         self.assertNotIn('reset --soft', workflow)
+        self.assertRegex(workflow, r'actions/checkout@v4\n\s+with:\n\s+ref: master\n', 'queued runs must build from the current master tip')
 
     def test_git_tracks_catalog_and_excludes_actual_credentials(self):
         with tempfile.TemporaryDirectory() as tmp:
