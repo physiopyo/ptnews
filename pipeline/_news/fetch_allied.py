@@ -13,7 +13,10 @@ from xml.etree import ElementTree as ET
 
 import requests
 from buzz_config import CONFIG_HASH, SPECS
-from fetch_press import BAD_PAGE_TITLE, H, decode_gnews, fetch_meta, parse_pub, resolve_chip
+import hashlib
+import time
+
+from fetch_press import BAD_PAGE_TITLE, H, IMGDIR, decode_gnews, dl_img, fetch_meta, parse_pub, resolve_chip
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGULAR_DAYS = 4
@@ -21,7 +24,10 @@ MAX_DAYS = 31
 # One-shot backfill only: the official news API serves start<=1000 (10 pages of 100).
 BACKFILL_PAGES = 10
 REGULAR_LIMITS = (160, 400)
-BACKFILL_LIMITS = (2500, 3000)
+BACKFILL_LIMITS = (8000, 4000)
+# Google News RSS returns at most ~100 items per query, so backfills search week by week.
+WINDOW_DAYS = 7
+IMAGE_REPAIRS = (40, 800)  # regular run / backfill: older rows missing a thumbnail
 TOPICS = {
     'psych': ('심리 상담', '심리 상담사', '상담 심리사', '임상 심리사',
               '정신 건강 임상 심리사', '정신 건강 간호사', '정신 건강 사회 복지사',
@@ -188,10 +194,11 @@ class RequestBudget:
         return self.request('post', url, **kwargs)
 
 
-def gnews_rss(session, query, days=REGULAR_DAYS):
+def gnews_rss(session, query, days=REGULAR_DAYS, window=None):
     # fetch_press.gnews_rss uses a separate global session and hides transport errors.
+    scope = ' after:%s before:%s' % window if window else ' when:%dd' % days
     response = session.get('https://news.google.com/rss/search',
-                           params={'q': query + ' when:%dd' % days, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'},
+                           params={'q': query + scope, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'},
                            timeout=20)
     root = ET.fromstring(response.content)
     if root.tag != 'rss':
@@ -236,6 +243,52 @@ def limits(days, max_requests=None, max_candidates=None):
     default_requests, default_candidates = BACKFILL_LIMITS if days > REGULAR_DAYS else REGULAR_LIMITS
     return (default_requests if max_requests is None else max_requests,
             default_candidates if max_candidates is None else max_candidates)
+
+
+def image_name(url):
+    return 'al_' + hashlib.md5(url_key(url).encode('utf-8')).hexdigest()[:10] + '.jpg'
+
+
+def attach_image(session, row, image_url):
+    """Download og:image into the board image folder; failures leave the row without a thumbnail."""
+    row['img_checked'] = True
+    if not image_url:
+        return False
+    os.makedirs(IMGDIR, exist_ok=True)
+    name = image_name(row['url'])
+    if dl_img(session, image_url, os.path.join(IMGDIR, name), row['url']):
+        row['img'] = 'img/' + name
+        return True
+    return False
+
+
+def repair_images(session, rows, limit, pause=0.3):
+    """Fill thumbnails for stored articles that never had one (each article is tried once)."""
+    done = tried = 0
+    for row in rows:
+        if tried >= limit:
+            break
+        if row.get('img') or row.get('img_checked') or not row.get('url'):
+            continue
+        tried += 1
+        meta = fetch_meta(session, row['url'])
+        if not meta:
+            continue  # page unreachable now: retry in a later run instead of giving up
+        done += attach_image(session, row, meta.get('img'))
+        time.sleep(pause)
+    return {'tried': tried, 'filled': done}
+
+
+def windows(now, days):
+    """Week-sized [after, before) date windows covering the last `days` days."""
+    end = (now + timedelta(days=1)).date()
+    start = (now - timedelta(days=days)).date()
+    result = []
+    while end > start:
+        begin = max(start, end - timedelta(days=WINDOW_DAYS))
+        result.append((begin.isoformat(), end.isoformat()))
+        end = begin
+    return result
 
 
 def article_evidence(row):
@@ -348,7 +401,7 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
         result[key] = {'title': title, 'desc': desc, 'url': url, 'topics': topics,
                        'chip': resolve_chip(urlsplit(url).netloc, meta.get('site') or row.get('media'), desc, title),
                        'date': meta.get('date') or date or '', 'dt': meta.get('dt') or dt or '',
-                       'img': '', 'source': 'news-search', 'retrieval_status': 'retrieved',
+                       'img': '', 'img_meta': meta.get('img') or '', 'source': 'news-search', 'retrieval_status': 'retrieved',
                        'topic_evidence': article_evidence(evidence), **aliases}
 
     for query in queries:
@@ -358,7 +411,9 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
         if 'google' not in http.blocked:
             http.source = 'google'
             try:
-                rows = gnews_rss(http, query, days)
+                rows = []
+                for window in (windows(now, days) if backfill else [None]):
+                    rows.extend(gnews_rss(http, query, days, window))
                 report['sources'].setdefault('google', {'requests': 0})['status'] = 'ok' if rows else 'empty'
                 report['queries'].append({'source': 'google', 'query': query, 'status': 'ok' if rows else 'empty', 'count': len(rows)})
                 for row in rows:
@@ -468,9 +523,20 @@ def main(argv=None):
         fresh = collect(session, credentials, known=list(merged.values()), keywords=args.keywords, topic=args.topic,
                         max_requests=args.max_requests, max_candidates=args.max_candidates, pages=args.pages,
                         report=report, days=args.days)
+    with requests.Session() as images:
+        images.headers.update(H)
+        for row in fresh:
+            if not row.get('img') and row.get('img_meta'):
+                attach_image(images, row, row.get('img_meta'))
+            row.pop('img_meta', None)
     for row in fresh:
         key = url_key(row['url'])
         merged[key] = merge_article(merged[key], row) if key in merged else row
+    with requests.Session() as images:
+        images.headers.update(H)
+        rows = sorted(merged.values(), key=lambda row: row.get('dt') or '', reverse=True)
+        report['images'] = (repair_images(images, rows, IMAGE_REPAIRS[args.days > REGULAR_DAYS])
+                            if args.max_requests else {'tried': 0, 'filled': 0})
     # Save the complete rejected originals before replacing any published feed.
     if rejected:
         save_json(rejected_path, rejected)
@@ -481,7 +547,7 @@ def main(argv=None):
         report[topic] = len(rows)
     report['rejected_archive'] = len(rejected)
     save_json(os.path.join(args.output_dir, 'allied_status.json'), report)
-    print(json.dumps({key: report[key] for key in ('days', 'requests', 'stop_reason', 'psych', 'pharm', 'rejected_archive')},
+    print(json.dumps({key: report[key] for key in ('days', 'requests', 'stop_reason', 'psych', 'pharm', 'images', 'rejected_archive')},
                      ensure_ascii=False))
     return report
 

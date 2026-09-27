@@ -286,6 +286,32 @@ class AlliedTests(unittest.TestCase):
         self.assertEqual(session.get.call_args.kwargs['params']['q'], '약사 when:4d')
         allied.gnews_rss(session, '약사', 30)
         self.assertEqual(session.get.call_args.kwargs['params']['q'], '약사 when:30d')
+        allied.gnews_rss(session, '약사', 30, ('2026-09-01', '2026-09-08'))
+        self.assertEqual(session.get.call_args.kwargs['params']['q'], '약사 after:2026-09-01 before:2026-09-08')
+
+    @patch.object(allied, 'dl_img', return_value=True)
+    @patch.object(allied, 'fetch_meta')
+    def test_thumbnails_for_new_and_stored_articles_are_tried_once(self, meta, download):
+        meta.side_effect = lambda session, url: ({'img': url + '/og.jpg'} if 'has' in url
+                                                 else None if 'down' in url else {'img': ''})
+        rows = [{'url': 'https://a.kr/has1'}, {'url': 'https://a.kr/none'},
+                {'url': 'https://a.kr/has2', 'img': 'img/keep.jpg'}, {'url': 'https://a.kr/has3'}]
+        result = allied.repair_images(Mock(), rows, limit=2, pause=0)
+        self.assertEqual(result, {'tried': 2, 'filled': 1})
+        self.assertTrue(rows[0]['img'].startswith('img/al_'))
+        self.assertNotIn('img', rows[1])
+        self.assertTrue(rows[1]['img_checked'], 'no og:image is remembered, not retried every hour')
+        self.assertEqual(rows[2]['img'], 'img/keep.jpg')
+        self.assertNotIn('img_checked', rows[3], 'limit leaves the rest for later runs')
+        down = [{'url': 'https://a.kr/down'}]
+        allied.repair_images(Mock(), down, limit=5, pause=0)
+        self.assertNotIn('img_checked', down[0], 'unreachable page is retried later')
+        again = allied.repair_images(Mock(), rows, limit=5, pause=0)
+        self.assertEqual(again, {'tried': 1, 'filled': 1})
+        download.return_value = False
+        failed = {'url': 'https://a.kr/has4'}
+        self.assertFalse(allied.attach_image(Mock(), failed, 'https://a.kr/x.jpg'))
+        self.assertEqual(failed.get('img', ''), '')
 
     @patch.object(allied, 'gnews_rss', return_value=[])
     @patch.object(allied, 'fetch_meta', return_value={'title': '약사 정책'})
@@ -320,8 +346,13 @@ class AlliedTests(unittest.TestCase):
         self.assertEqual([call.kwargs['start'] for call in naver.call_args_list], [1, 101, 201, 301])
         self.assertEqual(len(rows), 350)
         self.assertNotIn('https://a.kr/news?id=360', {row['url'] for row in rows})
-        self.assertEqual(rss.call_args.args[2], 30)
-        self.assertEqual((report['max_requests'], report['max_candidates']), (2500, 3000))
+        windows = [call.args[3] for call in rss.call_args_list]
+        self.assertEqual(len(windows), 5, 'a 30-day backfill searches Google News week by week')
+        self.assertEqual(windows[0], ('2026-09-21', '2026-09-28'))
+        self.assertEqual(windows[-1], ('2026-08-28', '2026-08-31'))
+        for (_, before), (after, _) in zip(windows[1:], windows):
+            self.assertEqual(before, after, 'windows are contiguous')
+        self.assertEqual((report['max_requests'], report['max_candidates']), (8000, 4000))
         self.assertTrue(report['backfill'])
         self.assertEqual(report['cutoff'], (now - timedelta(days=30)).isoformat())
 
