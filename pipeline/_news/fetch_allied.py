@@ -14,7 +14,9 @@ from xml.etree import ElementTree as ET
 import requests
 from buzz_config import CONFIG_HASH, SPECS
 import hashlib
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from fetch_press import BAD_PAGE_TITLE, H, IMGDIR, decode_gnews, dl_img, fetch_meta, parse_pub, resolve_chip
 
@@ -27,7 +29,9 @@ REGULAR_LIMITS = (160, 400)
 BACKFILL_LIMITS = (8000, 4000)
 # Google News RSS returns at most ~100 items per query, so backfills search week by week.
 WINDOW_DAYS = 7
-IMAGE_REPAIRS = (40, 800)  # regular run / backfill: older rows missing a thumbnail
+IMAGE_REPAIRS = (40, 800)
+# Parallel workers: Google decode stays gentle (one host); article pages are spread across outlets.
+DECODE_WORKERS, PAGE_WORKERS = 2, 6  # regular run / backfill: older rows missing a thumbnail
 TOPICS = {
     'psych': ('심리 상담', '심리 상담사', '상담 심리사', '임상 심리사',
               '정신 건강 임상 심리사', '정신 건강 간호사', '정신 건강 사회 복지사',
@@ -177,19 +181,24 @@ class RequestBudget:
         self.source = 'google'
         self.blocked = set()
         self.count = 0
+        self.lock = threading.Lock()
         report.update(requests=0, max_requests=maximum, sources={}, queries=[], candidates=[], stop_reason=None)
 
-    def request(self, method, url, **kwargs):
-        source = self.source
+    def request(self, method, url, source=None, **kwargs):
+        source = source or self.source
         status = self.report['sources'].setdefault(source, {'requests': 0, 'status': 'pending'})
         for _ in range(6):
             if self.count >= self.maximum or source in self.blocked:
                 if self.count >= self.maximum:
                     self.report['stop_reason'] = 'request_budget'
                 raise requests.RequestException('request budget or source backoff')
-            self.count += 1
-            self.report['requests'] = self.count
-            status['requests'] += 1
+            with self.lock:
+                if self.count >= self.maximum:
+                    self.report['stop_reason'] = 'request_budget'
+                    raise requests.RequestException('request budget')
+                self.count += 1
+                self.report['requests'] = self.count
+                status['requests'] += 1
             try:
                 response = getattr(self.session, method)(url, allow_redirects=False, **kwargs)
                 code = response.status_code
@@ -221,6 +230,17 @@ class RequestBudget:
                 raise
         status['status'] = 'redirect_limit'
         raise requests.RequestException('redirect limit')
+
+    def for_source(self, source):
+        budget = self
+
+        class Scoped:
+            def get(self, url, **kwargs):
+                return budget.request('get', url, source=source, **kwargs)
+
+            def post(self, url, **kwargs):
+                return budget.request('post', url, source=source, **kwargs)
+        return Scoped()
 
     def get(self, url, **kwargs):
         return self.request('get', url, **kwargs)
@@ -299,21 +319,23 @@ def attach_image(session, row, image_url):
 
 def repair_images(session, rows, limit, pause=0.3):
     """Fill thumbnails for stored articles that never had one (each article is tried once)."""
-    done = tried = 0
-    for row in rows:
-        if tried >= limit:
-            break
-        if row.get('img') or row.get('img_checked') or not row.get('url'):
-            continue
-        tried += 1
-        if tried % 50 == 0:
-            print('[allied 썸네일] 시도 %d/%d, 성공 %d' % (tried, limit, done), flush=True)
+    todo = [row for row in rows if not (row.get('img') or row.get('img_checked')) and row.get('url')][:limit]
+
+    def one(row):
         meta = fetch_meta(session, row['url'])
         if not meta:
-            continue  # page unreachable now: retry in a later run instead of giving up
-        done += attach_image(session, row, meta.get('img'))
+            return None  # page unreachable now: retry in a later run instead of giving up
+        filled = attach_image(session, row, meta.get('img'))
         time.sleep(pause)
-    return {'tried': tried, 'filled': done}
+        return filled
+
+    done = 0
+    with ThreadPoolExecutor(PAGE_WORKERS) as pool:
+        for index, filled in enumerate(pool.map(one, todo), 1):
+            done += bool(filled)
+            if index % 50 == 0:
+                print('[allied 썸네일] 시도 %d/%d, 성공 %d' % (index, len(todo), done), flush=True)
+    return {'tried': len(todo), 'filled': done}
 
 
 def windows(now, days):
@@ -378,7 +400,40 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
     cache = {url_key(row['url']): dict(row) for row in known if row.get('url')}
     decode_cache = {url_key(alias): row['url'] for row in known for alias in row.get('search_urls', [])}
     attempted, candidates, result = set(), set(), {}
-    candidate_records = {}
+    candidate_records, meta_cache = {}, {}
+
+    def search_title(row):
+        title = row.get('title') or row.get('rawtitle') or ''
+        suffix = ' - ' + row.get('media', '')
+        return title[:-len(suffix)] if row.get('media') and title.endswith(suffix) else title
+
+    def relevant(row):
+        return bool(classify(search_title(row), row.get('desc'), row.get('url') or ''))
+
+    def prefetch(rows):
+        """Resolve Google links and article pages in parallel before the ordered ingest."""
+        slots = max(0, max_candidates - len(candidates))
+        chosen = [row for row in rows if relevant(row)][:slots]
+        aliases = list(dict.fromkeys(row['glink'] for row in chosen if row.get('glink')
+                                     and url_key(row['glink']) not in decode_cache))
+        if aliases and 'google' not in http.blocked:
+            google = http.for_source('google')
+            with ThreadPoolExecutor(DECODE_WORKERS) as pool:
+                for alias, url in zip(aliases, pool.map(lambda a: decode_gnews(google, a), aliases)):
+                    decode_cache[url_key(alias)] = url
+        urls = []
+        for row in chosen:
+            url = decode_cache.get(url_key(row['glink'])) if row.get('glink') else row.get('url')
+            if url and url.startswith(('https://', 'http://')):
+                key = url_key(url)
+                if key not in cache and key not in attempted and key not in meta_cache:
+                    urls.append(url)
+        urls = list(dict.fromkeys(urls))
+        if urls and 'metadata' not in http.blocked:
+            pages = http.for_source('metadata')
+            with ThreadPoolExecutor(PAGE_WORKERS) as pool:
+                for url, meta in zip(urls, pool.map(lambda u: fetch_meta(pages, u), urls)):
+                    meta_cache[url_key(url)] = meta or {}
 
     def ingest(row):
         alias = row.get('glink')
@@ -386,6 +441,12 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
         if not raw_url.startswith(('https://', 'http://')):
             return
         raw_key = url_key(raw_url)
+        if not relevant(row):
+            # Titles are classified before any page request: unrelated results cost nothing.
+            candidate_records.setdefault(raw_key, {'title': clean(search_title(row)), 'desc': clean(row.get('desc')),
+                                                   'url': raw_url, 'topics': [], 'status': 'rejected',
+                                                   'reason': 'title_rules'})
+            return
         if raw_key not in candidates:
             if len(candidates) >= max_candidates:
                 report['stop_reason'] = 'candidate_budget'
@@ -422,8 +483,11 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
             return
         attempted.add(key)
         http.source = 'metadata'
-        meta = ((fetch_meta(http, url) or {})
-                if http.count < max_requests and 'metadata' not in http.blocked else {})
+        if key in meta_cache:
+            meta = meta_cache[key]
+        else:
+            meta = ((fetch_meta(http, url) or {})
+                    if http.count < max_requests and 'metadata' not in http.blocked else {})
         meta_title = clean(meta.get('title') or meta.get('ptitle'))
         if not meta_title or any(marker.lower() in meta_title.lower() for marker in BAD_PAGE_TITLE):
             candidate_records[raw_key] = {**evidence, 'status': 'candidate', 'reason': 'metadata_unavailable'}
@@ -457,6 +521,7 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
                     rows.extend(gnews_rss(http, query, days, window))
                 report['sources'].setdefault('google', {'requests': 0})['status'] = 'ok' if rows else 'empty'
                 report['queries'].append({'source': 'google', 'query': query, 'status': 'ok' if rows else 'empty', 'count': len(rows)})
+                prefetch(rows)
                 for row in rows:
                     ingest(row)
                     if len(candidates) >= max_candidates:
@@ -489,6 +554,7 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
                     older = any(stamp is not None and stamp < cutoff for stamp in stamps)
                     # Out-of-window items are dropped; undated items are kept (not guessed).
                     rows = [row for row, stamp in zip(rows, stamps) if stamp is None or stamp >= cutoff]
+                prefetch(rows)
                 for row in rows:
                     ingest(row)
                     if len(candidates) >= max_candidates:

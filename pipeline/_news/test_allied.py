@@ -373,6 +373,42 @@ class AlliedTests(unittest.TestCase):
         self.assertEqual(naver.call_count, 10)
         self.assertEqual(max(call.kwargs['start'] for call in naver.call_args_list), 901)
 
+    @patch.object(allied, 'decode_gnews', side_effect=lambda session, alias: 'https://a.kr/' + alias[-3:])
+    @patch.object(allied, 'fetch_meta', side_effect=lambda session, url: {'title': '약 배송 확대 반대 ' + url})
+    @patch.object(allied, 'gnews_rss')
+    def test_unrelated_titles_cost_no_requests_and_pages_are_prefetched(self, rss, meta, decode):
+        rss.return_value = ([rss_row('r%03d' % i, '약 배송 확대 반대 %d' % i) for i in range(20)]
+                            + [rss_row('x%03d' % i, '추석 문 연 약국 %d' % i) for i in range(30)])
+        report = {}
+        rows = allied.collect(Mock(), None, keywords=['약 배송'], report=report)
+        self.assertEqual(len(rows), 20)
+        self.assertEqual(decode.call_count, 20, 'unrelated search titles are never decoded')
+        self.assertEqual(meta.call_count, 20, 'each relevant page is fetched once')
+        self.assertEqual(sum(1 for c in report['candidates'] if c['reason'] == 'title_rules'), 30)
+
+    def test_parallel_requests_never_exceed_budget(self):
+        import threading
+        session = Mock()
+        session.get.return_value = response('ok')
+        report = {}
+        budget = allied.RequestBudget(session, 50, report)
+        scoped = budget.for_source('metadata')
+
+        def hit():
+            for _ in range(20):
+                try:
+                    scoped.get('https://a.kr/')
+                except requests.RequestException:
+                    pass
+        threads = [threading.Thread(target=hit) for _ in range(8)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        self.assertEqual(budget.count, 50)
+        self.assertEqual(session.get.call_count, 50)
+        self.assertEqual(report['sources']['metadata']['requests'], 50)
+
     def test_cli_days_validation_and_status_report(self):
         for value in ('0', '32'):
             with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
