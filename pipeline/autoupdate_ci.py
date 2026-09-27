@@ -121,6 +121,9 @@ def main():
     if since:
         if re.fullmatch(r'\d{4}-\d{2}-\d{2}', since):
             allied_args = ['--since', since]
+            topic = (os.environ.get('ALLIED_TOPIC') or '').strip()
+            if topic in ('psych', 'pharm'):
+                allied_args += ['--topic', topic]
             log('ALLIED_SINCE=%s → 심리상담·약사 뉴스 장기 소급' % since)
         else:
             log('ALLIED_SINCE=%r 무시(형식 YYYY-MM-DD)' % since[:20])
