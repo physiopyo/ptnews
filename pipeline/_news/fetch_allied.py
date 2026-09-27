@@ -109,25 +109,60 @@ def url_key(url):
     return urlunsplit((p.scheme.lower(), host, path, encoded_query, ''))
 
 
+# Issue focus: psych = 심리상담 공통업무화·정신건강전문요원/심리 자격 제도, pharm = 비대면 약 배송 등
+#약사 직역 현안. A core term alone qualifies; a broad term needs an issue qualifier in the same text.
+PSYCH_CORE = ('공통업무', '임상심리', '정신건강전문요원', '정신건강임상심리사', '임상심리사', '상담심리사', '심리상담사법',
+              '심리사법', '정신건강복지법시행령', '전문요원업무범위', '한국임상심리학회', '한국상담심리학회',
+              '한국심리학회', '한국상담학회', '정신건강간호사', '정신건강사회복지사', '정신건강작업치료사')
+PSYCH_BROAD = ('심리상담', '마음투자', '심리상담바우처', '마음건강')
+PSYCH_QUALIFIER = ('자격', '법제화', '입법', '법안', '업무범위', '전문성', '수련', '직역', '국가자격',
+                   '민간자격', '시행령', '전문인력', '인력기준', '공통업무')
+PHARM_CORE = ('약배송', '약배달', '의약품배송', '비대면조제', '성분명처방', '대체조제', '공적전자처방',
+              '전자처방전', '약사총궐기', '약사궐기', '약사결의대회', '약배송확대', '재택수령', '의약품수령')
+PHARM_BROAD = ('비대면진료', '약사회', '약사', '약국', '약사법')
+PHARM_QUALIFIER = ('비대면', '플랫폼', '성분명', '대체조제', '처방전', '궐기', '집회', '결의대회', '재택수령', '비대위')
+
+
+NOT_PHARMACIST = ('제약사', '제약회사', '신약', '한약사')
+
+
+def squeeze(text):
+    return re.sub(r'[\s·ㆍ・\-]+', '', text)
+
+
+def issue_topics(title, body):
+    """Core term in the title qualifies. Otherwise the title must name the field (broad term or
+    core term in the summary) and the article must carry an issue qualifier."""
+    title, body = squeeze(title), squeeze(body)
+    for word in NOT_PHARMACIST:
+        title, body = title.replace(word, ' '), body.replace(word, ' ')
+    text = title + ' ' + body
+    topics = []
+    hints = {'psych': ('간호사', '사회복지사', '작업치료사'), 'pharm': ('약사', '약국', '의약품')}
+    for topic, core, broad, qualifier in (('psych', PSYCH_CORE, PSYCH_BROAD, PSYCH_QUALIFIER),
+                                          ('pharm', PHARM_CORE, PHARM_BROAD, PHARM_QUALIFIER)):
+        titled = any(w in title for w in broad + qualifier + hints[topic])
+        if (any(w in title for w in core)
+                or (any(w in body for w in core) and titled)
+                or (any(w in title for w in broad) and any(w in title for w in qualifier))):
+            topics.append(topic)
+    if ('pharm' not in topics and ('배송' in title or '배달' in title)
+            and any(w in title for w in ('약사', '약국', '의약품', '처방약'))
+            and not any(w in title for w in ('광고', '차량'))):
+        topics.append('pharm')
+    return topics
+
+
 def classify(title, description='', url=''):
-    """Only article title/description; Korean words may take particles, not arbitrary prefixes."""
+    """Only article title/description; the text must be about the psych or pharm issue itself."""
     text = clean(title) + ' ' + clean(description)
-    compact = re.sub(r'\s+', '', text)
+    compact = squeeze(text)
     host = (urlsplit(url).hostname or '').lower()
     if not clean(title) or any(host == h or host.endswith('.' + h) for h in BLOCK_HOSTS):
         return []
     if any(re.sub(r'\s+', '', w) in compact for w in PROMO) and not any(w in compact for w in DEBATE):
         return []
-    if not any(w in compact for w in POLICY):
-        return []
-    topics = [topic for topic, patterns in TOPIC_PATTERNS.items() if any(p.search(text) for p in patterns)]
-    if ('psych' not in topics and any(p.search(text) for p in GENERAL_JOBS)
-            and any(p.search(text) for p in MENTAL_CONTEXT)):
-        topics.insert(0, 'psych')
-    if ('psych' not in topics and any(p.search(text) for p in ORGANIZATIONS)
-            and any(word in compact for word in ORGANIZATION_POLICY)):
-        topics.insert(0, 'psych')
-    return topics
+    return issue_topics(clean(title), clean(description))
 
 
 def credentials_valid(credentials):

@@ -23,12 +23,12 @@ def response(body='', status=200, headers=None):
     return result
 
 
-def rss_row(aid='one', title='약사 정책', **extra):
+def rss_row(aid='one', title='약 배송 확대 반대', **extra):
     return {'rawtitle': title, 'glink': 'https://news.google.com/rss/articles/' + aid,
             'pub': PUB, 'media': '', **extra}
 
 
-def article(index=1, title='약사 정책', host='a.kr', **extra):
+def article(index=1, title='약 배송 확대 반대', host='a.kr', **extra):
     return {'title': title, 'desc': '법안 논의', 'url': 'https://%s/news?id=%s' % (host, index),
             'topics': ['pharm'], 'chip': '매체', 'date': '2020-01-01',
             'dt': '2020-01-01T00:00:00+09:00', 'img': '', 'source': 'news-search', **extra}
@@ -50,33 +50,34 @@ class AlliedTests(unittest.TestCase):
         for term in ('심리상담사', '상담심리사', '임상심리사', '정신건강 전문요원'):
             self.assertEqual(allied.classify(term + '에게 업무범위 정책 적용'), ['psych'])
 
-    def test_general_jobs_need_mental_or_counseling_context(self):
-        for job in ('간호사', '사회복지사', '작업치료사'):
-            self.assertEqual(allied.classify(job + ' 병원 고용 정책'), [])
-            self.assertEqual(allied.classify(job + ' 정신건강 정책'), ['psych'])
-            self.assertEqual(allied.classify(job + ' 상담 정책 참여'), ['psych'])
-        for title in ('계약사항 정책 변경', '예약사항 안전 안내', '주식 정책 발표',
-                      '식약처 식품 안전 정책', '보건복지부 시설 안전 점검', '국립정신건강센터 화재 안전 점검'):
-            self.assertEqual(allied.classify(title), [], title)
-
-    def test_programs_organizations_and_pharmacy_policies(self):
-        for title in ('전국민 마음투자 지원사업 정책 개편', '전 국민 마음 투자 지원 사업 개선',
-                      '정신건강 심리상담 바우처사업 시행', '정신건강복지법 시행령 개정',
-                      '한국심리학회 자격 법제화', '국립정신건강센터 전문요원 수련 정책'):
+    def test_psych_issue_needs_common_duty_or_qualification_context(self):
+        for title in ('심리상담 공통업무화 반대 집회', '정신건강전문요원 업무 확대 논란',
+                      '국가 심리상담, 사회복지사·간호사도 한다… 임상심리계 우려',
+                      '복지부 심리상담 시행령 입법예고', '한국임상심리학회 성명', '상담심리사 국가자격 법제화'):
             self.assertEqual(allied.classify(title), ['psych'], title)
-        for title in ('약 배송 플랫폼 규제', '성분명처방 정책 논의', '대체 조제 제도 개편',
-                      '의약품 수급 대책', '공적전자처방전 정책 논의', '약사법 개정 법안'):
+        self.assertEqual(allied.classify('간호사·사회복지사도', '심리상담 공통업무 확대에 임상심리학계 반발'), ['psych'])
+        for title in ('헬로스마일 심리상담센터 집단 심리상담 프로그램 진행', '건보공단 심리상담 바우처 우수사례 공모',
+                      '전남광주 정신건강 지원 안내서 배포', '발달장애인 돌봄 인력 강화',
+                      '간호사 병원 고용 정책', '국립정신건강센터 화재 안전 점검'):
+            self.assertEqual(allied.classify(title), [], title)
+        self.assertEqual(allied.classify('청주시 장애인 조례 입법예고', '심리상담 전문인력 지원'), [],
+                         'a broad term only in the summary does not qualify')
+
+    def test_pharm_issue_is_delivery_and_pharmacist_policy(self):
+        for title in ('약 배송 플랫폼 규제', '"의약품은 배송상품 아니다" 전국 약사', '성분명처방 정책 논의',
+                      '대체 조제 제도 개편', '공적전자처방전 정책 논의', '약사회, 비대면진료 확대 반대 집회',
+                      '원산협, 약사회에 의약품 재택수령 제도 참여 요청'):
             self.assertEqual(allied.classify(title), ['pharm'], title)
-        self.assertEqual(allied.classify('약사와 상담심리사 직역 정책'), ['psych', 'pharm'])
-        self.assertEqual(allied.classify('국회 정책 논의', '약사 처우 개선'), ['pharm'])
+        for title in ('추석 문 연 약국 어디?', '순천시약사회 의과대학 설립 촉구', '제약사 AI 신약개발 플랫폼',
+                      '사무장병원·면대약국 수사 장기화', '지오영 배송차량 광고, 감기약 성수기', '의약품 수급 대책'):
+            self.assertEqual(allied.classify(title), [], title)
+        self.assertEqual(allied.classify('약사와 임상심리사 모두 반대 집회 약 배송'), ['psych', 'pharm'])
 
     def test_promotion_filter_preserves_policy_debate(self):
-        for title in ('심리상담사 자격증 취득 무료수강', '약국 특가 구매 이벤트'):
-            self.assertEqual(allied.classify(title), [])
-        for title in ('심리상담사 민간자격 자격증 취득 광고 논란', '심리상담사 무료수강 지원 정책 논의'):
-            self.assertEqual(allied.classify(title), ['psych'])
+        self.assertEqual(allied.classify('심리상담사 자격증 취득 무료수강'), [])
+        self.assertEqual(allied.classify('상담심리사 민간자격 자격증 취득 광고 논란'), ['psych'])
         self.assertEqual(allied.classify('약 배송 할인 쿠폰 규제 정책'), ['pharm'])
-        self.assertEqual(allied.classify('약사 정책', url='https://blog.naver.com/x'), [])
+        self.assertEqual(allied.classify('약 배송 반대', url='https://blog.naver.com/x'), [])
 
     def test_url_identity_matches_ui_scheme_and_stable_parameter_order(self):
         self.assertNotEqual(allied.url_key('https://a.kr/a?idxno=1'), allied.url_key('https://b.kr/a?idxno=1'))
@@ -164,7 +165,7 @@ class AlliedTests(unittest.TestCase):
 
     def test_request_budget_includes_decode_and_stops(self):
         session = Mock()
-        session.get.return_value = response('<rss><channel><item><title>약사 정책</title>'
+        session.get.return_value = response('<rss><channel><item><title>약 배송 반대</title>'
             '<link>https://news.google.com/rss/articles/one</link></item></channel></rss>')
         report = {}
         rows = allied.collect(session, keywords=['약사', '약국'], max_requests=1, report=report)
@@ -179,10 +180,10 @@ class AlliedTests(unittest.TestCase):
     def test_fixture_end_to_end_rss_decode_metadata_and_budget(self):
         session, report = Mock(), {}
         session.get.side_effect = [
-            response('<rss><channel><item><title>약사 정책</title>'
+            response('<rss><channel><item><title>약 배송 반대</title>'
                      '<link>https://news.google.com/rss/articles/one</link></item></channel></rss>'),
             response('<div data-n-a-sg="fixture" data-n-a-ts="1"></div>'),
-            response('<html><meta property="og:title" content="약사와 상담심리사 정책">'
+            response('<html><meta property="og:title" content="약 배송 반대 약사와 상담심리사 자격 논란">'
                      '<meta property="og:description" content="법안 논의">'
                      '<meta property="article:published_time" content="2026-09-27T09:00:00+09:00"></html>'),
         ]
@@ -246,7 +247,7 @@ class AlliedTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
             old = [article(i) for i in range(301)]
-            joint = article(999, title='약사와 정신건강간호사 정책')
+            joint = article(999, title='약 배송 반대 약사와 정신건강간호사 공통업무 논란')
             invalid = article(1000, title='계약사항 정책 변경', desc='', user_note='must survive')
             (path / 'pharm.json').write_text(json.dumps(old + [joint, invalid]), encoding='utf-8')
             output = io.StringIO()
