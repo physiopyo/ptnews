@@ -139,7 +139,7 @@ PHARM_QUALIFIER = ('비대면', '플랫폼', '성분명', '대체조제', '처�
 
 
 # Education/training notices mention qualifications without being about the policy dispute.
-PSYCH_NOT_ISSUE = ('자격과정', '과정운영', '수강생', '채용', '업무협약', '자격연수', '연수', '자격증', '학과', '학점', '입학', '모집', '특강', 'Wee', '위센터', '위클래스')
+PSYCH_NOT_ISSUE = ('자격시험', '합격', '평생교육원', '자격과정', '과정운영', '수강생', '채용', '업무협약', '자격연수', '연수', '자격증', '학과', '학점', '입학', '모집', '특강', 'Wee', '위센터', '위클래스')
 NOT_PHARMACIST = ('제약사', '제약회사', '신약', '한약사')
 
 
