@@ -68,7 +68,7 @@ PROMO = ('할인', '쿠폰', '수강생 모집', '수강료', '무료수강', '�
 DEBATE = ('정책', '법안', '법제화', '입법', '국회', '논란', '규제', '불법', '민간자격',
           '국가자격', '직역', '제도', '수가', '급여', '분쟁', '업무범위', '수급', '오남용',
           '위반', '금지', '반대', '우려', '대책')
-BLOCK_HOSTS = ('blog.naver.com', 'cafe.naver.com', 'youtube.com', 'instagram.com')
+BLOCK_HOSTS = ('blog.naver.com', 'cafe.naver.com', 'youtube.com', 'youtu.be', 'instagram.com')
 PARTICLES = ('에서는', '에게는', '으로는', '으로서', '로서', '으로', '로는', '와는', '과는',
              '에서도', '에게도', '에서', '에게', '까지', '부터', '처럼', '보다', '마다', '라도',
              '이란', '라는', '이자', '은', '는', '이', '가', '을', '를', '의', '도', '에',
@@ -116,10 +116,10 @@ def url_key(url):
 # Issue focus: psych = 심리상담 공통업무화·정신건강전문요원/심리 자격 제도, pharm = 비대면 약 배송 등
 #약사 직역 현안. A core term alone qualifies; a broad term needs an issue qualifier in the same text.
 PSYCH_CORE = ('공통업무', '임상심리', '심리상담바우처', '심리바우처', '상담바우처', '마음투자', '정신건강전문요원', '정신건강임상심리사', '임상심리사', '상담심리사', '심리상담사법',
-              '심리사법', '정신건강복지법시행령', '전문요원업무범위', '한국임상심리학회', '한국상담심리학회',
-              '한국심리학회', '한국상담학회', '정신건강간호사', '정신건강사회복지사', '정신건강작업치료사')
-PSYCH_BROAD = ('심리상담', '마음투자', '심리상담바우처')
-PSYCH_QUALIFIER = ('자격', '법제화', '입법', '법안', '업무범위', '전문성', '수련', '직역', '국가자격',
+              '심리사법', '정신건강복지법시행령', '전문요원업무범위', '정신건강간호사', '정신건강사회복지사', '정신건강작업치료사')
+# Associations count only with a policy qualifier (e.g. '학회 반발 … 공통업무'), not for MOUs or appointments.
+PSYCH_BROAD = ('심리상담', '마음투자', '심리상담바우처', '임상심리학회', '상담심리학회', '심리학회', '상담학회')
+PSYCH_QUALIFIER = ('반발', '성명', '반대', '자격', '법제화', '입법', '법안', '업무범위', '전문성', '수련', '직역', '국가자격',
                    '민간자격', '시행령', '공통업무', '누구의역할', '고유업무')
 # Summary-only evidence must name the policy dispute itself, not merely mention a profession.
 PSYCH_STRONG = ('공통업무', '업무범위', '고유업무', '시행령', '심리상담사법', '국가자격', '심리상담바우처',

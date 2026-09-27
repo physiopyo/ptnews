@@ -429,6 +429,10 @@ class AlliedTests(unittest.TestCase):
                             ('충북교육청, 정신건강전문인력 직무 스트레스 완화', '정신건강전문요원 대상')):
             self.assertEqual(allied.classify(title, desc), [], title)
         self.assertEqual(allied.classify('심리상담은 누구의 역할인가', '심리상담을 정신건강전문요원 공통업무로'), ['psych'])
+        for title in ('정부, 한국상담학회 천명수호처로 위촉', '독거노인종합지원센터-한국상담학회 업무협약 체결'):
+            self.assertEqual(allied.classify(title), [], title)
+        self.assertEqual(allied.classify('임상심리학회, 복지부 시행령에 반발'), ['psych'])
+        self.assertEqual(allied.classify('심리상담', url='https://youtu.be/x'), [])
 
     def test_cli_days_validation_and_status_report(self):
         for value in ('0', '32'):
