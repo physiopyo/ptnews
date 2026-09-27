@@ -55,8 +55,11 @@ class AlliedTests(unittest.TestCase):
                       '국가 심리상담, 사회복지사·간호사도 한다… 임상심리계 우려',
                       '복지부 심리상담 시행령 입법예고', '한국임상심리학회 성명', '상담심리사 국가자격 법제화'):
             self.assertEqual(allied.classify(title), ['psych'], title)
+        for title in ('건보공단 심리상담 바우처 우수사례 공모', '충주, 심리상담 바우처 294명 이용',
+                      '전국민 마음투자 지원사업 확대'):
+            self.assertEqual(allied.classify(title), ['psych'], title)
         self.assertEqual(allied.classify('간호사·사회복지사도', '심리상담 공통업무 확대에 임상심리학계 반발'), ['psych'])
-        for title in ('헬로스마일 심리상담센터 집단 심리상담 프로그램 진행', '건보공단 심리상담 바우처 우수사례 공모',
+        for title in ('헬로스마일 심리상담센터 집단 심리상담 프로그램 진행',
                       '전남광주 정신건강 지원 안내서 배포', '발달장애인 돌봄 인력 강화',
                       '간호사 병원 고용 정책', '국립정신건강센터 화재 안전 점검'):
             self.assertEqual(allied.classify(title), [], title)
