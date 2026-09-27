@@ -713,12 +713,77 @@ runPage(
     );
   },
 );
-console.log(
-  "buzz board runtime: " +
-    pagesPassed +
-    " generated pages, " +
-    checkboxActivations +
-    " native checkbox activations, " +
-    detailChanges +
-    " detail changes passed; subject subsets, empty/all recovery, dropdown focus/dismissal, shared date row, source-specific indices, gaps, words, legacy, notices and recovered merge",
-);
+async function lazyWords() {
+  const built = buildBoard({
+    "buzz.json": { keywords: ["도수치료"], naver: { channel_daily: {} } },
+    __words: {
+      "2026-09-26.json": {
+        도수치료: {
+          first_seen: {
+            documents: { blog: 4, cafe: 1 },
+            related: { 지원: 4 },
+            sentiment: { blog: { 개선: [4, 1] }, cafe: { 우려: [1, -1] } },
+            coverage: ["blog", "cafe", "news"],
+            observed_at: null,
+          },
+        },
+      },
+    },
+  });
+  const url = built.data.buzz.word_files.도수치료;
+  const file = built.extra["웹/board/" + url.split("?")[0]];
+  for (const outcome of ["ok", "fail"]) {
+    const dom = new JSDOM(built.output, {
+      url: "https://example.test/board/#opin",
+      runScripts: "outside-only",
+    });
+    const { window } = dom;
+    const requested = [];
+    window.fetch = (target) => {
+      requested.push(target);
+      return Promise.resolve(
+        outcome === "ok"
+          ? { ok: true, json: () => Promise.resolve(JSON.parse(file)) }
+          : { ok: false, status: 404 },
+      );
+    };
+    for (const script of window.document.querySelectorAll("script:not([src])"))
+      window.eval(script.textContent);
+    const center = () => window.document.getElementById("center");
+    const input = center().querySelector("[data-buzz-end]");
+    input.value = "2026-09-27";
+    input.dispatchEvent(new window.Event("change", { bubbles: true }));
+    center().querySelector('[data-act="buzzview"][data-view="senti"]').click();
+    assert.match(center().textContent, /단어 자료를 불러오는 중/);
+    for (let i = 0; i < 5; i++) await new Promise((r) => setTimeout(r, 0));
+    assert.deepEqual(requested, [url], "each keyword file is fetched once");
+    if (outcome === "ok") {
+      assert.doesNotMatch(center().textContent, /불러오는 중/);
+      assert.match(center().textContent, /긍정어 1/);
+      assert.match(center().textContent, /날짜별 상위 150개 연관어/);
+      center()
+        .querySelector('[data-act="buzzwordper"][data-period="1개월"]')
+        .click();
+      assert.deepEqual(requested, [url], "cached after the first load");
+    } else {
+      assert.match(center().textContent, /단어 자료를 불러오지 못했어요/);
+    }
+    window.close();
+  }
+}
+lazyWords()
+  .then(() => {
+    console.log(
+      "buzz board runtime: " +
+        pagesPassed +
+        " generated pages, " +
+        checkboxActivations +
+        " native checkbox activations, " +
+        detailChanges +
+        " detail changes passed; subject subsets, empty/all recovery, dropdown focus/dismissal, shared date row, source-specific indices, gaps, words, legacy, notices and recovered merge",
+    );
+  })
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

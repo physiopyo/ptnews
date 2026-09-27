@@ -5,6 +5,7 @@ import hashlib
 import io
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -104,6 +105,26 @@ class OfflineCase(unittest.TestCase):
     def write(self, filename, value):
         config.save(str(self.root / filename), value)
 
+    def word_daily(self, keyword='검색어'):
+        return HistoryArchive(self.root).word_daily(keyword)
+
+    def word_daily_backfill(self, keyword='검색어'):
+        return HistoryArchive(self.root).word_daily_backfill(keyword)
+
+    def assert_compact_archive(self, *texts):
+        archive = self.root / 'buzz_archive'
+        for path in archive.rglob('*.json'):
+            if 'legacy' in path.relative_to(archive).parts:
+                continue
+            raw = path.read_text(encoding='utf-8')
+            self.assertNotIn('"tokens"', raw, path)
+            self.assertNotIn('\n ', raw, path)  # compact, not indented
+            for text in texts:
+                self.assertNotIn(text, raw, path)
+        for path in (archive / 'index').glob('*.json'):
+            for ids in json.loads(path.read_text(encoding='utf-8')).values():
+                self.assertTrue(all(re.fullmatch('[0-9a-f]{16}', value) for value in ids), path)
+
 
 class CollectorTests(OfflineCase):
     def test_actual_alias_payload_dedup_totals_words_and_reload_cadence(self):
@@ -124,7 +145,9 @@ class CollectorTests(OfflineCase):
         self.assertEqual(related['기쁨'], 3)
         senti = {row['w']: row['c'] for row in naver['sentiment']['검색어']['community']}
         self.assertEqual(senti['불안'], 1)  # news is not community sentiment
-        word_day = naver['word_daily']['검색어'][0]
+        self.assertNotIn('word_daily', naver)
+        first_rows = self.word_daily()
+        word_day = first_rows[0]
         self.assertEqual(word_day['date'], '2026-02-01')
         self.assertEqual(word_day['basis'], 'first_seen')
         self.assertEqual(word_day['observed_at']['utc'], '2026-01-31T15:00:00+00:00')
@@ -137,11 +160,11 @@ class CollectorTests(OfflineCase):
         self.assertEqual(count, 0)
         self.assertEqual(client2.calls, [])
         self.assertEqual(second['naver']['totals'], first['naver']['totals'])
-        self.assertEqual(second['naver']['word_daily'], first['naver']['word_daily'])
+        self.assertEqual(self.word_daily(), first_rows)
         third, count = self.execute(now=NOW + config.SIX_HOURS)
         self.assertEqual(count, 10)
-        self.assertEqual(third['naver']['word_daily']['검색어'][0]['documents'], word_day['documents'])
-        self.assertEqual(third['naver']['word_daily']['검색어'][0]['related'], word_day['related'])
+        self.assertEqual(self.word_daily()[0]['documents'], word_day['documents'])
+        self.assertEqual(self.word_daily()[0]['related'], word_day['related'])
         self.assertEqual(len(third['naver']['hourly']['검색어']), 2)
         self.assertEqual(third['naver']['hourly']['검색어'][-1]['interval_hours'], 6)
         self.assertEqual(len(third['naver']['history']), 2)
@@ -171,12 +194,12 @@ class CollectorTests(OfflineCase):
         self.assertTrue(any('after:2026-01-27' in query for query in queries))
         # The 23:59:59 mention observation is still fresh at midnight. RSS-only
         # work must not fabricate next-day word coverage or a false zero bucket.
-        self.assertEqual([row['date'] for row in result['naver']['word_daily']['검색어']], ['2026-02-01'])
+        self.assertEqual([row['date'] for row in self.word_daily()], ['2026-02-01'])
         result, _ = self.execute(now=NOW + config.DAY + config.SIX_HOURS - 1)
-        self.assertEqual(len(result['naver']['word_daily']['검색어']), 2)
-        self.assertEqual(result['naver']['word_daily']['검색어'][1]['date'], '2026-02-02')
-        self.assertEqual(result['naver']['word_daily']['검색어'][1]['documents'], {'news': 0, 'blog': 0, 'cafe': 0})
-        self.assertEqual(result['naver']['word_daily']['검색어'][1]['coverage'], ['blog', 'cafe', 'news'])
+        self.assertEqual(len(self.word_daily()), 2)
+        self.assertEqual(self.word_daily()[1]['date'], '2026-02-02')
+        self.assertEqual(self.word_daily()[1]['documents'], {'news': 0, 'blog': 0, 'cafe': 0})
+        self.assertEqual(self.word_daily()[1]['coverage'], ['blog', 'cafe', 'news'])
 
     def test_rss_six_hour_refresh_and_daily_backfill_persist_across_processes(self):
         first, used = self.execute(credentials={})
@@ -336,10 +359,12 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
 
     def test_error_preserves_successful_data_and_does_not_leak_exceptions(self):
         first, _ = self.execute()
+        rows = self.word_daily()
         failed = FakeClient(lambda method, url, kwargs: Response(status=503))
         result, _ = self.execute(failed, now=NOW + config.DAY)
-        for section in ('totals', 'related', 'sentiment', 'datalab', 'samples', 'word_daily', 'history', 'hourly'):
+        for section in ('totals', 'related', 'sentiment', 'datalab', 'samples', 'history', 'hourly'):
             self.assertEqual(result['naver'][section], first['naver'][section], section)
+        self.assertEqual(self.word_daily(), rows)
         for key, value in first['collection'].items():
             if 'success_at' in value:
                 self.assertEqual(result['collection'][key]['success_at'], value['success_at'])
@@ -398,7 +423,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         self.assertEqual(result['collection']['mentions:검색어:blog']['status'], 'missing')
         self.assertIsNone(result['naver']['totals']['검색어']['blog'])
         self.assertIsNone(result['naver']['related']['검색어'])
-        self.assertEqual(result['naver']['word_daily']['검색어'], [])
+        self.assertEqual(self.word_daily(), [])
         rows = {row['date']: row for row in result['naver']['channel_daily']['검색어']}
         self.assertEqual(rows['2026-02-01']['news'], 0)
         self.assertIsNone(rows['2026-02-01']['blog'])
@@ -407,7 +432,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         result, _ = self.execute(FakeClient(empty=True), now=NOW + config.DAY)
         self.assertEqual(result['naver']['totals']['검색어']['blog'], 0)
         self.assertEqual(result['naver']['related']['검색어'], [])
-        self.assertEqual(result['naver']['word_daily']['검색어'][0]['documents'], {'news': 0, 'blog': 0, 'cafe': 0})
+        self.assertEqual(self.word_daily()[0]['documents'], {'news': 0, 'blog': 0, 'cafe': 0})
 
     def test_pagination_limits_and_all_seen_page_not_an_end_signal(self):
         def handler(method, url, kwargs):
@@ -430,7 +455,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
             self.assertLessEqual(max(call[2]['params']['start'] for call in calls), 201)
         self.assertEqual(len([call for call in client.calls if 'kakao.com' in call[1]]), 4)
         self.assertEqual(result['naver']['samples']['검색어']['blog']['documents'], 2)
-        self.assertEqual(sum(result['naver']['word_daily']['검색어'][0]['documents'].values()), 2)
+        self.assertEqual(sum(self.word_daily()[0]['documents'].values()), 2)
 
     def test_config_change_invalidates_cadence_without_losing_old_history(self):
         first, _ = self.execute()
@@ -463,7 +488,8 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         old = {
             'buzz.json': {'google': {'preserve': 42}, 'custom': [1],
                           'collection': {'google:untouched': {'status': 'ok'}},
-                          'naver': {'custom': {'preserve': True}, 'word_daily': {'검색어': [{'date': old_date, 'basis': 'first_seen'}]}}},
+                          'naver': {'custom': {'preserve': True}, 'word_daily': {'검색어': [{'date': old_date, 'related': [{'w': '옛', 'c': 1}]},
+                                                                             {'date': '1999-01-02', 'basis': 'first_seen'}]}}},
             'buzz_naver_history.json': [{'date': old_date, 'totals': {'검색어': {'blog': 999}}}] * 121,
             'buzz_related_weeks.json': {'검색어': [{'key': str(i), 'label': 'legacy', 'items': []} for i in range(9)]},
             'buzz_hourly.json': {'검색어': [{'t': f'1999-01-01 {i:02}:00', 'blog': i} for i in range(17)]},
@@ -488,7 +514,10 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         self.assertTrue(set(seen) <= set(state['sc']))
         self.assertEqual(self.read('buzz_news_daily.json')['검색어'][old_date], 7)
         self.assertEqual(self.read('buzz_daum_daily.json')['검색어'][old_date], 9)
-        self.assertIn(old_date, {row['date'] for row in result['naver']['word_daily']['검색어']})
+        # Legacy rows without an archive basis stay; archive-derived rows are not duplicated.
+        self.assertEqual(result['naver']['word_daily']['검색어'], [{'date': old_date, 'related': [{'w': '옛', 'c': 1}]}])
+        self.assertNotIn('word_daily_backfill', result['naver'])
+        self.assertEqual([row['date'] for row in self.word_daily()], ['2026-02-01'])
         manifest = self.read('buzz_archive/legacy/manifest.json')['files']
         for name, content in raw.items():
             info = manifest[name]
@@ -498,7 +527,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         self.assertEqual(self.read('buzz_archive/legacy/manifest.json')['files'], manifest)
         self.assertEqual((self.root / 'buzz_custom.json').read_bytes(), raw['buzz_custom.json'])
 
-    def test_full_word_maps_document_revisions_and_month_boundaries(self):
+    def test_full_word_maps_seen_url_not_recounted_and_month_boundaries(self):
         vocabulary = ' '.join(f'단어{i}' for i in range(70))
         def initial(method, url, kwargs):
             if '/blog.json' in url:
@@ -508,14 +537,17 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         before_midnight = NOW - 1
         with patch.dict(LEXICON, {f'단어{i}': 1 if i % 2 else -1 for i in range(70)}):
             first, _ = self.execute(FakeClient(initial), now=before_midnight)
+        identifier = digest(['검색어', 'https://revision/doc'])[:16]
         archive = HistoryArchive(self.root)
-        identifier = digest(['검색어', 'https://revision/doc'])
-        old = deepcopy(archive.documents[identifier])
-        self.assertEqual(old['first_seen']['kst'][:10], '2026-01-31')
-        self.assertEqual(old['published_at'], '1999-01-01')
-        self.assertGreater(len(old['related']), 24)
-        self.assertGreater(len(old['sentiment']), 50)
-        self.assertGreater(len(old['tokens']), 50)
+        self.assertIn(identifier, archive.seen)
+        self.assertEqual(archive.index['2026-01-31']['blog'], [identifier])
+        self.assertTrue(archive.has('검색어', 'https://revision/doc#fragment'))
+        first_rows = self.word_daily()
+        old_row = {row['date']: row for row in first_rows}['2026-01-31']
+        self.assertEqual(old_row['documents']['blog'], 1)
+        self.assertGreater(len(old_row['related']), 24)
+        self.assertGreater(len(old_row['sentiment']['blog']), 50)
+        self.assert_compact_archive(vocabulary, '단어10 단어11')
         def revision(method, url, kwargs):
             if '/blog.json' in url:
                 return Response({'total': 1, 'items': [{'link': 'https://revision/doc', 'title': '불안 수정',
@@ -524,24 +556,24 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         month_later = datetime(2026, 3, 1, 15, 0, tzinfo=timezone.utc).timestamp()
         result, _ = self.execute(FakeClient(revision), now=month_later)
         archive = HistoryArchive(self.root)
-        document = archive.documents[identifier]
-        self.assertEqual(document['first_seen'], old['first_seen'])
-        self.assertNotEqual(document['content_hash'], old['content_hash'])
-        self.assertIn('2026-01', archive.months)
-        revisions = [event for rows in archive.events.values() for event in rows
-                     if event['kind'] == 'document_revision' and event['data']['document']['id'] == identifier]
-        self.assertEqual(len(revisions), 1)
-        self.assertEqual(revisions[0]['data']['previous']['related'], old['related'])
-        words = {row['date']: row for row in result['naver']['word_daily']['검색어']}
-        self.assertEqual(words['2026-01-31']['documents']['blog'], 1)
-        self.assertEqual(words['2026-01-31'], first['naver']['word_daily']['검색어'][0])
+        # The already-seen URL keeps its first-seen attribution; changed content is not recounted.
+        self.assertEqual([date for date, day in archive.index.items() if identifier in day.get('blog', [])],
+                         ['2026-01-31'])
+        self.assertFalse(any(event['kind'] in ('document', 'document_revision')
+                             for rows in archive.events.values() for event in rows))
+        words = {row['date']: row for row in self.word_daily()}
+        self.assertEqual(words['2026-01-31'], old_row)
         self.assertEqual(words['2026-03-02']['documents']['blog'], 0)
-        self.assertEqual(document['related'], {'불안': 1, '수정': 1})
         self.assertNotIn('수정', {row['w'] for row in words['2026-01-31']['related']})
+        self.assertNotIn('수정', {row['w'] for row in words['2026-03-02']['related']})
+        # The live sample summary still reflects the current content.
         self.assertIn('수정', {row['w'] for row in result['naver']['related']['검색어']})
         self.assertNotIn('1999-01-01', words)
-        self.assertTrue((self.root / 'buzz_archive/events-2026-01.json').exists())
-        self.assertTrue((self.root / 'buzz_archive/events-2026-03.json').exists())
+        for name in ('words/2026-01-31.json', 'words/2026-03-02.json', 'index/2026-01-31.json',
+                     'events-2026-01.json', 'events-2026-03.json'):
+            self.assertTrue((self.root / 'buzz_archive' / name).exists(), name)
+        self.assertFalse((self.root / 'buzz_archive/index/2026-03-02.json').exists())
+        self.assert_compact_archive(vocabulary, '불안 수정')
 
     def test_analysis_failure_does_not_append_invalid_weekly_snapshot(self):
         self.write('buzz.json', {'naver': {'related': {'검색어': None}}})
@@ -717,18 +749,19 @@ class BackfillTests(OfflineCase):
 
     def test_document_index_prevents_first_seen_double_count_and_words_by_pub_date(self):
         client = PagedClient(self.fixture())
-        first, _ = self.execute(client, backfill_days=5)
-        again, _ = self.execute(PagedClient(self.fixture()), now=NOW + config.SIX_HOURS)
-        for result in (first, again):
+        runs = [lambda: self.execute(client, backfill_days=5),
+                lambda: self.execute(PagedClient(self.fixture()), now=NOW + config.SIX_HOURS)]
+        for run in runs:
+            run()
             # Regular samples see only already-indexed URLs: no first-seen words today.
-            today = {row['date']: row for row in result['naver']['word_daily']['검색어']}['2026-02-01']
+            today = {row['date']: row for row in self.word_daily()}['2026-02-01']
             self.assertEqual(today['basis'], 'first_seen')
             # Only out-of-window documents (old, old2, naver cafe x) are newly first seen;
             # the backfilled a-d are indexed and never re-counted, also not on the next run.
             self.assertEqual(today['documents'], {'news': 2, 'blog': 2, 'cafe': 3})
             state = self.read('buzz_channel_daily.json')['검색어']
             self.assertEqual(state['daily']['2026-01-31']['blog'], 2)
-        words = {row['date']: row for row in again['naver']['word_daily_backfill']['검색어']}
+        words = {row['date']: row for row in self.word_daily_backfill()}
         row = words['2026-01-31']
         self.assertEqual(row['basis'], 'publication_date_backfill')
         self.assertEqual(row['documents'], {'news': 2, 'blog': 2, 'cafe': 2})
@@ -737,16 +770,20 @@ class BackfillTests(OfflineCase):
         self.assertEqual(words['2026-01-28']['documents'], {'news': 0, 'blog': 0, 'cafe': 0})
         self.assertNotIn('2026-01-20', words)
         archive = HistoryArchive(self.root)
-        document = archive.documents[digest(['검색어', 'https://blog/a'])]
-        self.assertEqual(document['discovery'], 'publication_date_backfill')
-        self.assertEqual(document['first_seen']['utc'], '2026-01-31T15:00:00+00:00')
+        identifier = digest(['검색어', 'https://blog/a'])[:16]
+        # Indexed on the discovery date, while its words sit under the publication date.
+        self.assertEqual([date for date, day in archive.index.items() if identifier in day.get('blog', [])],
+                         ['2026-02-01'])
+        self.assertEqual(sum(ids.count(identifier) for day in archive.index.values() for ids in day.values()), 1)
+        self.assertNotIn('publication_date_backfill', archive.words['2026-02-01'].get('검색어', {}))
+        self.assert_compact_archive('불안 소식')
 
     def test_previously_observed_documents_stay_in_first_seen_rows(self):
         self.execute(PagedClient(self.fixture()))
         result, _ = self.execute(PagedClient(self.fixture()), now=NOW + config.SIX_HOURS, backfill_days=5)
-        first_seen = {row['date']: row for row in result['naver']['word_daily']['검색어']}['2026-02-01']
+        first_seen = {row['date']: row for row in self.word_daily()}['2026-02-01']
         self.assertEqual(first_seen['documents']['blog'], 6)  # a,b,c,old,d,old2 from the regular run
-        words = {row['date']: row for row in result['naver']['word_daily_backfill']['검색어']}
+        words = {row['date']: row for row in self.word_daily_backfill()}
         self.assertEqual(words['2026-01-31']['documents']['blog'], 0)
         self.assertEqual(words['2026-01-31']['previously_observed']['blog'], 2)
         self.assertEqual(words['2026-01-31']['status']['blog'], 'partial')

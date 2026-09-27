@@ -10,8 +10,12 @@ const source = fs.readFileSync(
 function buildBoard(fixtures = {}) {
   let output = "";
   const writes = [];
+  const extra = {};
+  const wordsDir = path.join(builderDir, "_news/buzz_archive/words");
   const fakeFs = {
     readFileSync(p, encoding) {
+      if (fixtures.__words && p.startsWith(wordsDir + "/"))
+        return JSON.stringify(fixtures.__words[path.basename(p)]);
       if (
         ["_news/buzz_keywords.json", "buzz_view.js", "buzz_chart.js"].some(
           (file) => p === path.join(builderDir, file),
@@ -24,10 +28,16 @@ function buildBoard(fixtures = {}) {
         return JSON.stringify(fixtures[name]);
       throw new Error("fixture absent: " + p);
     },
+    readdirSync(p) {
+      if (p === wordsDir && fixtures.__words)
+        return Object.keys(fixtures.__words);
+      throw new Error("no directory: " + p);
+    },
     mkdirSync() {},
     writeFileSync(p, value) {
       writes.push(p);
-      output = value;
+      if (p === "웹/board/index.html") output = value;
+      else extra[p] = value;
     },
   };
   const context = {
@@ -51,11 +61,16 @@ function buildBoard(fixtures = {}) {
     if (match[1].trim()) new vm.Script(match[1]);
   }
   assert.deepEqual(
-    writes,
+    writes.filter((p) => !p.startsWith("웹/board/buzzwords/")),
     ["웹/board/index.html"],
     "builder never writes source datasets",
   );
-  return { output, data: context.result, sourceBuzz: context.sourceBuzz };
+  return {
+    output,
+    data: context.result,
+    sourceBuzz: context.sourceBuzz,
+    extra,
+  };
 }
 
 if (require.main === module) {
@@ -126,6 +141,60 @@ if (require.main === module) {
     JSON.stringify(safe.sourceBuzz),
     JSON.stringify(archived),
     "display projection never deletes archival data",
+  );
+  const bigRelated = {};
+  for (let i = 0; i < 400; i++) bigRelated["단어" + i] = 1000 - i;
+  const worded = buildBoard({
+    "buzz.json": { keywords: ["심리상담"] },
+    __words: {
+      "2026-09-20.json": {
+        심리상담: {
+          first_seen: {
+            documents: { blog: 3 },
+            related: bigRelated,
+            sentiment: { blog: { 부담: [2, -1] } },
+            coverage: ["blog", "news"],
+            observed_at: null,
+          },
+        },
+      },
+      "2026-09-21.json": {
+        심리상담: {
+          publication_date_backfill: {
+            documents: { news: 2 },
+            related: { 바우처: 2 },
+            sentiment: {},
+            coverage: ["news"],
+            status: { news: "partial" },
+            observed_at: null,
+          },
+        },
+      },
+    },
+  });
+  const url = worded.data.buzz.word_files["심리상담"];
+  assert.match(url, /^buzzwords\/k\d+\.json\?v=[0-9a-f]+$/);
+  const file = JSON.parse(worded.extra["웹/board/" + url.split("?")[0]]);
+  assert.equal(file.rows.length, 2);
+  const [seen, filled] = file.rows;
+  assert.deepEqual(seen.documents, { news: 0, blog: 3, cafe: null });
+  assert.equal(
+    seen.related.length,
+    150,
+    "display rows keep each day's top words",
+  );
+  assert.deepEqual(seen.related[0], { w: "단어0", c: 1000 });
+  assert.deepEqual(seen.sentiment.community, [{ w: "부담", c: 2, p: -1 }]);
+  assert.equal(
+    seen.sentiment.cafe,
+    null,
+    "uncovered channel is unknown, not zero",
+  );
+  assert.equal(filled.basis, "publication_date_backfill");
+  assert.deepEqual(filled.status, { news: "partial" });
+  assert.ok(
+    !worded.output.includes("단어399"),
+    "word rows are not embedded in the page",
   );
   console.log(
     "allied board: URL identity, source preservation, membership, UI and generated JS passed",

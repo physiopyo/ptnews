@@ -1,19 +1,32 @@
-"""Permanent, non-secret observations. Storage has no retention window.
+"""Permanent, non-secret observations kept compact enough to commit every run.
 
-Documents are unique per canonical keyword and URL, with immutable first_seen.
-Word periods use first_seen (KST), never inferred publication or legacy dates.
+Storage has no retention window. Instead of raw documents (text/tokens), it keeps:
+
+* ``index/YYYY-MM-DD.json``: short ids of every document first seen that day, per
+  channel. Membership alone decides "already seen", so first_seen is immutable.
+* ``words/YYYY-MM-DD.json``: per keyword and basis, the word counts of the documents
+  attributed to that date. ``first_seen`` rows use the KST discovery date;
+  ``publication_date_backfill`` rows use the KST publication date of documents first
+  found by a one-shot backfill. A document is counted in exactly one row.
+* ``events-YYYY-MM.json``: small collection receipts (counts, requests, windows).
+* ``legacy/``: byte-for-byte copies of pre-existing buzz*.json files.
 """
 from collections import Counter
-from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
+import tempfile
 from urllib.parse import urldefrag
 
 import buzz_config as config
 
 KST = timezone(timedelta(hours=9))
+CHANNELS = ('news', 'blog', 'cafe')
+FIRST_SEEN = 'first_seen'
+BACKFILL = 'publication_date_backfill'
+ID_LENGTH = 16
 
 
 def observed_at(now):
@@ -24,6 +37,10 @@ def observed_at(now):
 def digest(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True,
                                      separators=(',', ':')).encode('utf-8')).hexdigest()
+
+
+def document_id(keyword, url):
+    return digest([keyword, urldefrag(url)[0]])[:ID_LENGTH]
 
 
 def kst_date(value):
@@ -51,53 +68,68 @@ def word_rows(counts, polarities=None):
 
 
 def summarize(documents):
-    counts = {'news': 0, 'blog': 0, 'cafe': 0}
-    related = {channel: Counter() for channel in counts}
-    sentiment = {channel: Counter() for channel in counts}
+    """Word summary of analyzed in-memory documents (a single search sample)."""
+    counts = {channel: 0 for channel in CHANNELS}
+    related = Counter()
+    sentiment = {channel: Counter() for channel in CHANNELS}
     polarity = {}
     for document in documents:
         channel = document['channel']
         counts[channel] += 1
-        related[channel].update(document['related'])
+        related.update(document['related'])
         for word, item in document['sentiment'].items():
             sentiment[channel][word] += item['c']
             polarity[word] = item['p']
-    all_related = sum(related.values(), Counter())
-    community = sentiment['blog'] + sentiment['cafe']
     return {
         'documents': counts,
-        'related': word_rows(all_related),
+        'related': word_rows(related),
         'sentiment': {
-            'community': word_rows(community, polarity),
+            'community': word_rows(sentiment['blog'] + sentiment['cafe'], polarity),
             'blog': word_rows(sentiment['blog'], polarity),
             'cafe': word_rows(sentiment['cafe'], polarity),
         },
-        'channels': {
-            channel: {'documents': counts[channel], 'related': dict(related[channel]),
-                      'sentiment': {word: {'c': count, 'p': polarity[word]}
-                                    for word, count in sentiment[channel].items()}}
-            for channel in counts
-        },
     }
+
+
+def save_compact(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(prefix=path.name + '.', suffix='.tmp', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as handle:
+            json.dump(value, handle, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+            handle.write('\n')
+        os.replace(tmp, path)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+
+
+def empty_aggregate():
+    return {'documents': {}, 'related': {}, 'sentiment': {}, 'coverage': [], 'observed_at': None}
 
 
 class HistoryArchive:
     def __init__(self, output_dir):
         self.output_dir = Path(output_dir)
         self.root = self.output_dir / 'buzz_archive'
-        self.documents = {}
-        self.months = {}
+        self.seen = set()
+        self.index = {}
+        self.words = {}
         self.events = {}
-        self.dirty_documents = set()
+        self.dirty_index = set()
+        self.dirty_words = set()
         self.dirty_events = set()
-        for path in sorted(self.root.glob('documents-*.json')):
-            month = path.stem.removeprefix('documents-')
-            records = config.load(str(path), {})
-            self.months[month] = records
-            self.documents.update(records)
+        for path in sorted((self.root / 'index').glob('*.json')):
+            day = config.load(str(path), {})
+            self.index[path.stem] = day
+            for ids in day.values():
+                self.seen.update(ids)
+        for path in sorted((self.root / 'words').glob('*.json')):
+            self.words[path.stem] = config.load(str(path), {})
         for path in sorted(self.root.glob('events-*.json')):
-            month = path.stem.removeprefix('events-')
-            self.events[month] = config.load(str(path), [])
+            self.events[path.stem.removeprefix('events-')] = config.load(str(path), [])
 
     def preserve_legacy(self):
         """Copy each pre-existing buzz*.json byte-for-byte before any mutation."""
@@ -114,8 +146,7 @@ class HistoryArchive:
             target = directory / (content_hash + '.json')
             if not target.exists():
                 target.write_bytes(raw)
-            manifest['files'][path.name] = {'sha256': content_hash,
-                                           'path': target.name}
+            manifest['files'][path.name] = {'sha256': content_hash, 'path': target.name}
             changed = True
         if changed or not manifest_path.exists():
             config.save(str(manifest_path), manifest)
@@ -123,157 +154,124 @@ class HistoryArchive:
     def snapshot(self, kind, keyword, source, data, now):
         stamp = observed_at(now)
         event = {'kind': kind, 'keyword': keyword, 'source': source,
-                 'observed_at': stamp, 'data': deepcopy(data),
-                 'config_hash': config.CONFIG_HASH}
+                 'observed_at': stamp, 'data': data, 'config_hash': config.CONFIG_HASH}
         month = stamp['kst'][:7]
         rows = self.events.setdefault(month, [])
         event['id'] = digest([event, len(rows)])
         rows.append(event)
         self.dirty_events.add(month)
 
-    def observe(self, keyword, documents, now, discovery=None):
-        """discovery='publication_date_backfill' marks documents first found by a backfill.
+    def has(self, keyword, url):
+        return document_id(keyword, url) in self.seen
 
-        They join the permanent index (so later runs never re-count them as newly
-        first-seen) but their words belong to publication-date rows, not first_seen.
+    def _aggregate(self, date, keyword, basis):
+        self.dirty_words.add(date)
+        return self.words.setdefault(date, {}).setdefault(keyword, {}).setdefault(basis, empty_aggregate())
+
+    def cover(self, keyword, date, channel, now, basis=FIRST_SEEN, status=None, previously_observed=0):
+        """Record that a channel was observed for a date even when no new document appeared."""
+        aggregate = self._aggregate(date, keyword, basis)
+        if channel not in aggregate['coverage']:
+            aggregate['coverage'] = sorted(aggregate['coverage'] + [channel])
+        aggregate['documents'].setdefault(channel, 0)
+        stamp = observed_at(now)
+        if aggregate['observed_at'] is None or aggregate['observed_at']['utc'] < stamp['utc']:
+            aggregate['observed_at'] = stamp
+        if status is not None:
+            rank = {'partial': 1, 'complete': 2}
+            status = 'partial' if previously_observed else status
+            old = aggregate.setdefault('status', {}).get(channel)
+            if old is None or rank[status] > rank[old]:
+                aggregate['status'][channel] = status
+                aggregate.setdefault('previously_observed', {})[channel] = previously_observed
+
+    def observe(self, keyword, documents, now, discovery=None):
+        """Index analyzed documents; words of new ones go to exactly one date row.
+
+        Returns ``(identifiers, new_documents)``. Documents already indexed keep their
+        original first-seen attribution and are never counted again.
         """
         stamp = observed_at(now)
-        identifiers = []
-        for value in documents:
-            document = deepcopy(value)
-            url = urldefrag(document['url'])[0]
-            identifier = digest([keyword, url])
+        today = stamp['kst'][:10]
+        identifiers, fresh = [], []
+        for document in documents:
+            identifier = document_id(keyword, document['url'])
             if identifier in identifiers:
                 continue
             identifiers.append(identifier)
-            old = self.documents.get(identifier)
-            document.update({'id': identifier, 'keyword': keyword, 'url': url,
-                             'first_seen': old['first_seen'] if old else stamp,
-                             'last_seen': stamp})
-            if old:
-                document['channel'] = old['channel']
-                document['published_at'] = document.get('published_at') or old.get('published_at')
-                if old.get('discovery'):
-                    document['discovery'] = old['discovery']
-            elif discovery:
-                document['discovery'] = discovery
-            if old is None or any(document.get(key) != old.get(key) for key in
-                                  ('content_hash', 'tokens', 'related', 'sentiment', 'published_at')):
-                self.snapshot('document_revision' if old else 'document', keyword,
-                              document['provider'], {'document': document, 'previous': old}, now)
-            month = document['first_seen']['kst'][:7]
-            self.documents[identifier] = document
-            self.months.setdefault(month, {})[identifier] = document
-            self.dirty_documents.add(month)
-        return identifiers
+            if identifier in self.seen:
+                continue
+            date = today if discovery is None else kst_date(document.get('published_at'))
+            if date is None:
+                continue
+            self.seen.add(identifier)
+            self.index.setdefault(today, {}).setdefault(document['channel'], []).append(identifier)
+            self.dirty_index.add(today)
+            fresh.append(document)
+            aggregate = self._aggregate(date, keyword, discovery or FIRST_SEEN)
+            channel = document['channel']
+            aggregate['documents'][channel] = aggregate['documents'].get(channel, 0) + 1
+            if channel not in aggregate['coverage']:
+                aggregate['coverage'] = sorted(aggregate['coverage'] + [channel])
+            related = aggregate['related']
+            for word, count in document['related'].items():
+                related[word] = related.get(word, 0) + count
+            bucket = aggregate['sentiment'].setdefault(channel, {})
+            for word, item in document['sentiment'].items():
+                old = bucket.get(word, [0, item['p']])
+                bucket[word] = [old[0] + item['c'], item['p']]
+            if aggregate['observed_at'] is None or aggregate['observed_at']['utc'] < stamp['utc']:
+                aggregate['observed_at'] = stamp
+        return identifiers, fresh
 
-    def sample(self, identifiers):
-        return summarize([self.documents[key] for key in dict.fromkeys(identifiers)
-                          if key in self.documents])
+    def _rows(self, keyword, basis):
+        rows = []
+        for date in sorted(self.words):
+            aggregate = self.words[date].get(keyword, {}).get(basis)
+            if not aggregate:
+                continue
+            coverage = set(aggregate['coverage'])
+            documents = {channel: aggregate['documents'].get(channel, 0) if channel in coverage else None
+                         for channel in CHANNELS}
+            polarity, sentiment = {}, {}
+            for channel in CHANNELS:
+                counts = Counter()
+                for word, (count, value) in aggregate['sentiment'].get(channel, {}).items():
+                    counts[word] = count
+                    polarity[word] = value
+                sentiment[channel] = counts
+            row = {
+                'date': date, 'basis': basis, 'documents': documents,
+                'related': word_rows(Counter(aggregate['related'])),
+                'sentiment': {
+                    'community': (word_rows(sentiment['blog'] + sentiment['cafe'], polarity)
+                                  if coverage.intersection({'blog', 'cafe'}) else None),
+                    'blog': word_rows(sentiment['blog'], polarity) if 'blog' in coverage else None,
+                    'cafe': word_rows(sentiment['cafe'], polarity) if 'cafe' in coverage else None,
+                },
+                'coverage': sorted(coverage), 'observed_at': aggregate['observed_at'],
+            }
+            if basis == BACKFILL:
+                row['status'] = aggregate.get('status', {})
+                row['previously_observed'] = aggregate.get('previously_observed', {})
+            rows.append(row)
+        return rows
 
     def word_daily(self, keyword):
-        by_date, coverage, stamps = {}, {}, {}
-        originals = {}
-        for events in self.events.values():
-            for event in events:
-                if event['keyword'] == keyword and event['kind'] == 'document':
-                    document = event['data']['document']
-                    originals.setdefault(document['id'], document)
-        originals = {key: document for key, document in originals.items() if not document.get('discovery')}
-        # Only the immutable initial analysis belongs to a first-seen period.
-        # Revisions are current samples, not newly published words in the past.
-        for document in originals.values():
-            date = document['first_seen']['kst'][:10]
-            by_date.setdefault(date, []).append(document)
-            coverage.setdefault(date, set()).add(document['channel'])
-            current = stamps.get(date)
-            if current is None or current['utc'] < document['first_seen']['utc']:
-                stamps[date] = document['first_seen']
-        for events in self.events.values():
-            for event in events:
-                if event['keyword'] != keyword or event['kind'] != 'mentions':
-                    continue
-                date = event['observed_at']['kst'][:10]
-                channel = event['data']['channel']
-                coverage.setdefault(date, set()).add(channel)
-                by_date.setdefault(date, [])
-                current = stamps.get(date)
-                if current is None or current['utc'] < event['observed_at']['utc']:
-                    stamps[date] = event['observed_at']
-        rows = []
-        for date in sorted(by_date):
-            summary = summarize(by_date[date])
-            for channel in summary['documents']:
-                if channel not in coverage[date]:
-                    summary['documents'][channel] = None
-                    summary['channels'][channel] = None
-                    if channel in summary['sentiment']:
-                        summary['sentiment'][channel] = None
-            if not coverage[date].intersection({'blog', 'cafe'}):
-                summary['sentiment']['community'] = None
-            rows.append({'date': date, 'basis': 'first_seen', **summary,
-                         'coverage': sorted(coverage[date]), 'observed_at': stamps[date]})
-        return rows
+        return self._rows(keyword, FIRST_SEEN)
 
     def word_daily_backfill(self, keyword):
-        """Words of backfill-discovered documents by publication date (KST).
-
-        Coverage/status come from the permanent 'mentions_backfill' events. Documents
-        already observed by regular runs stay in their first_seen rows and are only
-        reported as previously_observed (the row is then partial for that channel).
-        """
-        rank = {'complete': 2, 'partial': 1}
-        coverage, stamps, known = {}, {}, {}
-        for events in self.events.values():
-            for event in events:
-                if event['keyword'] != keyword or event['kind'] != 'mentions_backfill':
-                    continue
-                channel = event['data']['channel']
-                for date, info in event['data']['dates'].items():
-                    state = coverage.setdefault(date, {})
-                    status = info['status']
-                    if info.get('previously_observed'):
-                        status = 'partial'
-                    previous = state.get(channel)
-                    if previous is None or rank[status] > rank[previous]:
-                        state[channel] = status
-                        known.setdefault(date, {})[channel] = info.get('previously_observed', 0)
-                    current = stamps.get(date)
-                    if current is None or current['utc'] < event['observed_at']['utc']:
-                        stamps[date] = event['observed_at']
-        by_date = {}
-        for events in self.events.values():
-            for event in events:
-                if event['keyword'] != keyword or event['kind'] != 'document':
-                    continue
-                document = event['data']['document']
-                if document.get('discovery') != 'publication_date_backfill':
-                    continue
-                date = kst_date(document.get('published_at'))
-                if date in coverage and document['channel'] in coverage[date]:
-                    by_date.setdefault(date, {})[document['id']] = document
-        rows = []
-        for date in sorted(coverage):
-            summary = summarize(list(by_date.get(date, {}).values()))
-            for channel in summary['documents']:
-                if channel not in coverage[date]:
-                    summary['documents'][channel] = None
-                    summary['channels'][channel] = None
-                    if channel in summary['sentiment']:
-                        summary['sentiment'][channel] = None
-            if not set(coverage[date]).intersection({'blog', 'cafe'}):
-                summary['sentiment']['community'] = None
-            rows.append({'date': date, 'basis': 'publication_date_backfill', **summary,
-                         'coverage': sorted(coverage[date]), 'status': coverage[date],
-                         'previously_observed': known.get(date, {}), 'observed_at': stamps[date]})
-        return rows
+        return self._rows(keyword, BACKFILL)
 
     def save(self):
         self.root.mkdir(parents=True, exist_ok=True)
-        # Persist immutable observations before their mutable document index.
+        # Receipts first, then word aggregates, then the membership index.
         for month in sorted(self.dirty_events):
-            config.save(str(self.root / f'events-{month}.json'), self.events[month])
-        for month in sorted(self.dirty_documents):
-            config.save(str(self.root / f'documents-{month}.json'), self.months[month])
-        self.dirty_documents.clear()
+            save_compact(self.root / f'events-{month}.json', self.events[month])
+        for date in sorted(self.dirty_words):
+            save_compact(self.root / 'words' / f'{date}.json', self.words[date])
+        for date in sorted(self.dirty_index):
+            save_compact(self.root / 'index' / f'{date}.json', self.index[date])
         self.dirty_events.clear()
+        self.dirty_words.clear()
+        self.dirty_index.clear()

@@ -19,7 +19,7 @@ from urllib.parse import urldefrag
 
 import requests
 import buzz_config as config
-from buzz_history import HistoryArchive, digest, kst_date, observed_at
+from buzz_history import BACKFILL, FIRST_SEEN, HistoryArchive, digest, kst_date, observed_at, summarize
 
 ROOT = Path(__file__).resolve().parent
 KST = timezone(timedelta(hours=9))
@@ -499,7 +499,7 @@ def run_backfill(clients, spec, headers, kakao_headers, histories, archive, anal
         counts = Counter(kst_date(doc['published_at']) for doc in in_range)
         statuses, stored = {}, []
         previously = Counter(kst_date(doc['published_at']) for doc in analyzed
-                             if digest([keyword, doc['url']]) in archive.documents)
+                             if archive.has(keyword, doc['url']))
         for date in covered:
             partial = floor is not None and date == floor
             info = {'count': counts.get(date, 0), 'status': 'partial' if partial else 'complete'}
@@ -521,7 +521,10 @@ def run_backfill(clients, spec, headers, kakao_headers, histories, archive, anal
                 stored.append(date)
             statuses[date] = info
         if analyzed:
-            archive.observe(keyword, analyzed, now, discovery=BACKFILL_BASIS)
+            archive.observe(keyword, analyzed, now, discovery=BACKFILL)
+        for date, info in statuses.items():
+            archive.cover(keyword, date, 'cafe' if source == 'daumcafe' else source, now, basis=BACKFILL,
+                          status=info['status'], previously_observed=info.get('previously_observed', 0))
             if source == 'blog':
                 seen_list = channel.setdefault('sb', [])
                 seen = set(seen_list)
@@ -537,8 +540,7 @@ def run_backfill(clients, spec, headers, kakao_headers, histories, archive, anal
             archive.snapshot('mentions_backfill', keyword, source, {
                 'channel': 'cafe' if source == 'daumcafe' else source, 'provider': provider,
                 'basis': BACKFILL_BASIS, 'days': days, 'window': result['window'], 'reached': floor,
-                'reason': reason, 'dates': statuses, 'stored_dates': stored,
-                'document_ids': [digest([keyword, doc['url']]) for doc in analyzed]}, now)
+                'reason': reason, 'dates': statuses, 'stored_dates': stored}, now)
         http.collection[key] = report[source] = result
     return report
 
@@ -596,29 +598,51 @@ def channels_for(keyword, naver, channel_history, daum_history, news_history, to
     return [rows[date] for date in sorted(rows)]
 
 
-def refresh_words(naver, archive, keyword):
-    samples = naver.get('samples', {}).get(keyword, {})
-    identifiers = [identifier for sample in samples.values() for identifier in sample['document_ids']]
-    summary = archive.sample(identifiers)
+SAMPLE_WORD_LIMIT = 200
+
+
+def sample_summary(documents):
+    """Capped word summary of one search sample (display of the latest sample only)."""
+    summary = summarize(documents)
+    return {'documents': summary['documents'], 'related': summary['related'][:SAMPLE_WORD_LIMIT],
+            'sentiment': {channel: rows[:SAMPLE_WORD_LIMIT] for channel, rows in summary['sentiment'].items()}}
+
+
+def refresh_words(naver, keyword):
+    samples = {source: sample for source, sample in naver.get('samples', {}).get(keyword, {}).items()
+               if isinstance(sample.get('summary'), dict)}
     coverage = {sample['channel'] for sample in samples.values()}
+    related, sentiments, polarity = Counter(), {'blog': Counter(), 'cafe': Counter()}, {}
+    documents = {'news': 0, 'blog': 0, 'cafe': 0}
+    for sample in samples.values():
+        summary, channel = sample['summary'], sample['channel']
+        documents[channel] += summary['documents'].get(channel, 0)
+        related.update({row['w']: row['c'] for row in summary['related']})
+        if channel in sentiments:
+            for row in summary['sentiment'].get(channel) or []:
+                sentiments[channel][row['w']] += row['c']
+                polarity[row['w']] = row['p']
     for channel in ('blog', 'news', 'cafe'):
         if channel not in coverage:
-            summary['documents'][channel] = None
-            summary['channels'][channel] = None
-    related = naver.setdefault('related', {})
-    if coverage == {'news', 'blog', 'cafe'} or related.get(keyword) is None:
-        related[keyword] = summary['related']
+            documents[channel] = None
+    rows = lambda counts, pol=None: [dict(row, **({'p': pol[row['w']]} if pol is not None else {}))
+                                     for row in [{'w': w, 'c': c} for w, c in
+                                                 sorted(counts.items(), key=lambda item: (-item[1], item[0]))]
+                                     ][:SAMPLE_WORD_LIMIT]
+    stored = naver.setdefault('related', {})
+    if coverage == {'news', 'blog', 'cafe'} or stored.get(keyword) is None:
+        stored[keyword] = rows(related)
     sentiment = naver.setdefault('sentiment', {}).setdefault(keyword, {})
     for channel in ('blog', 'cafe'):
         if channel in coverage:
-            sentiment[channel] = summary['sentiment'][channel]
+            sentiment[channel] = rows(sentiments[channel], polarity)
     if {'blog', 'cafe'} <= coverage or (
             coverage.intersection({'blog', 'cafe'}) and sentiment.get('community') is None):
-        sentiment['community'] = summary['sentiment']['community']
+        sentiment['community'] = rows(sentiments['blog'] + sentiments['cafe'], polarity)
     for channel in ('community', 'blog', 'cafe'):
         sentiment.setdefault(channel, None)
     naver.setdefault('word_counts', {})[keyword] = {
-        **summary, 'coverage': sorted(coverage),
+        'documents': documents, 'coverage': sorted(coverage),
         'observed_at': {source: sample['observed_at'] for source, sample in samples.items()},
         'basis': 'latest_successful_deduplicated_sample'}
 
@@ -693,16 +717,17 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
             except CollectionError as exc:
                 set_status(collection, key, False, now, exc.code, attempted=http.used != before)
                 continue
-            identifiers = archive.observe(keyword, documents, now)
+            identifiers, _fresh = archive.observe(keyword, documents, now)
+            archive.cover(keyword, today, 'cafe' if source == 'daumcafe' else source, now)
             sample = {'channel': 'cafe' if source == 'daumcafe' else source,
-                      'document_ids': identifiers, 'documents': len(identifiers),
+                      'documents': len(identifiers),
                       'observed_at': stamp, 'canonical_query': keyword,
                       'canonical_total': totals[keyword],
                       'alias_totals': {term: value for term, value in totals.items() if term != keyword},
-                      'basis': 'url_deduplicated_search_sample', 'skipped_missing_url': missing_urls,
-                      'word_counts': archive.sample(identifiers)['channels']}
+                      'basis': 'url_deduplicated_search_sample', 'skipped_missing_url': missing_urls}
             archive.snapshot('mentions', keyword, source, sample, now)
-            naver.setdefault('samples', {}).setdefault(keyword, {})[source] = sample
+            naver.setdefault('samples', {}).setdefault(keyword, {})[source] = {
+                **sample, 'summary': sample_summary(documents)}
             naver.setdefault('totals', {}).setdefault(keyword, {})[source] = totals[keyword]
             naver.setdefault('totals_metadata', {}).setdefault(keyword, {})[source] = {
                 'query': keyword, 'aliases': sample['alias_totals'], 'observed_at': stamp,
@@ -711,7 +736,7 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
             set_status(collection, key, True, now)
             successes.add(keyword)
         if keyword in successes:
-            refresh_words(naver, archive, keyword)
+            refresh_words(naver, keyword)
         collect_rss(http, spec, histories['news'], archive, now, force)
     collect_datalab(http, specs, headers, naver, archive, now, force)
     for spec in specs:
@@ -732,14 +757,15 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
             else:
                 old_news.setdefault(date, {'date': date, 'c': None})
         naver.setdefault('news_daily', {})[keyword] = [old_news[date] for date in sorted(old_news)]
-        # Never invent timestamps for legacy words. Only new document observations
-        # populate period buckets; all old latest values remain in legacy archive.
-        words = {row['date']: row for row in naver.get('word_daily', {}).get(keyword, [])}
-        words.update({row['date']: row for row in archive.word_daily(keyword)})
-        naver.setdefault('word_daily', {})[keyword] = [words[date] for date in sorted(words)]
-        backfill_words = archive.word_daily_backfill(keyword)
-        if backfill_words or keyword in naver.get('word_daily_backfill', {}):
-            naver.setdefault('word_daily_backfill', {})[keyword] = backfill_words
+        # Word rows live in buzz_archive/words (read by the board builder); buzz.json keeps
+        # only pre-existing rows the archive cannot reproduce (never timestamp-invented).
+        legacy_rows = [row for row in naver.get('word_daily', {}).get(keyword, [])
+                       if row.get('basis') not in (FIRST_SEEN, BACKFILL)]
+        if legacy_rows:
+            naver.setdefault('word_daily', {})[keyword] = legacy_rows
+        else:
+            naver.get('word_daily', {}).pop(keyword, None)
+        naver.get('word_daily_backfill', {}).pop(keyword, None)
         if keyword not in successes:
             continue
         wkey, label = week_label(day)

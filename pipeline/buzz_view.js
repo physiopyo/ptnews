@@ -242,6 +242,31 @@ var PTBuzz = (function () {
   function mount(root, b, state, refresh) {
     unmount(root);
     var charts = Chart.mountAll(root);
+    var pending = root.querySelector("[data-buzz-words-pending]");
+    if (pending) {
+      var wordKey = pending.getAttribute("data-buzz-words-pending"),
+        wordUrl = (b.word_files || {})[wordKey];
+      state.buzzWords = state.buzzWords || {};
+      if (wordUrl && !state.buzzWords[wordKey] && typeof fetch === "function") {
+        state.buzzWords[wordKey] = { loading: true };
+        fetch(wordUrl)
+          .then(function (response) {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            return response.json();
+          })
+          .then(function (payload) {
+            state.buzzWords[wordKey] = {
+              rows: Array.isArray(payload && payload.rows) ? payload.rows : [],
+            };
+          })
+          .catch(function () {
+            state.buzzWords[wordKey] = { error: true };
+          })
+          .then(function () {
+            if (pending.isConnected) refresh();
+          });
+      }
+    }
     var details = root.querySelector(".pt-buzz-picker");
     if (!details) return;
     var doc = root.ownerDocument,
@@ -793,8 +818,13 @@ var PTBuzz = (function () {
           );
         })
         .join("");
+      var wordFile = (b.word_files || {})[kw],
+        wordState = (state.buzzWords || {})[kw],
+        pending =
+          !!wordFile && !(wordState && (wordState.rows || wordState.error));
       var source = ((nv.word_daily || {})[kw] || []).concat(
           (nv.word_daily_backfill || {})[kw] || [],
+          (wordState && wordState.rows) || [],
         ),
         cur = words(source, wr, channel),
         prev = words(source, pr, channel);
@@ -831,23 +861,29 @@ var PTBuzz = (function () {
         '</span><span style="color:#C99A22">중립어 ' +
         neu +
         '</span></div><div class="pt-bz-cloud">' +
-        (cur.sentiment.length
-          ? '<div id="d3cloud" data-w="' +
-            esc(
-              encodeURIComponent(
-                JSON.stringify(
-                  cur.sentiment.slice(0, 50).map(function (r) {
-                    return [r.w, r.c, r.p];
-                  }),
-                ),
-              ),
-            ) +
-            '" style="position:absolute;inset:0"></div>'
-          : '<div class="pt-bz-empty">' +
-            (cur.documents
-              ? "분석한 글에서 감성 표현이 검출되지 않았어요 (중립·찬반 없음이라는 뜻은 아닙니다)"
-              : "이 기간에 수집된 단어 자료가 없어요") +
-            "</div>") +
+        (pending
+          ? '<div class="pt-bz-empty" data-buzz-words-pending="' +
+            esc(kw) +
+            '">단어 자료를 불러오는 중이에요…</div>'
+          : wordState && wordState.error
+            ? '<div class="pt-bz-empty">단어 자료를 불러오지 못했어요. 새로고침해 주세요.</div>'
+            : cur.sentiment.length
+              ? '<div id="d3cloud" data-w="' +
+                esc(
+                  encodeURIComponent(
+                    JSON.stringify(
+                      cur.sentiment.slice(0, 50).map(function (r) {
+                        return [r.w, r.c, r.p];
+                      }),
+                    ),
+                  ),
+                ) +
+                '" style="position:absolute;inset:0"></div>'
+              : '<div class="pt-bz-empty">' +
+                (cur.documents
+                  ? "분석한 글에서 감성 표현이 검출되지 않았어요 (중립·찬반 없음이라는 뜻은 아닙니다)"
+                  : "이 기간에 수집된 단어 자료가 없어요") +
+                "</div>") +
         "</div></div>";
       var span = function (rows, r) {
         var sums = { news: null, blog: null, cafe: null };
@@ -937,6 +973,11 @@ var PTBuzz = (function () {
       notes.push(
         "긍·부정은 검색 제목·요약에 나온 감성사전 표현입니다. 정책 찬반·직역 지지율이 아닙니다. 같은 글은 키워드 안에서 한 번만 집계하지만 키워드 사이에는 중복될 수 있습니다.",
         "단어 통계는 최초 발견일 기준이라 원문 작성일과 다를 수 있습니다. 수집 전 구간·수집 실패는 0건이나 중립이 아닙니다.",
+        "화면의 단어 통계는 날짜별 상위 " +
+          ((b.word_limits || {}).related || 150) +
+          "개 연관어·" +
+          ((b.word_limits || {}).sentiment || 100) +
+          "개 감성어를 합산한 값입니다. 날짜별 전체 집계는 보관 자료에 그대로 남아 있습니다.",
       );
       if (cur.partialDays || prev.partialDays)
         notes.push(

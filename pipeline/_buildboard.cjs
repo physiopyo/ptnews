@@ -220,6 +220,64 @@ function mergeBuzzRows(current, recovered, key) {
 }
 const currentNaver = buzz.naver || {};
 const recoveredNaver = recoveredBuzz.naver || {};
+// Word statistics are loaded per keyword on demand (buzzwords/k<N>.json) so the page stays small.
+// Display rows keep each day's top related/sentiment words; the archive keeps full daily counts.
+const WORD_LIMITS = { related: 150, sentiment: 100 };
+function topRows(counts, limit, polarity) {
+  return Object.keys(counts).map(function (w) { return polarity ? { w: w, c: counts[w][0], p: counts[w][1] } : { w: w, c: counts[w] }; })
+    .sort(function (a, b) { return b.c - a.c || (a.w < b.w ? -1 : a.w > b.w ? 1 : 0); }).slice(0, limit);
+}
+function wordRow(date, basis, agg) {
+  const coverage = agg.coverage || [];
+  const covered = function (ch) { return coverage.indexOf(ch) >= 0; };
+  const documents = {};
+  ['news', 'blog', 'cafe'].forEach(function (ch) { documents[ch] = covered(ch) ? ((agg.documents || {})[ch] || 0) : null; });
+  const sent = agg.sentiment || {};
+  const community = {};
+  ['blog', 'cafe'].forEach(function (ch) { Object.keys(sent[ch] || {}).forEach(function (w) { const v = sent[ch][w]; community[w] = [(community[w] ? community[w][0] : 0) + v[0], v[1]]; }); });
+  const row = {
+    date: date, basis: basis, documents: documents,
+    related: topRows(agg.related || {}, WORD_LIMITS.related),
+    sentiment: {
+      community: covered('blog') || covered('cafe') ? topRows(community, WORD_LIMITS.sentiment, true) : null,
+      blog: covered('blog') ? topRows(sent.blog || {}, WORD_LIMITS.sentiment, true) : null,
+      cafe: covered('cafe') ? topRows(sent.cafe || {}, WORD_LIMITS.sentiment, true) : null
+    },
+    coverage: coverage.slice(),
+    observed_at: agg.observed_at || null
+  };
+  if (agg.status) row.status = agg.status;
+  if (agg.previously_observed) row.previously_observed = agg.previously_observed;
+  return row;
+}
+function shortHash(text) {
+  let h = 2166136261;
+  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619) >>> 0;
+  return h.toString(16);
+}
+function buildWordFiles(keywords) {
+  const dir = __dirname + '/_news/buzz_archive/words';
+  let names;
+  try { names = fs.readdirSync(dir).filter(function (n) { return /^\d{4}-\d{2}-\d{2}\.json$/.test(n); }).sort(); } catch (e) { return {}; }
+  const perKeyword = {};
+  names.forEach(function (name) {
+    let day;
+    try { day = JSON.parse(fs.readFileSync(dir + '/' + name, 'utf8')); } catch (e) { return; }
+    Object.keys(day).forEach(function (kw) {
+      Object.keys(day[kw]).forEach(function (basis) { (perKeyword[kw] = perKeyword[kw] || []).push(wordRow(name.slice(0, 10), basis, day[kw][basis])); });
+    });
+  });
+  const files = {};
+  if (!Object.keys(perKeyword).length) return files;
+  fs.mkdirSync('웹/board/buzzwords', { recursive: true });
+  keywords.forEach(function (kw, index) {
+    if (!perKeyword[kw]) return;
+    const body = JSON.stringify({ keyword: kw, limits: WORD_LIMITS, rows: perKeyword[kw] });
+    fs.writeFileSync('웹/board/buzzwords/k' + index + '.json', body, 'utf8');
+    files[kw] = 'buzzwords/k' + index + '.json?v=' + shortHash(body);
+  });
+  return files;
+}
 const BUZZ = {
   updated: buzz.updated || '',
   trend: buzz.trend || {},
@@ -235,11 +293,12 @@ const BUZZ = {
     const { snapshots, ...status } = value || {};
     return [key, status];
   })),
+  word_files: buildWordFiles(BUZZ_CONFIG.subjects.reduce(function (all, s) { return all.concat(s.keywords.map(function (k) { return k.keyword; })); }, [])),
+  word_limits: WORD_LIMITS,
   naver: {
     datalab: currentNaver.datalab || {},
     sentiment: currentNaver.sentiment || {},
     word_daily: currentNaver.word_daily || {},
-    word_daily_backfill: currentNaver.word_daily_backfill || {},
     word_history_metadata: currentNaver.word_history_metadata || {},
     channel_daily: mergeBuzzRows(currentNaver.channel_daily, recoveredNaver.channel_daily, 'date'),
     hourly: mergeBuzzRows(currentNaver.hourly, recoveredNaver.hourly, 't'),
