@@ -41,10 +41,10 @@ function harness(html = Chart.render(dates, series, "건"), reduced = true) {
     svg.getBoundingClientRect = () => ({
       left: 100,
       top: 40,
-      width: 440,
-      height: 147,
-      right: 540,
-      bottom: 187,
+      width: Chart.helpers.plot.viewWidth / 2,
+      height: Chart.helpers.plot.viewHeight / 2,
+      right: 100 + Chart.helpers.plot.viewWidth / 2,
+      bottom: 40 + Chart.helpers.plot.viewHeight / 2,
     });
   const controllers = Chart.mountAll(root);
   const element = root.querySelector(".pt-buzz-chart"),
@@ -192,7 +192,7 @@ async function main() {
     element.querySelector(".pt-chart-dot title").textContent,
     "2026-09-20 · 뉴스 10건",
   );
-  const svgPoint = toSvgPoint(svg, 132, 50);
+  const svgPoint = toSvgPoint(svg, 100 + plot.x / 2, 40 + plot.y / 2);
   closeTo(svgPoint.x, plot.x);
   closeTo(svgPoint.y, plot.y);
   closeTo(svgPoint.scale, 0.5);
@@ -200,14 +200,14 @@ async function main() {
     getBoundingClientRect: () => ({
       left: 10,
       top: 20,
-      width: 440,
+      width: plot.viewWidth / 2,
       height: 200,
     }),
   };
   const local = toSvgPoint(
     letterbox,
     10 + plot.x / 2,
-    20 + (200 - 147) / 2 + plot.y / 2,
+    20 + (200 - plot.viewHeight / 2) / 2 + plot.y / 2,
   );
   closeTo(local.x, plot.x);
   closeTo(local.y, plot.y);
@@ -297,7 +297,7 @@ async function main() {
     element
       .querySelector('.pt-chart-line[data-series-index="0"]')
       .getAttribute("stroke-width"),
-    "3.8",
+    "3.4",
   );
   assert.equal(h.frames.size, 0);
   // Midpoint of a null gap must not acquire the nonexistent connection.

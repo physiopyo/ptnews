@@ -177,7 +177,7 @@ runPage(
             .slice(0, 10)
         : "";
       assert.equal(
-        center().querySelector("h3").textContent,
+        center().querySelector(".pt-buzz-dates .pt-bz-range").textContent,
         (start || "최초 기록") + " ~ " + END,
       );
       const visibleDates = countRows().map((row) => row.cells[0].textContent);
@@ -356,8 +356,9 @@ runPage(
           .period,
         period,
       );
-      assert.ok(
-        text().includes("긍·부정 표현 · " + shift(1 - days) + " ~ " + END),
+      assert.equal(
+        center().querySelector(".pt-buzz-dates .pt-bz-range").textContent,
+        shift(1 - days) + " ~ " + END,
       );
       assert.ok(
         text().includes(
@@ -383,7 +384,10 @@ runPage(
       "우려",
     );
     changeEnd("2026-09-26");
-    assert.ok(text().includes("긍·부정 표현 · 2026-09-26 ~ 2026-09-26"));
+    assert.equal(
+      center().querySelector(".pt-buzz-dates .pt-bz-range").textContent,
+      "2026-09-26 ~ 2026-09-26",
+    );
   },
   recovered,
 );
@@ -484,7 +488,7 @@ runPage(
       assert.deepEqual(selected(), []);
       assert.equal(all().checked, false);
       assert.equal(all().indeterminate, false);
-      assert.match(text(), /선택한 검색어가 없습니다/);
+      assert.match(text(), /선택한 검색어가 없어요/);
       assert.equal(
         center().querySelector('svg[role="img"]'),
         null,

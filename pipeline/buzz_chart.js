@@ -11,19 +11,19 @@
     serial = 0,
     mounted = new WeakMap();
   var PLOT = Object.freeze({
-    x: 64,
-    y: 20,
-    width: 792,
-    height: 222,
-    viewWidth: 880,
-    viewHeight: 294,
+    x: 50,
+    y: 14,
+    width: 832,
+    height: 228,
+    viewWidth: 900,
+    viewHeight: 270,
   });
   var EMPTY =
     "이 기간에 수집된 값이 없습니다. 미수집을 0건으로 표시하지 않습니다.";
   var HELP =
-    "선이나 점에 포인터를 올리면 실제 관측값을 확인합니다. 범례 선택 후 방향키로 날짜·계열을 탐색할 수 있습니다.";
+    "선이나 점에 마우스를 올리면 날짜별 수치가 여기에 표시됩니다 · 그래프 위에서 휠을 돌리면 그 위치를 기준으로 확대/축소";
   var CSS =
-    '.pt-buzz-chart{margin:16px 0;padding:14px;border:1px solid #ddd9d0;border-radius:14px;background:#fffdf9;color:#302e29;font:13px/1.5 system-ui,sans-serif}.pt-buzz-chart *{box-sizing:border-box}.pt-buzz-chart .pt-chart-legend{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px;padding:0;list-style:none}.pt-buzz-chart button{font:inherit;cursor:pointer;border:1px solid #d9d5cc;background:#fff;border-radius:8px;padding:6px 10px;color:inherit}.pt-buzz-chart button:focus-visible,.pt-buzz-chart svg:focus-visible{outline:3px solid #2b6fc0;outline-offset:3px}.pt-buzz-chart .pt-chart-legend button{display:flex;align-items:center;gap:7px;text-align:left;transition:opacity 90ms}.pt-buzz-chart .pt-chart-legend button[aria-pressed="true"]{border-color:var(--pt-series-color);background:#f1efe8;font-weight:700}.pt-buzz-chart .pt-chart-swatch{display:inline-block;flex:0 0 18px;height:4px;background:var(--pt-series-color);border-radius:2px}.pt-buzz-chart .pt-chart-unavailable{margin:6px 0;color:#716b60;font-size:12px}.pt-buzz-chart .pt-chart-unavailable ul{display:flex;flex-wrap:wrap;gap:4px 16px;padding-left:20px}.pt-buzz-chart .pt-chart-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:4px 0 2px}.pt-buzz-chart .pt-chart-zoom{margin-left:3px;color:#666159;font-variant-numeric:tabular-nums}.pt-buzz-chart .pt-chart-stage{width:100%;overflow:hidden}.pt-buzz-chart svg{display:block;width:100%;height:auto;overflow:visible}.pt-buzz-chart .pt-chart-line{transition:opacity 90ms;vector-effect:non-scaling-stroke}.pt-buzz-chart .pt-chart-detail{min-height:50px;margin-top:6px;padding:10px 12px;border:1px solid #e4e0d7;border-radius:9px;background:#f6f3ec;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.pt-buzz-chart .pt-chart-hint{margin:8px 0 0;color:#716b60;font-size:11px}.pt-buzz-chart .pt-chart-empty{margin:12px 0}.pt-buzz-chart .pt-chart-grid{stroke:#e8e4db;stroke-width:1}.pt-buzz-chart .pt-chart-tick{fill:#6b665d;font-size:11px;font-variant-numeric:tabular-nums}@media(prefers-reduced-motion:reduce){.pt-buzz-chart .pt-chart-line,.pt-buzz-chart .pt-chart-legend button{transition:none}}';
+    '.pt-buzz-chart{position:relative;margin:0 0 8px;padding:6px 8px 4px;border:1px solid #ececec;border-radius:12px;background:#faf9f6;color:#1a1a1a;font:inherit}.pt-buzz-chart *{box-sizing:border-box}.pt-buzz-chart .pt-chart-legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:4px 118px 7px 2px;padding:0;list-style:none}.pt-buzz-chart .pt-chart-legend button{display:inline-flex;align-items:center;gap:5px;border:0;background:none;padding:2px 0;font:inherit;font-size:12.5px;font-weight:700;color:var(--pt-series-color);cursor:pointer;transition:opacity .12s}.pt-buzz-chart .pt-chart-legend button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:3px}.pt-buzz-chart .pt-chart-swatch{width:9px;height:9px;border-radius:50%;background:var(--pt-series-color);flex:none}.pt-buzz-chart .pt-chart-tools{position:absolute;top:8px;right:10px;display:flex;align-items:center;gap:5px;z-index:3}.pt-buzz-chart .pt-chart-tools button{cursor:pointer;width:26px;height:26px;border-radius:7px;border:1px solid #e2ddd3;background:#fff;color:#57534b;font-size:15px;font-weight:800;line-height:1;padding:0;font-family:inherit}.pt-buzz-chart .pt-chart-tools button:hover{border-color:#bdb6aa;color:#1a1a1a}.pt-buzz-chart .pt-chart-zoom{font-size:11px;font-weight:700;color:#8c8c8c;background:#fff;border:1px solid #e2ddd3;padding:3px 7px;border-radius:6px}.pt-buzz-chart[data-zoom="1"] .pt-chart-zoom{display:none}.pt-buzz-chart[data-zoom="1"] [data-chart-action="reset"]{opacity:.45}.pt-buzz-chart .pt-chart-unavailable{margin:-3px 2px 4px;font-size:11.5px;color:#a3a3a3}.pt-buzz-chart .pt-chart-unavailable summary{cursor:pointer;width:max-content}.pt-buzz-chart .pt-chart-unavailable ul{display:flex;flex-wrap:wrap;gap:2px 10px;margin:4px 0;padding:0;list-style:none}.pt-buzz-chart .pt-chart-stage svg{display:block;width:100%;height:auto;overflow:hidden;outline:none}.pt-buzz-chart .pt-chart-grid{stroke:rgba(0,0,0,.07)}.pt-buzz-chart .pt-chart-tick{font-size:13px;fill:#8c8c8c}.pt-buzz-chart .pt-chart-line{stroke-linejoin:round;stroke-linecap:round;transition:opacity .12s}.pt-buzz-chart .pt-chart-dots{transition:opacity .12s}.pt-buzz-chart .pt-chart-detail{min-height:30px;margin:2px 0 2px;padding:6px 8px;border-top:1px dashed #e7e2d8;font-size:12px;color:#a3a3a3;line-height:1.5}.pt-buzz-chart[data-active-series] .pt-chart-detail{color:#1a1a1a;font-size:13.5px;font-weight:800}.pt-buzz-chart[data-active-series] .pt-chart-detail::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--pt-active-color,#1a1a1a);vertical-align:1px}.pt-buzz-chart .pt-chart-empty{color:#8c8c8c;font-size:13px;padding:30px 16px;text-align:center;line-height:1.6;margin:0}.pt-buzz-chart button:focus-visible,.pt-buzz-chart svg:focus-visible{outline:2px solid #1a1a1a;outline-offset:2px}';
   function esc(value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
       return {
@@ -174,6 +174,14 @@
       model.unit
     );
   }
+  function shortNumber(value) {
+    var abs = Math.abs(value);
+    if (abs >= 1000)
+      return (
+        (value / 1000).toFixed(abs >= 10000 ? 0 : 1).replace(/\.0$/, "") + "k"
+      );
+    return String(abs >= 100 ? Math.round(value) : Math.round(value * 10) / 10);
+  }
   function axes(x, y) {
     var html = "",
       i,
@@ -181,8 +189,8 @@
       px,
       py,
       label;
-    for (i = 0; i <= 4; i++) {
-      value = y[0] + ((y[1] - y[0]) * i) / 4;
+    for (i = 0; i <= 2; i++) {
+      value = y[0] + ((y[1] - y[0]) * i) / 2;
       py = yAt(value, y);
       html +=
         '<line class="pt-chart-grid" x1="' +
@@ -194,34 +202,66 @@
         '" y2="' +
         py +
         '"/><text class="pt-chart-tick" x="' +
-        (PLOT.x - 9) +
+        (PLOT.x - 7) +
         '" y="' +
         (py + 4) +
         '" text-anchor="end">' +
-        esc(value.toLocaleString("ko-KR", { maximumSignificantDigits: 5 })) +
+        esc(shortNumber(value)) +
         "</text>";
     }
-    var ticks = x[1] - x[0] < 2 * DAY ? 2 : 4;
-    for (i = 0; i <= ticks; i++) {
-      value = x[0] + ((x[1] - x[0]) * i) / ticks;
+    var hours = x[1] - x[0] < 2 * DAY;
+    for (i = 0; i <= 4; i++) {
+      value = x[0] + ((x[1] - x[0]) * i) / 4;
       px = xAt(value, x);
       label = new Date(value).toISOString();
       label =
-        ticks === 2
-          ? label.slice(0, 10) + " " + label.slice(11, 16)
-          : label.slice(0, 10);
+        label.slice(5, 7) +
+        "." +
+        label.slice(8, 10) +
+        (hours ? " " + label.slice(11, 16) : "");
       html +=
         '<text class="pt-chart-tick" x="' +
         px +
         '" y="' +
-        (PLOT.y + PLOT.height + 26) +
+        (PLOT.y + PLOT.height + 20) +
         '" text-anchor="' +
-        (i === 0 ? "start" : i === ticks ? "end" : "middle") +
+        (i === 0 ? "start" : i === 4 ? "end" : "middle") +
         '">' +
         esc(label) +
         "</text>";
     }
     return html;
+  }
+  function areaPath(g) {
+    var bottom = PLOT.y + PLOT.height,
+      path = "",
+      run = [];
+    function flush() {
+      if (run.length > 1)
+        path +=
+          " M" +
+          run[0].x.toFixed(3) +
+          " " +
+          bottom +
+          run
+            .map(function (p) {
+              return " L" + p.x.toFixed(3) + " " + p.y.toFixed(3);
+            })
+            .join("") +
+          " L" +
+          run[run.length - 1].x.toFixed(3) +
+          " " +
+          bottom +
+          " Z";
+      run = [];
+    }
+    g.points.forEach(function (point, i) {
+      var prev = g.points[i - 1];
+      if (prev && point.sample.time - prev.sample.time !== DAY) flush();
+      run.push(point);
+    });
+    flush();
+    return path;
   }
   function render(dates, series, unit) {
     var model = normalize(dates, series, unit),
@@ -250,8 +290,14 @@
         );
       })
       .join("");
+    var observed = model.series.filter(function (s) {
+      return s.samples.some(function (sample) {
+        return finite(sample.value);
+      });
+    });
+    var single = observed.length === 1 ? observed[0] : null;
     var html =
-      '<section class="pt-buzz-chart" data-chart-model="' +
+      '<section class="pt-buzz-chart" data-zoom="1" data-chart-model="' +
       esc(JSON.stringify(model)) +
       '" aria-label="여론 관측 추이"><style>' +
       CSS +
@@ -262,7 +308,7 @@
       html +=
         '<details class="pt-chart-unavailable"><summary>' +
         unavailable.length +
-        "개 계열 미수집</summary><ul>" +
+        "개 검색어는 아직 수집 자료가 없어 선을 그리지 않았어요</summary><ul>" +
         unavailable
           .map(function (name) {
             return "<li>" + esc(name) + " · 미수집</li>";
@@ -279,9 +325,9 @@
         "</div></section>"
       );
     html +=
-      '<div class="pt-chart-tools" aria-label="그래프 배율"><button type="button" data-chart-action="zoom-in" aria-label="그래프 확대">＋ 확대</button><button type="button" data-chart-action="zoom-out" aria-label="그래프 축소">− 축소</button><button type="button" data-chart-action="reset">전체 보기 · 초기화</button><output class="pt-chart-zoom" aria-label="현재 배율">1×</output></div>';
+      '<div class="pt-chart-tools" aria-label="그래프 배율"><button type="button" data-chart-action="zoom-out" aria-label="그래프 축소" title="축소">−</button><output class="pt-chart-zoom" aria-label="현재 배율">1×</output><button type="button" data-chart-action="zoom-in" aria-label="그래프 확대" title="확대">+</button><button type="button" data-chart-action="reset" aria-label="전체 보기 · 초기화" title="전체 보기">↺</button></div>';
     html +=
-      '<div class="pt-chart-stage"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 294" preserveAspectRatio="xMidYMid meet" tabindex="0" role="group" aria-labelledby="' +
+      '<div class="pt-chart-stage"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 270" preserveAspectRatio="xMidYMid meet" tabindex="0" role="group" aria-labelledby="' +
       id +
       '-title" aria-describedby="' +
       id +
@@ -311,7 +357,17 @@
       PLOT.width +
       '" height="' +
       PLOT.height +
-      '"/></clipPath></defs><g class="pt-chart-axes">' +
+      '"/></clipPath>' +
+      (single
+        ? '<linearGradient id="' +
+          id +
+          '-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' +
+          esc(single.color) +
+          '" stop-opacity="0.26"/><stop offset="1" stop-color="' +
+          esc(single.color) +
+          '" stop-opacity="0"/></linearGradient>'
+        : "") +
+      '</defs><g class="pt-chart-axes">' +
       axes(model.x, model.y) +
       '</g><g clip-path="url(#' +
       clip +
@@ -323,13 +379,21 @@
       html +=
         '<g class="pt-chart-series" data-series-index="' +
         index +
-        '"><path class="pt-chart-line" data-series-index="' +
+        '">' +
+        (single === s
+          ? '<path class="pt-chart-area" d="' +
+            areaPath(g) +
+            '" fill="url(#' +
+            id +
+            '-area)" stroke="none"/>'
+          : "") +
+        '<path class="pt-chart-line" data-series-index="' +
         index +
         '" d="' +
         g.path +
         '" stroke="' +
         esc(s.color) +
-        '" fill="none" stroke-width="2.4" style="opacity:1"/><g class="pt-chart-dots">';
+        '" fill="none" stroke-width="2.2" style="opacity:1"/><g class="pt-chart-dots">';
       g.points.forEach(function (point) {
         html +=
           '<circle class="pt-chart-dot" data-sample-index="' +
@@ -338,7 +402,9 @@
           point.x +
           '" cy="' +
           point.y +
-          '" r="2.8" fill="' +
+          '" r="' +
+          (g.points.length > 45 ? 1.8 : 2.6) +
+          '" fill="' +
           esc(s.color) +
           '"><title>' +
           esc(sampleLabel(model, index, point.sample)) +
@@ -348,9 +414,9 @@
     });
     return (
       html +
-      '<circle class="pt-chart-active-dot" r="5" fill="#fffdf9" stroke-width="2.5" visibility="hidden" pointer-events="none"/></g></g></svg></div><div class="pt-chart-detail" role="status" aria-live="polite" aria-atomic="true">' +
+      '<circle class="pt-chart-active-dot" r="5" fill="#faf9f6" stroke-width="2.5" visibility="hidden" pointer-events="none"/></g></g></svg></div><div class="pt-chart-detail" role="status" aria-live="polite" aria-atomic="true">' +
       HELP +
-      '</div><p class="pt-chart-hint">휠: 포인터를 기준으로 가로·세로 확대/축소 (최대 32배). 범례: 계열 선택. 빈 날짜는 연결하지 않습니다.</p></section>'
+      "</div></section>"
     );
   }
   function toSvgPoint(svg, clientX, clientY) {
@@ -469,6 +535,10 @@
       if (active) {
         element.setAttribute("data-active-series", active.series);
         element.setAttribute("data-active-sample", active.point.index);
+        element.style.setProperty(
+          "--pt-active-color",
+          model.series[active.series].color,
+        );
       } else {
         element.removeAttribute("data-active-series");
         element.removeAttribute("data-active-sample");
@@ -479,7 +549,7 @@
         line.style.opacity = opacity;
         line.setAttribute(
           "stroke-width",
-          active && active.series === index ? "3.8" : "2.4",
+          active && active.series === index ? "3.4" : "2.2",
         );
         group.querySelector(".pt-chart-dots").style.opacity = opacity;
       });
@@ -519,6 +589,8 @@
       groups.forEach(function (group, index) {
         var g = geometries[index];
         group.querySelector(".pt-chart-line").setAttribute("d", g.path);
+        var area = group.querySelector(".pt-chart-area");
+        if (area) area.setAttribute("d", areaPath(g));
         Array.from(group.querySelectorAll(".pt-chart-dot")).forEach(
           function (dot, pointIndex) {
             var p = g.points[pointIndex];

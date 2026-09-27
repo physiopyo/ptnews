@@ -96,7 +96,7 @@ assert.deepEqual(
 );
 assert.match(
   buzz.render(data, { ...chosen, buzzView: "all4" }),
-  /선택한 검색어가 없습니다/,
+  /선택한 검색어가 없어요/,
 );
 assert.deepEqual(
   chosen.buzzSelections.psych,
