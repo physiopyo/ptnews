@@ -31,8 +31,9 @@ BACKFILL_LIMITS = (8000, 4000)
 WINDOW_DAYS = 7
 IMAGE_REPAIRS = (40, 800)
 # Parallel workers: Google decode stays gentle (one host); article pages are spread across outlets.
-DECODE_WORKERS = int(os.environ.get('ALLIED_DECODE_WORKERS', '4'))
-PAGE_WORKERS = int(os.environ.get('ALLIED_PAGE_WORKERS', '12'))  # regular run / backfill: older rows missing a thumbnail
+DECODE_WORKERS = int(os.environ.get('ALLIED_DECODE_WORKERS', '16'))
+PAGE_WORKERS = int(os.environ.get('ALLIED_PAGE_WORKERS', '16'))
+SEARCH_WORKERS = int(os.environ.get('ALLIED_SEARCH_WORKERS', '16'))
 TOPICS = {
     'psych': ('심리 상담', '심리 상담사', '상담 심리사', '임상 심리사',
               '정신 건강 임상 심리사', '정신 건강 간호사', '정신 건강 사회 복지사',
@@ -53,9 +54,13 @@ SEARCH_CONTEXT = {
     '전국민 마음건강': '전국민 마음건강 심리상담',
 }
 QUERY_EXTRAS = {
-    'psych': ('심리상담사 법제화', '상담심리사 자격', '보건복지부 심리상담', '국립정신건강센터 정책'),
+    'psych': ('심리상담사 법제화', '상담심리사 자격', '보건복지부 심리상담', '국립정신건강센터 정책',
+              '심리상담 입법예고', '정신건강전문요원 시행령', '정신건강복지법 시행령 심리상담',
+              '임상심리학회 시행령', '임상심리사 반발', '심리상담 복지부 갈등', '심리상담 공통업무 철회'),
     'pharm': ('보건복지부 약사', '식약처 의약품 수급'),
 }
+# Long-range backfill (--since) exists for issues older than a month; Google windows stay weekly.
+MAX_SINCE_DAYS = 400
 QUERIES = {topic: tuple(dict.fromkeys(
     [SEARCH_CONTEXT.get(spec['keyword'], spec['keyword']) for spec in SPECS if spec['subject'] == topic]
     + list(QUERY_EXTRAS[topic]))) for topic in TOPICS}
@@ -120,7 +125,7 @@ PSYCH_CORE = ('공통업무', '임상심리', '심리상담바우처', '심리�
               '심리사법', '정신건강복지법시행령', '전문요원업무범위', '정신건강간호사', '정신건강사회복지사', '정신건강작업치료사')
 # Associations count only with a policy qualifier (e.g. '학회 반발 … 공통업무'), not for MOUs or appointments.
 PSYCH_BROAD = ('심리상담', '마음투자', '심리상담바우처', '임상심리학회', '상담심리학회', '심리학회', '상담학회')
-PSYCH_QUALIFIER = ('반발', '성명', '반대', '자격', '법제화', '입법', '법안', '업무범위', '전문성', '수련', '직역', '국가자격',
+PSYCH_QUALIFIER = ('반발', '성명', '반대', '갈등', '입법예고', '규탄', '투쟁', '보류', '철회', '자격', '법제화', '입법', '법안', '업무범위', '전문성', '수련', '직역', '국가자격',
                    '민간자격', '시행령', '공통업무', '누구의역할', '고유업무')
 # Summary-only evidence must name the policy dispute itself, not merely mention a profession.
 PSYCH_STRONG = ('공통업무', '업무범위', '고유업무', '시행령', '심리상담사법', '국가자격', '심리상담바우처',
@@ -132,7 +137,7 @@ PHARM_QUALIFIER = ('비대면', '플랫폼', '성분명', '대체조제', '처�
 
 
 # Education/training notices mention qualifications without being about the policy dispute.
-PSYCH_NOT_ISSUE = ('자격연수', '연수', '자격증', '학과', '학점', '입학', '모집', '특강', 'Wee', '위센터', '위클래스')
+PSYCH_NOT_ISSUE = ('자격과정', '과정운영', '수강생', '채용', '업무협약', '자격연수', '연수', '자격증', '학과', '학점', '입학', '모집', '특강', 'Wee', '위센터', '위클래스')
 NOT_PHARMACIST = ('제약사', '제약회사', '신약', '한약사')
 
 
@@ -430,7 +435,7 @@ def merge_article(first, second):
 def collect(session, credentials=None, *, known=(), keywords=None, topic=None, max_requests=None,
             max_candidates=None, pages=2, report=None, days=REGULAR_DAYS, now=None):
     """days>4 is a bounded one-shot backfill; days=4 keeps the hourly request pattern."""
-    if not 1 <= days <= MAX_DAYS:
+    if not 1 <= days <= MAX_SINCE_DAYS:
         raise ValueError('invalid days')
     max_requests, max_candidates = limits(days, max_requests, max_candidates)
     if max_requests < 0 or max_candidates < 1 or not 1 <= pages <= 2:
@@ -566,9 +571,10 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
         if 'google' not in http.blocked:
             http.source = 'google'
             try:
-                rows = []
-                for window in (windows(now, days) if backfill else [None]):
-                    rows.extend(gnews_rss(http, query, days, window))
+                spans = windows(now, days) if backfill else [None]
+                google = http.for_source('google')
+                with ThreadPoolExecutor(min(SEARCH_WORKERS, len(spans))) as pool:
+                    rows = [row for part in pool.map(lambda w: gnews_rss(google, query, days, w), spans) for row in part]
                 report['sources'].setdefault('google', {'requests': 0})['status'] = 'ok' if rows else 'empty'
                 report['queries'].append({'source': 'google', 'query': query, 'status': 'ok' if rows else 'empty', 'count': len(rows)})
                 prefetch(rows)
@@ -643,10 +649,19 @@ def main(argv=None):
     parser.add_argument('--max-requests', type=int)
     parser.add_argument('--max-candidates', type=int)
     parser.add_argument('--pages', type=int, choices=(1, 2), default=2)
+    parser.add_argument('--since', help='backfill start date YYYY-MM-DD (overrides --days, up to %d days)' % 400)
     parser.add_argument('--days', type=int, default=REGULAR_DAYS,
                         help='search window in days (1..31); >4 is a bounded one-shot backfill')
     args = parser.parse_args(argv)
-    if not 1 <= args.days <= MAX_DAYS:
+    if args.since:
+        try:
+            start = datetime.strptime(args.since, '%Y-%m-%d').replace(tzinfo=timezone.utc)
+        except ValueError:
+            parser.error('--since must be YYYY-MM-DD')
+        args.days = (datetime.now(timezone.utc) - start).days + 1
+        if not REGULAR_DAYS < args.days <= MAX_SINCE_DAYS:
+            parser.error('--since must be 5..%d days ago' % MAX_SINCE_DAYS)
+    elif not 1 <= args.days <= MAX_DAYS:
         parser.error('--days must be between 1 and %d' % MAX_DAYS)
     args.max_requests, args.max_candidates = limits(args.days, args.max_requests, args.max_candidates)
     if args.max_requests < 0 or args.max_candidates < 1:

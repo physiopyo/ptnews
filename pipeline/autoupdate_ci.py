@@ -117,6 +117,13 @@ def main():
     elif days:
         log('BACKFILL_DAYS=%d → 동맹 뉴스·네이버/카카오 언급 1회성 게시일 기준 소급 수집(한도 있음)' % days)
     allied_args = ['--days', str(days)] if days else []
+    since = (os.environ.get('ALLIED_SINCE') or '').strip()
+    if since:
+        if re.fullmatch(r'\d{4}-\d{2}-\d{2}', since):
+            allied_args = ['--since', since]
+            log('ALLIED_SINCE=%s → 심리상담·약사 뉴스 장기 소급' % since)
+        else:
+            log('ALLIED_SINCE=%r 무시(형식 YYYY-MM-DD)' % since[:20])
     naver_args = ['--backfill-days', str(days)] if days else []
     if skip:
         log('SKIP_FETCH=1 → 뉴스·버즈 수집 생략, 빌드만 수행(코드/문구 변경 즉시 반영)')

@@ -434,6 +434,15 @@ class AlliedTests(unittest.TestCase):
         self.assertEqual(allied.classify('임상심리학회, 복지부 시행령에 반발'), ['psych'])
         self.assertEqual(allied.classify('심리상담', url='https://youtu.be/x'), [])
 
+    def test_since_backfill_is_bounded_and_training_notices_excluded(self):
+        for value in ('2020-01-01', 'bad'):
+            with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
+                allied.main(['--since', value, '--max-requests', '0'])
+        for title in ('목원대, 미술심리상담사 과정 운영…수강생 자격시험 합격', '병무청, 임상심리사 공무원 경력채용',
+                      '명우임상심리연구소와 업무협약'):
+            self.assertEqual(allied.classify(title), [], title)
+        self.assertEqual(allied.classify('심리상담 놓고 복지부·임상심리학회 갈등'), ['psych'])
+
     def test_cli_days_validation_and_status_report(self):
         for value in ('0', '32'):
             with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):

@@ -13,7 +13,11 @@ on:
         type: boolean
         default: false
       allied_workers:
-        description: '(시험용) 심리상담·약사 수집 동시 처리 수 "구글링크,기사페이지" 예: 4,10. 비우면 기본 4,12'
+        description: '(시험용) 심리상담·약사 수집 동시 처리 수 "구글링크,기사페이지" 예: 4,10. 비우면 기본 16,16'
+        type: string
+        default: ''
+      allied_since:
+        description: '심리상담·약사 뉴스 장기 소급 시작일(YYYY-MM-DD, 최대 400일 전). 비우면 사용 안 함'
         type: string
         default: ''
       backfill_days:
@@ -80,6 +84,7 @@ jobs:
           SKIP_FETCH: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}
           BACKFILL_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.backfill_days || '0' }}
           ALLIED_WORKERS: ${{ github.event_name == 'workflow_dispatch' && inputs.allied_workers || '' }}
+          ALLIED_SINCE: ${{ github.event_name == 'workflow_dispatch' && inputs.allied_since || '' }}
         run: python pipeline/autoupdate_ci.py
 
       - name: Remove temporary credentials
