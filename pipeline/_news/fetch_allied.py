@@ -31,8 +31,8 @@ BACKFILL_LIMITS = (8000, 4000)
 WINDOW_DAYS = 7
 IMAGE_REPAIRS = (40, 800)
 # Parallel workers: Google decode stays gentle (one host); article pages are spread across outlets.
-DECODE_WORKERS = int(os.environ.get('ALLIED_DECODE_WORKERS', '2'))
-PAGE_WORKERS = int(os.environ.get('ALLIED_PAGE_WORKERS', '6'))  # regular run / backfill: older rows missing a thumbnail
+DECODE_WORKERS = int(os.environ.get('ALLIED_DECODE_WORKERS', '4'))
+PAGE_WORKERS = int(os.environ.get('ALLIED_PAGE_WORKERS', '12'))  # regular run / backfill: older rows missing a thumbnail
 TOPICS = {
     'psych': ('심리 상담', '심리 상담사', '상담 심리사', '임상 심리사',
               '정신 건강 임상 심리사', '정신 건강 간호사', '정신 건강 사회 복지사',
