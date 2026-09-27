@@ -69,7 +69,25 @@ const articles = _articlesRaw.filter(function (a) {
   }
   if (k) _dseen.set(k, a);
   return true;
-}).sort((a, b) => String(b.dt).localeCompare(String(a.dt)));
+}).sort((a, b) => String(b.dt).localeCompare(String(a.dt)))
+// Same headline from several outlets (syndication): show only the latest one, keeping every tab it belongs to.
+// Ko photo series share titles on purpose and are exempt. Source datasets keep every outlet.
+  .filter((function () {
+    const seen = new Map();
+    const tkn = t => String(t || '').replace(/[^0-9A-Za-z가-힣]/g, '');
+    return function (a) {
+      if ((a.channels || []).indexOf('ko') >= 0) return true;
+      const t = tkn(a.title);
+      if (!t) return true;
+      if (seen.has(t)) {
+        const first = seen.get(t);
+        first.channels = [...new Set(first.channels.concat(a.channels))];
+        return false;
+      }
+      seen.set(t, a);
+      return true;
+    };
+  })());
 
 const petitions = [
   { dl: '7.17(금) 마감', deadline: '2026.7.17', dday: dday('2026-07-17'), count: CO.petition ? nf(CO.petition) : '3,165', pct: (CO.petitionPct != null ? CO.petitionPct : 6), title: '도수치료 관리급여화 고시 및 체외충격파 횟수 제한 정책 철회·시행유예 촉구', desc: '국민의 치료 선택권과 물리치료사의 생존권을 위협하는 관리급여 고시의 철회 및 충분한 사회적 논의를 요구합니다.', url: 'https://petitions.assembly.go.kr/proceed/onGoingAll/527DFB9D4A5222D7E064ECE7A7064E8B' },

@@ -31,7 +31,8 @@ BACKFILL_LIMITS = (8000, 4000)
 WINDOW_DAYS = 7
 IMAGE_REPAIRS = (40, 800)
 # Parallel workers: Google decode stays gentle (one host); article pages are spread across outlets.
-DECODE_WORKERS, PAGE_WORKERS = 2, 6  # regular run / backfill: older rows missing a thumbnail
+DECODE_WORKERS = int(os.environ.get('ALLIED_DECODE_WORKERS', '2'))
+PAGE_WORKERS = int(os.environ.get('ALLIED_PAGE_WORKERS', '6'))  # regular run / backfill: older rows missing a thumbnail
 TOPICS = {
     'psych': ('심리 상담', '심리 상담사', '상담 심리사', '임상 심리사',
               '정신 건강 임상 심리사', '정신 건강 간호사', '정신 건강 사회 복지사',
@@ -611,7 +612,9 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
                 # Backfill ignores the all-seen overlap: older unseen pages may follow.
                 if len(raw_rows) < 100 or older or (overlap and not backfill):
                     break
-    report.update(candidate_count=len(candidates), accepted=len(result), candidates=list(candidate_records.values()))
+    report.update(candidate_count=len(candidates), accepted=len(result), candidates=list(candidate_records.values()),
+                  workers={'decode': DECODE_WORKERS, 'pages': PAGE_WORKERS},
+                  elapsed_seconds=round(time.monotonic() - started))
     if http.count >= max_requests:
         report['stop_reason'] = 'request_budget'
     if len(candidates) >= max_candidates:

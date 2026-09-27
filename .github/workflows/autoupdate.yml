@@ -12,6 +12,10 @@ on:
         description: '수집 건너뛰고 빌드만 (코드/문구 변경 즉시 반영용)'
         type: boolean
         default: false
+      allied_workers:
+        description: '(시험용) 심리상담·약사 수집 동시 처리 수 "구글링크,기사페이지" 예: 4,10. 비우면 기본 2,6'
+        type: string
+        default: ''
       backfill_days:
         description: '1회성 소급 수집 일수(0=평시, 1~31). 동맹 뉴스·네이버/카카오 언급을 게시일 기준으로 채움'
         type: string
@@ -75,6 +79,7 @@ jobs:
           KAKAO_KEY: ${{ secrets.KAKAO }}
           SKIP_FETCH: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}
           BACKFILL_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.backfill_days || '0' }}
+          ALLIED_WORKERS: ${{ github.event_name == 'workflow_dispatch' && inputs.allied_workers || '' }}
         run: python pipeline/autoupdate_ci.py
 
       - name: Remove temporary credentials

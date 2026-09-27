@@ -142,6 +142,43 @@ if (require.main === module) {
     JSON.stringify(archived),
     "display projection never deletes archival data",
   );
+  const synd = buildBoard({
+    "press.json": [
+      {
+        title: "약 배송 반대 집회",
+        url: "https://c.kr/1",
+        dt: "2026-09-20T10:00:00+09:00",
+      },
+      {
+        title: "물리치료 다른 기사",
+        url: "https://c.kr/2",
+        dt: "2026-09-20T09:00:00+09:00",
+      },
+    ],
+    "pharm.json": [
+      {
+        title: "약 배송 반대 집회",
+        url: "https://d.kr/1",
+        dt: "2026-09-20T12:00:00+09:00",
+      },
+      {
+        title: "약 배송, 반대 집회!",
+        url: "https://e.kr/1",
+        dt: "2026-09-20T08:00:00+09:00",
+      },
+    ],
+  }).data.articles;
+  const same = synd.filter(
+    (a) => a.title.replace(/[^0-9A-Za-z가-힣]/g, "") === "약배송반대집회",
+  );
+  assert.equal(same.length, 1, "syndicated headline shows once");
+  assert.equal(same[0].url, "https://d.kr/1", "latest outlet is kept");
+  assert.deepEqual(
+    Array.from(same[0].channels).sort(),
+    ["pharm", "press"],
+    "tabs of hidden copies are kept",
+  );
+  assert.equal(synd.length, 2);
   const bigRelated = {};
   for (let i = 0; i < 400; i++) bigRelated["단어" + i] = 1000 - i;
   const worded = buildBoard({

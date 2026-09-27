@@ -94,11 +94,24 @@ def backfill_days():
     return int(raw)
 
 
+def allied_workers():
+    """Optional trial override 'decode,pages' (each 1..16); anything else keeps the defaults."""
+    raw = (os.environ.get('ALLIED_WORKERS') or '').strip()
+    m = re.fullmatch(r'(\d{1,2}),(\d{1,2})', raw)
+    if not m or not all(1 <= int(v) <= 16 for v in m.groups()):
+        if raw:
+            log('ALLIED_WORKERS=%r 무시(형식: 구글,기사 각 1~16)' % raw[:20])
+        return
+    os.environ['ALLIED_DECODE_WORKERS'], os.environ['ALLIED_PAGE_WORKERS'] = m.groups()
+    log('ALLIED_WORKERS → 구글 링크 %s개, 기사 페이지 %s개 동시 처리' % m.groups())
+
+
 def main():
     log('===== CI auto-update start =====')
     os.makedirs(os.path.join(PIPE, '웹', 'board', 'img'), exist_ok=True)
     skip = bool(os.environ.get('SKIP_FETCH'))
     days = backfill_days()
+    allied_workers()
     if days and skip:
         log('SKIP_FETCH=1 이므로 BACKFILL_DAYS=%d 무시' % days)
     elif days:
