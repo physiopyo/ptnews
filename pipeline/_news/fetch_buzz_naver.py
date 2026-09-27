@@ -10,6 +10,7 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 import hashlib
 import html
+import json
 import math
 from pathlib import Path
 import re
@@ -18,11 +19,17 @@ from urllib.parse import urldefrag
 
 import requests
 import buzz_config as config
-from buzz_history import HistoryArchive, digest, observed_at
+from buzz_history import HistoryArchive, digest, kst_date, observed_at
 
 ROOT = Path(__file__).resolve().parent
 KST = timezone(timedelta(hours=9))
 CHANNELS = {'blog': 'blog', 'news': 'news', 'cafe': 'cafearticle'}
+MAX_BACKFILL_DAYS = 31
+BACKFILL_BASIS = 'publication_date_backfill'
+# Naver cafearticle has no publication date, so it is never backfilled (stays unknown).
+BACKFILL_SOURCES = ('news', 'blog', 'daumcafe')
+BACKFILL_PAGES = {'naver': 10, 'kakao': 10}  # naver start<=901 (+100); kakao page<=10 of size 50
+BACKFILL_MAX_REQUESTS = {'naver': 2500, 'kakao': 1000}
 STOP = set('''도수 치료 도수치료 관리 급여 관리급여 실손 보험 실손보험 체외 충격 충격파 체외충격파 물리 치료사 물리치료사 의료 병원 환자
 경우 정도 사용 제품 가능 진행 시작 관련 내용 방법 정보 생각 이야기 이번 우리 가지 사람 자신 부분 문제 때문
 다양 최근 다음 오늘 하나 모두 위해 통해 이상 이하 정말 제일 추천 후기 블로그 포스팅 사진 이용 확인 소개 운영
@@ -373,6 +380,169 @@ def collect_datalab(http, specs, headers, naver, archive, now, force):
         set_status(http.collection, key, True, now)
 
 
+def backfill_search(http, spec, source, headers, cutoff, today):
+    """Page sort=date/recency per alias until items predate cutoff, provider end or depth cap.
+
+    Returns URL-deduplicated (across aliases) documents dated cutoff..yesterday (KST),
+    plus the coverage floor: when any alias stopped before crossing the cutoff, dates
+    older than its oldest retrieved date are unknown and that boundary date is partial.
+    """
+    provider = 'kakao' if source == 'daumcafe' else 'naver'
+    size, pages = (50, BACKFILL_PAGES['kakao']) if provider == 'kakao' else (100, BACKFILL_PAGES['naver'])
+    documents, floor, reason, undated, errors = {}, None, None, 0, []
+    for term in terms_for(spec):
+        oldest, state = None, 'search_depth'
+        for page in range(1, pages + 1):
+            if provider == 'kakao':
+                url = 'https://dapi.kakao.com/v2/search/cafe'
+                params = {'query': term, 'size': size, 'page': page, 'sort': 'recency'}
+            else:
+                url = f'https://openapi.naver.com/v1/search/{CHANNELS[source]}.json'
+                params = {'query': term, 'display': size, 'start': (page - 1) * size + 1, 'sort': 'date'}
+            try:
+                data = response_json(http.request(provider, 'get', url, params=params,
+                                                  headers=headers, timeout=15))
+                items = data.get('documents' if provider == 'kakao' else 'items')
+                meta = data.get('meta', {}) if provider == 'kakao' else {}
+                if not isinstance(items, list) or not isinstance(meta, dict):
+                    raise CollectionError('invalid_search_response')
+                crossed = False
+                for item in items:
+                    if not isinstance(item, dict):
+                        raise CollectionError('invalid_search_document')
+                    date = kst_date(published_at(item, source))
+                    if date is None:
+                        undated += 1
+                        continue
+                    oldest = date if oldest is None else min(oldest, date)
+                    if date < cutoff:
+                        crossed = True
+                        continue
+                    raw_url = item.get('url' if provider == 'kakao' else 'link')
+                    if date >= today or not isinstance(raw_url, str) or not raw_url:
+                        continue
+                    try:
+                        link = urldefrag(raw_url)[0]
+                    except ValueError:
+                        raise CollectionError('invalid_search_document') from None
+                    if link in documents:
+                        continue
+                    text = tag(item.get('title', '')) + ' ' + tag(
+                        item.get('contents' if provider == 'kakao' else 'description', ''))
+                    documents[link] = {'url': link, 'provider': provider,
+                                       'channel': 'cafe' if source == 'daumcafe' else source,
+                                       'published_at': published_at(item, source), 'text': text,
+                                       'content_hash': hashlib.sha256(text.encode('utf-8')).hexdigest()}
+            except CollectionError as exc:
+                state = exc.code
+                errors.append(exc.code)
+                break
+            if crossed:
+                state = 'crossed_cutoff'
+                break
+            if len(items) < size or (provider == 'kakao' and meta.get('is_end') is True):
+                state = 'provider_end'
+                break
+        if state not in ('crossed_cutoff', 'provider_end'):
+            term_floor = oldest or today
+            if floor is None or term_floor > floor:
+                floor, reason = term_floor, state
+    return documents, floor, reason, undated, errors
+
+
+def run_backfill(clients, spec, headers, kakao_headers, histories, archive, analyzer, now, days):
+    """One-shot publication-date backfill for one canonical keyword.
+
+    Only (date, source) cells without an existing stored value are filled; nothing
+    observed is overwritten. Documents join the permanent index with discovery
+    'publication_date_backfill' so later regular runs do not count them as first seen.
+    """
+    keyword = spec['keyword']
+    day = datetime.fromtimestamp(now, KST).date()
+    today, stamp = day.isoformat(), observed_at(now)
+    window = [(day - timedelta(days=offset)).isoformat() for offset in range(days, 0, -1)]
+    channel = histories['channels'].setdefault(keyword, {})
+    daily = channel.setdefault('daily', {})
+    rss, daum = histories['news'].get(keyword, {}), histories['daum'].setdefault(keyword, {})
+    report = {}
+    for source in BACKFILL_SOURCES:
+        key = f'backfill:{keyword}:{source}'
+        provider = 'kakao' if source == 'daumcafe' else 'naver'
+        http = clients[provider]
+        source_headers = kakao_headers if source == 'daumcafe' else headers
+        if source == 'daumcafe':
+            needed = [date for date in window if daum.get(date) is None]
+        elif source == 'news':
+            needed = [date for date in window if rss.get(date) is None and daily.get(date, {}).get('news') is None]
+        else:
+            needed = [date for date in window if daily.get(date, {}).get('blog') is None]
+        entry = {'days': days, 'attempted_at': now, 'basis': BACKFILL_BASIS, 'config_hash': config.CONFIG_HASH}
+        if not source_headers:
+            http.collection[key] = report[source] = {**entry, 'status': 'missing'}
+            continue
+        if not needed:
+            # Word coverage still matters, but every count cell is already observed.
+            http.collection[key] = report[source] = {**entry, 'status': 'already_observed', 'requests': 0}
+            continue
+        before = http.used
+        documents, floor, reason, undated, errors = backfill_search(
+            http, spec, source, source_headers, window[0], today)
+        covered = [date for date in window if floor is None or date >= floor]
+        if floor is not None and floor > window[-1]:
+            covered = []
+        in_range = [doc for doc in documents.values() if kst_date(doc['published_at']) in set(covered)]
+        try:
+            analyzed = analyzer.analyze(in_range)
+        except Exception:
+            errors.append('analysis_unavailable')
+            covered, analyzed = [], []
+        counts = Counter(kst_date(doc['published_at']) for doc in in_range)
+        statuses, stored = {}, []
+        previously = Counter(kst_date(doc['published_at']) for doc in analyzed
+                             if digest([keyword, doc['url']]) in archive.documents)
+        for date in covered:
+            partial = floor is not None and date == floor
+            info = {'count': counts.get(date, 0), 'status': 'partial' if partial else 'complete'}
+            if partial:
+                info['reason'] = reason
+            if previously.get(date):
+                info['previously_observed'] = previously[date]
+            if date in needed:
+                # Only unobserved cells are filled; existing observations always win.
+                if source == 'daumcafe':
+                    daum[date] = info['count']
+                else:
+                    daily.setdefault(date, {})[source] = info['count']
+                meta = {'basis': BACKFILL_BASIS, 'status': info['status'], 'observed_at': stamp,
+                        'provider': {'news': 'naver_news', 'blog': 'naver_blog', 'daumcafe': 'kakao_cafe'}[source]}
+                if partial:
+                    meta.update(reason=reason, reached=floor)
+                channel.setdefault('backfill', {}).setdefault(date, {})[source] = meta
+                stored.append(date)
+            statuses[date] = info
+        if analyzed:
+            archive.observe(keyword, analyzed, now, discovery=BACKFILL_BASIS)
+            if source == 'blog':
+                seen_list = channel.setdefault('sb', [])
+                seen = set(seen_list)
+                seen_list.extend(doc['url'] for doc in analyzed if doc['url'] not in seen)
+        requests_used = http.used - before
+        result = {**entry, 'status': ('error' if not covered and errors else
+                                      'partial' if floor is not None else 'complete'),
+                  'requests': requests_used, 'window': [window[0], window[-1]],
+                  'covered_from': covered[0] if covered else None, 'reached': floor,
+                  'reason': reason, 'errors': sorted(set(errors)), 'undated': undated,
+                  'documents': len(in_range), 'stored_dates': len(stored)}
+        if covered:
+            archive.snapshot('mentions_backfill', keyword, source, {
+                'channel': 'cafe' if source == 'daumcafe' else source, 'provider': provider,
+                'basis': BACKFILL_BASIS, 'days': days, 'window': result['window'], 'reached': floor,
+                'reason': reason, 'dates': statuses, 'stored_dates': stored,
+                'document_ids': [digest([keyword, doc['url']]) for doc in analyzed]}, now)
+        http.collection[key] = report[source] = result
+    return report
+
+
 def add_known(values):
     return sum(values) if all(value is not None for value in values) else None
 
@@ -381,6 +551,7 @@ def channels_for(keyword, naver, channel_history, daum_history, news_history, to
                  kakao_configured):
     rows = {row['date']: dict(row) for row in naver.get('channel_daily', {}).get(keyword, [])}
     channel = channel_history.get(keyword, {}).get('daily', {})
+    backfill = channel_history.get(keyword, {}).get('backfill', {})
     daum, news = daum_history.get(keyword, {}), news_history.get(keyword, {})
     dates = set(rows) | set(channel) | set(daum) | set(news)
     dates.update((today - timedelta(days=i)).isoformat() for i in range(365))
@@ -393,8 +564,19 @@ def channels_for(keyword, naver, channel_history, daum_history, news_history, to
         if kakao_configured or cafe_sources['kakao'] is not None:
             cafe_expected.append('kakao')
         cafe = sum(cafe_sources[source] for source in cafe_observed) if cafe_observed else None
-        cafe_complete = set(cafe_expected) <= set(cafe_observed)
-        values = {'news': news.get(date), 'blog': blog, 'cafe': cafe}
+        # Google RSS date counts win; Naver news backfill only fills dates RSS never observed.
+        news_value = news.get(date)
+        if news_value is None:
+            news_value = channel.get(date, {}).get('news')
+        used = {}
+        for source, value in (('news', None if news.get(date) is not None else news_value),
+                              ('blog', blog), ('daumcafe', cafe_sources['kakao'])):
+            if value is not None and source in backfill.get(date, {}):
+                used[source] = backfill[date][source]
+        backfill_partial = any(meta.get('status') != 'complete' for meta in used.values())
+        cafe_complete = (set(cafe_expected) <= set(cafe_observed)
+                         and used.get('daumcafe', {}).get('status', 'complete') == 'complete')
+        values = {'news': news_value, 'blog': blog, 'cafe': cafe}
         for name, value in values.items():
             if value is not None or name not in row:
                 row[name] = value
@@ -405,9 +587,12 @@ def channels_for(keyword, naver, channel_history, daum_history, news_history, to
             'cafe': {'expected': cafe_expected, 'observed': cafe_observed,
                      'components': cafe_sources,
                      'status': 'complete' if cafe_complete else 'partial' if cafe_observed else 'unknown'},
-            'total': {'status': 'complete' if total is not None and cafe_complete else
+            'total': {'status': 'complete' if total is not None and cafe_complete and not backfill_partial else
                                 'partial' if total is not None else 'unknown'},
         }
+        if used:
+            # Publication-date counts from a one-shot search backfill, not first-seen samples.
+            row['scope']['backfill'] = used
     return [rows[date] for date in sorted(rows)]
 
 
@@ -438,9 +623,15 @@ def refresh_words(naver, archive, keyword):
         'basis': 'latest_successful_deduplicated_sample'}
 
 
-def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, max_requests=1000, force=False):
+def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, max_requests=1000, force=False,
+        backfill_days=0, backfill_max_requests=None):
     if max_requests < 0:
         raise ValueError('max_requests must be non-negative')
+    if not 0 <= backfill_days <= MAX_BACKFILL_DAYS:
+        raise ValueError('backfill_days must be 0..%d' % MAX_BACKFILL_DAYS)
+    backfill_limits = {**BACKFILL_MAX_REQUESTS, **(backfill_max_requests or {})}
+    if any(value < 0 for value in backfill_limits.values()):
+        raise ValueError('backfill max requests must be non-negative')
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     if max_requests == 0:
@@ -463,6 +654,24 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
                 'User-Agent': 'Mozilla/5.0'} if naver_key.get('id') and naver_key.get('secret') else None)
     kakao_headers = ({'Authorization': 'KakaoAK ' + kakao_key['rest_api_key']}
                      if kakao_key.get('rest_api_key') else None)
+    if backfill_days:
+        # Runs before regular sampling so regular first-seen counts cannot pre-empt
+        # publication-date cells; separate bounded budgets per provider.
+        clients = {provider: RequestBudget(client, collection, backfill_limits[provider], now)
+                   for provider in ('naver', 'kakao')}
+        details = {spec['keyword']: run_backfill(clients, spec, headers, kakao_headers, histories,
+                                                 archive, analyzer, now, backfill_days) for spec in specs}
+        buzz['backfill'] = {
+            'days': backfill_days, 'basis': BACKFILL_BASIS, 'observed_at': stamp,
+            'sources': list(BACKFILL_SOURCES), 'not_backfilled': {'cafearticle': 'no_publication_date'},
+            'requests': {provider: http_.used for provider, http_ in clients.items()},
+            'max_requests': backfill_limits,
+            'status': {status: sum(1 for report in details.values() for item in report.values()
+                                   if item['status'] == status)
+                       for status in ('complete', 'partial', 'error', 'missing', 'already_observed')}}
+        print('Backfill %d days; requests naver %d/%d, kakao %d/%d; %s' % (
+            backfill_days, clients['naver'].used, backfill_limits['naver'], clients['kakao'].used,
+            backfill_limits['kakao'], json.dumps(buzz['backfill']['status'])))
     successes = set()
     for spec in specs:
         keyword = spec['keyword']
@@ -528,6 +737,9 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
         words = {row['date']: row for row in naver.get('word_daily', {}).get(keyword, [])}
         words.update({row['date']: row for row in archive.word_daily(keyword)})
         naver.setdefault('word_daily', {})[keyword] = [words[date] for date in sorted(words)]
+        backfill_words = archive.word_daily_backfill(keyword)
+        if backfill_words or keyword in naver.get('word_daily_backfill', {}):
+            naver.setdefault('word_daily_backfill', {})[keyword] = backfill_words
         if keyword not in successes:
             continue
         wkey, label = week_label(day)
@@ -581,9 +793,18 @@ def main(argv=None, *, client=None, clock=None, kiwi=None, credentials=None, lex
     parser.add_argument('--output-dir', type=Path, default=ROOT)
     parser.add_argument('--keywords', nargs='+', help='Canonical keywords; spaces are quoted, commas also accepted')
     parser.add_argument('--max-requests', type=int, default=1000)
+    parser.add_argument('--backfill-days', type=int, default=0,
+                        help='one-shot publication-date backfill window (0=off, max 31)')
+    parser.add_argument('--backfill-max-requests', type=int, default=BACKFILL_MAX_REQUESTS['naver'],
+                        help='Naver request cap for the backfill (separate from --max-requests)')
+    parser.add_argument('--backfill-kakao-max-requests', type=int, default=BACKFILL_MAX_REQUESTS['kakao'])
     args = parser.parse_args(argv)
     if args.max_requests < 0:
         parser.error('--max-requests must be non-negative')
+    if not 0 <= args.backfill_days <= MAX_BACKFILL_DAYS:
+        parser.error('--backfill-days must be between 0 and %d' % MAX_BACKFILL_DAYS)
+    if args.backfill_max_requests < 0 or args.backfill_kakao_max_requests < 0:
+        parser.error('backfill request caps must be non-negative')
     selected = {term for value in args.keywords or [] for term in value.split(',')}
     if selected - set(config.KEYWORDS):
         parser.error('Unknown canonical keyword')
@@ -600,7 +821,10 @@ def main(argv=None, *, client=None, clock=None, kiwi=None, credentials=None, lex
         lexicon = config.load(str(ROOT / 'knu_senti.json'), {})
     now = clock() if clock else datetime.now(timezone.utc).timestamp()
     result, used = run(args.output_dir, specs, credentials, client if client is not None else requests,
-                       now, kiwi=kiwi, lexicon=lexicon, max_requests=args.max_requests)
+                       now, kiwi=kiwi, lexicon=lexicon, max_requests=args.max_requests,
+                       backfill_days=args.backfill_days,
+                       backfill_max_requests={'naver': args.backfill_max_requests,
+                                              'kakao': args.backfill_kakao_max_requests})
     print(f'Collection complete; HTTP requests: {used}/{args.max_requests}')
     return result
 

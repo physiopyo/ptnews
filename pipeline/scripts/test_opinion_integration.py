@@ -27,6 +27,33 @@ class IntegrationTests(unittest.TestCase):
         self.assertTrue(calls[-1][2])
         cleanup.assert_called_once(); sync.assert_called_once()
 
+    def run_main(self, env):
+        calls = []
+        with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, env, clear=True), \
+             patch.object(ci, 'PIPE', tmp), patch.object(ci, 'write_keys'), patch.object(ci, 'remove_keys'), \
+             patch.object(ci, 'sync_output'), patch.object(ci, 'log'), \
+             patch.object(ci, 'run', side_effect=lambda args, label='', must=False: calls.append((args, label)) or 0):
+            ci.main()
+        return {label: args for args, label in calls}
+
+    def test_backfill_days_flags_only_allied_and_naver(self):
+        regular = self.run_main({'BACKFILL_DAYS': '0'})
+        for label in ('allied-news', 'buzz-google', 'buzz-naver'):
+            self.assertEqual(len(regular[label]), 2, label)
+        backfill = self.run_main({'BACKFILL_DAYS': '30'})
+        self.assertEqual(backfill['allied-news'][2:], ['--days', '30'])
+        self.assertEqual(backfill['buzz-naver'][2:], ['--backfill-days', '30'])
+        self.assertEqual(len(backfill['buzz-google']), 2)
+        self.assertEqual(list(self.run_main({'BACKFILL_DAYS': '30', 'SKIP_FETCH': '1'})), ['build'])
+        workflow = (ROOT/'.github/workflows/autoupdate.yml').read_text(encoding='utf-8')
+        self.assertIn('backfill_days:', workflow)
+        self.assertIn('BACKFILL_DAYS: ${{', workflow)
+
+    def test_invalid_backfill_days_rejected_before_collection(self):
+        for value in ('32', '-1', 'abc', '1.5', '100'):
+            with self.subTest(value=value), self.assertRaises(SystemExit):
+                self.run_main({'BACKFILL_DAYS': value})
+
     def test_build_only_does_not_run_collectors(self):
         calls = []
         with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ, {'SKIP_FETCH':'1'}, clear=True), \

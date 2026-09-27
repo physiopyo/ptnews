@@ -793,7 +793,9 @@ var PTBuzz = (function () {
           );
         })
         .join("");
-      var source = (nv.word_daily || {})[kw] || [],
+      var source = ((nv.word_daily || {})[kw] || []).concat(
+          (nv.word_daily_backfill || {})[kw] || [],
+        ),
         cur = words(source, wr, channel),
         prev = words(source, pr, channel);
       body += dateRow("긍·부정 연관어", "", channels, wr) + statusLine;
@@ -945,6 +947,20 @@ var PTBuzz = (function () {
             "일. 빈도 차이에는 수집 범위 차이가 포함될 수 있습니다.",
         );
       if (cur.last) notes.push("마지막 단어 관측 시각: " + cur.last);
+      if (
+        source.some(function (row) {
+          return (
+            row.basis === "publication_date_backfill" &&
+            (within(row.date, wr) || within(row.date, pr))
+          );
+        })
+      )
+        body = body.replace(
+          '<div class="pt-bz-cloudrow">',
+          note(
+            "이 기간 단어 통계에는 1회성 소급 수집분이 포함돼 있어요 (소급분은 게시일 기준, 평시 수집분은 최초 발견일 기준).",
+          ) + '<div class="pt-bz-cloudrow">',
+        );
     } else if (view === "all4") {
       var aligned = align(
         keys.map(function (k) {
@@ -1036,6 +1052,19 @@ var PTBuzz = (function () {
           rows
             .map(function (r) {
               var scope = r.scope && r.scope.total && r.scope.total.status;
+              var filled = (r.scope && r.scope.backfill) || null;
+              var filledNote = filled
+                ? " · 소급 수집(게시일 기준" +
+                  (filled.news && filled.news.provider === "naver_news"
+                    ? ", 뉴스=네이버"
+                    : "") +
+                  (Object.keys(filled).some(function (k) {
+                    return filled[k].status !== "complete";
+                  })
+                    ? ", 검색 깊이 한도로 일부"
+                    : "") +
+                  ")"
+                : "";
               return (
                 "<tr><td>" +
                 esc(r.date) +
@@ -1051,11 +1080,20 @@ var PTBuzz = (function () {
                   : scope === "partial"
                     ? "일부 공급자만"
                     : "기존 집계/확인 불가") +
+                esc(filledNote) +
                 "</td></tr>"
               );
             })
             .join("") +
           "</tbody></table></div></details>";
+        if (
+          rows.some(function (r) {
+            return r.scope && r.scope.backfill;
+          })
+        )
+          body += note(
+            "일부 날짜는 1회성 소급 수집(게시일 기준) 값이에요. 소급한 날짜의 뉴스는 네이버 뉴스 검색 건수이고, 네이버 카페는 게시일이 없어 소급하지 않았습니다.",
+          );
         notes.push(
           "뉴스·블로그는 게시일, 카페는 발견일 기준인 기존 자료를 보존합니다. 새 단어 통계는 최초 발견일 기준입니다. 검색결과 수집 한도 내 관측이며 인터넷 전체 언급량이 아닙니다. 과거 수집기의 0건에는 미수집·실패가 섞였을 수 있으며 이를 소급해서 판별하지 않습니다.",
         );

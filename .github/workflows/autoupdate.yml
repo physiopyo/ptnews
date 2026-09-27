@@ -12,6 +12,10 @@ on:
         description: '수집 건너뛰고 빌드만 (코드/문구 변경 즉시 반영용)'
         type: boolean
         default: false
+      backfill_days:
+        description: '1회성 소급 수집 일수(0=평시, 1~31). 동맹 뉴스·네이버/카카오 언급을 게시일 기준으로 채움'
+        type: string
+        default: '0'
 
 permissions:
   contents: write           # 커밋/푸시용 (기본 GITHUB_TOKEN)
@@ -70,6 +74,7 @@ jobs:
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
           KAKAO_KEY: ${{ secrets.KAKAO_KEY }}
           SKIP_FETCH: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}
+          BACKFILL_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.backfill_days || '0' }}
         run: python pipeline/autoupdate_ci.py
 
       - name: Remove temporary credentials

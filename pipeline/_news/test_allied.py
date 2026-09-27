@@ -279,6 +279,75 @@ class AlliedTests(unittest.TestCase):
             self.assertEqual(report['sources']['google']['status'], 'error')
             self.assertEqual(report['sources']['naver']['status'], 'error')
 
+    def test_rss_window_query_default_and_backfill(self):
+        session = Mock()
+        session.get.return_value = response('<rss><channel /></rss>')
+        allied.gnews_rss(session, '약사')
+        self.assertEqual(session.get.call_args.kwargs['params']['q'], '약사 when:4d')
+        allied.gnews_rss(session, '약사', 30)
+        self.assertEqual(session.get.call_args.kwargs['params']['q'], '약사 when:30d')
+
+    @patch.object(allied, 'gnews_rss', return_value=[])
+    @patch.object(allied, 'fetch_meta', return_value={'title': '약사 정책'})
+    @patch.object(allied, 'naver_news')
+    def test_hourly_default_unchanged_two_pages_and_overlap_stop(self, naver, meta, rss):
+        first = [article(i) for i in range(100)]
+        naver.return_value = first
+        report = {}
+        allied.collect(Mock(), CREDENTIALS, known=first, keywords=['약사'], report=report)
+        naver.assert_called_once()
+        self.assertEqual(rss.call_args.args[2], 4)
+        self.assertEqual((report['max_requests'], report['max_candidates'], report['days']), (160, 400, 4))
+        self.assertFalse(report['backfill'])
+
+    @patch.object(allied, 'gnews_rss', return_value=[])
+    @patch.object(allied, 'fetch_meta', return_value={'title': '약사 정책'})
+    @patch.object(allied, 'naver_news')
+    def test_backfill_pages_past_overlap_until_cutoff_and_drops_old(self, naver, meta, rss):
+        from datetime import datetime, timedelta, timezone
+        now = datetime(2026, 9, 27, 3, 0, tzinfo=timezone.utc)
+        def page(start, age_days):
+            pub = (now - timedelta(days=age_days)).strftime('%a, %d %b %Y %H:%M:%S +0000')
+            return [{**article(start + i), 'pub': pub} for i in range(100)]
+        seen = page(0, 1)
+        pages = [seen, page(100, 10), page(200, 20),
+                 page(300, 29)[:50] + page(350, 31)[:50], page(400, 40)]
+        naver.side_effect = pages
+        report = {}
+        rows = allied.collect(Mock(), CREDENTIALS, known=seen, keywords=['약사'], report=report,
+                              days=30, now=now)
+        # All-seen first page does not stop backfill; the page crossing the cutoff does.
+        self.assertEqual([call.kwargs['start'] for call in naver.call_args_list], [1, 101, 201, 301])
+        self.assertEqual(len(rows), 350)
+        self.assertNotIn('https://a.kr/news?id=360', {row['url'] for row in rows})
+        self.assertEqual(rss.call_args.args[2], 30)
+        self.assertEqual((report['max_requests'], report['max_candidates']), (2500, 3000))
+        self.assertTrue(report['backfill'])
+        self.assertEqual(report['cutoff'], (now - timedelta(days=30)).isoformat())
+
+    @patch.object(allied, 'gnews_rss', return_value=[])
+    @patch.object(allied, 'fetch_meta', return_value={'title': '약사 정책'})
+    @patch.object(allied, 'naver_news')
+    def test_backfill_page_depth_is_bounded_to_provider_limit(self, naver, meta, rss):
+        from datetime import datetime, timezone
+        now = datetime(2026, 9, 27, tzinfo=timezone.utc)
+        counter = iter(range(10 ** 6))
+        naver.side_effect = lambda *args, **kwargs: [{**article(next(counter)), 'pub': 'Sat, 26 Sep 2026 00:00:00 +0000'}
+                                                     for _ in range(100)]
+        allied.collect(Mock(), CREDENTIALS, keywords=['약사'], days=31, now=now)
+        self.assertEqual(naver.call_count, 10)
+        self.assertEqual(max(call.kwargs['start'] for call in naver.call_args_list), 901)
+
+    def test_cli_days_validation_and_status_report(self):
+        for value in ('0', '32'):
+            with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
+                allied.main(['--days', value, '--max-requests', '0'])
+        with tempfile.TemporaryDirectory() as directory, contextlib.redirect_stdout(io.StringIO()):
+            report = allied.main(['--output-dir', directory, '--days', '30', '--max-requests', '0'])
+            saved = json.loads((Path(directory) / 'allied_status.json').read_text(encoding='utf-8'))
+        self.assertEqual((report['days'], saved['days'], saved['backfill']), (30, 30, True))
+        self.assertIn('cutoff', saved)
+
 
 if __name__ == '__main__':
     unittest.main()

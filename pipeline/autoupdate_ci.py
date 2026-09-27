@@ -82,10 +82,29 @@ def sync_output():
     log('sync | index.html + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
 
 
+MAX_BACKFILL_DAYS = 31
+
+
+def backfill_days():
+    """BACKFILL_DAYS from workflow_dispatch: integer 0..31; anything else aborts before collection."""
+    raw = (os.environ.get('BACKFILL_DAYS') or '0').strip()
+    if not re.fullmatch(r'\d{1,2}', raw) or int(raw) > MAX_BACKFILL_DAYS:
+        log('BACKFILL_DAYS=%r 거부: 0~%d 정수만 허용 (수집·빌드 중단)' % (raw[:20], MAX_BACKFILL_DAYS))
+        sys.exit(2)
+    return int(raw)
+
+
 def main():
     log('===== CI auto-update start =====')
     os.makedirs(os.path.join(PIPE, '웹', 'board', 'img'), exist_ok=True)
     skip = bool(os.environ.get('SKIP_FETCH'))
+    days = backfill_days()
+    if days and skip:
+        log('SKIP_FETCH=1 이므로 BACKFILL_DAYS=%d 무시' % days)
+    elif days:
+        log('BACKFILL_DAYS=%d → 동맹 뉴스·네이버/카카오 언급 1회성 게시일 기준 소급 수집(한도 있음)' % days)
+    allied_args = ['--days', str(days)] if days else []
+    naver_args = ['--backfill-days', str(days)] if days else []
     if skip:
         log('SKIP_FETCH=1 → 뉴스·버즈 수집 생략, 빌드만 수행(코드/문구 변경 즉시 반영)')
     try:
@@ -95,9 +114,9 @@ def main():
             run([PY, os.path.join(NEWS, 'fetch_press.py')], 'press')
             run([PY, os.path.join(NEWS, 'fetch_ko.py')], 'ko')
             run([PY, os.path.join(NEWS, 'fetch_insure.py')], 'insure')
-            run([PY, os.path.join(NEWS, 'fetch_allied.py')], 'allied-news')
+            run([PY, os.path.join(NEWS, 'fetch_allied.py')] + allied_args, 'allied-news')
             run([PY, os.path.join(NEWS, 'fetch_buzz.py')], 'buzz-google')
-            run([PY, os.path.join(NEWS, 'fetch_buzz_naver.py')], 'buzz-naver')
+            run([PY, os.path.join(NEWS, 'fetch_buzz_naver.py')] + naver_args, 'buzz-naver')
         run([NODE, os.path.join(PIPE, '_buildboard.cjs')], 'build', must=True)
         sync_output()
     finally:

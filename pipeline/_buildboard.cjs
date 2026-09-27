@@ -239,6 +239,7 @@ const BUZZ = {
     datalab: currentNaver.datalab || {},
     sentiment: currentNaver.sentiment || {},
     word_daily: currentNaver.word_daily || {},
+    word_daily_backfill: currentNaver.word_daily_backfill || {},
     word_history_metadata: currentNaver.word_history_metadata || {},
     channel_daily: mergeBuzzRows(currentNaver.channel_daily, recoveredNaver.channel_daily, 'date'),
     hourly: mergeBuzzRows(currentNaver.hourly, recoveredNaver.hourly, 't'),

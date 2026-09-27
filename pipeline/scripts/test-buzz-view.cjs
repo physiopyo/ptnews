@@ -141,6 +141,82 @@ html = buzz.render(data, {
 assert.match(html, /새 수집 상태 미확인/);
 assert.match(html, /해당 기간의 단어 관측 자료가 없습니다/);
 assert.doesNotMatch(html, /우려/);
+const backfilled = {
+  keywords: ["심리상담"],
+  naver: {
+    word_daily: { 심리상담: [] },
+    word_daily_backfill: {
+      심리상담: [
+        {
+          date: "2026-09-24",
+          basis: "publication_date_backfill",
+          documents: { news: 2, blog: 3, cafe: null },
+          related: [{ w: "바우처", c: 2 }],
+          sentiment: {
+            blog: [{ w: "부담", p: -1, c: 2 }],
+            community: [{ w: "부담", p: -1, c: 2 }],
+          },
+        },
+      ],
+    },
+  },
+};
+html = buzz.render(backfilled, {
+  buzzView: "senti",
+  buzzWordPeriod: "1주일",
+  buzzEnd: "2026-09-26",
+});
+assert.match(html, /소급 수집분이 포함/);
+assert.match(html, /부정어 1/);
+assert.match(html, /바우처/);
+html = buzz.render(backfilled, {
+  buzzView: "senti",
+  buzzWordPeriod: "1일",
+  buzzEnd: "2026-09-26",
+});
+assert.doesNotMatch(
+  html,
+  /소급 수집분이 포함/,
+  "notice only when backfill rows are in range",
+);
+html = buzz.render(
+  {
+    keywords: ["약사"],
+    naver: {
+      channel_daily: {
+        약사: [
+          {
+            date: "2026-09-20",
+            news: 4,
+            blog: 9,
+            cafe: null,
+            scope: {
+              total: { status: "unknown" },
+              backfill: {
+                news: {
+                  basis: "publication_date_backfill",
+                  status: "complete",
+                  provider: "naver_news",
+                },
+                blog: {
+                  basis: "publication_date_backfill",
+                  status: "partial",
+                  reason: "search_depth",
+                },
+              },
+            },
+          },
+        ],
+      },
+    },
+  },
+  { buzzView: "cnt", buzzPeriod: "1주일", buzzEnd: "2026-09-26" },
+);
+assert.match(html, /1회성 소급 수집\(게시일 기준\) 값/);
+assert.match(
+  html,
+  /소급 수집\(게시일 기준, 뉴스=네이버, 검색 깊이 한도로 일부\)/,
+);
 const svg = buzz.chart(
   ["2026-09-24", "2026-09-25", "2026-09-26"],
   [{ name: "x", values: [1, null, 3] }],

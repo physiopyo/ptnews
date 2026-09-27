@@ -26,6 +26,21 @@ def digest(value):
                                      separators=(',', ':')).encode('utf-8')).hexdigest()
 
 
+def kst_date(value):
+    """KST calendar date of a stored published_at (date-only values are already KST)."""
+    if not isinstance(value, str) or len(value) < 10:
+        return None
+    if len(value) == 10:
+        return value
+    try:
+        stamp = datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError:
+        return None
+    if stamp.tzinfo is None:
+        return value[:10]
+    return stamp.astimezone(KST).date().isoformat()
+
+
 def word_rows(counts, polarities=None):
     rows = [{'w': word, 'c': count} for word, count in
             sorted(counts.items(), key=lambda item: (-item[1], item[0]))]
@@ -116,7 +131,12 @@ class HistoryArchive:
         rows.append(event)
         self.dirty_events.add(month)
 
-    def observe(self, keyword, documents, now):
+    def observe(self, keyword, documents, now, discovery=None):
+        """discovery='publication_date_backfill' marks documents first found by a backfill.
+
+        They join the permanent index (so later runs never re-count them as newly
+        first-seen) but their words belong to publication-date rows, not first_seen.
+        """
         stamp = observed_at(now)
         identifiers = []
         for value in documents:
@@ -133,6 +153,10 @@ class HistoryArchive:
             if old:
                 document['channel'] = old['channel']
                 document['published_at'] = document.get('published_at') or old.get('published_at')
+                if old.get('discovery'):
+                    document['discovery'] = old['discovery']
+            elif discovery:
+                document['discovery'] = discovery
             if old is None or any(document.get(key) != old.get(key) for key in
                                   ('content_hash', 'tokens', 'related', 'sentiment', 'published_at')):
                 self.snapshot('document_revision' if old else 'document', keyword,
@@ -155,6 +179,7 @@ class HistoryArchive:
                 if event['keyword'] == keyword and event['kind'] == 'document':
                     document = event['data']['document']
                     originals.setdefault(document['id'], document)
+        originals = {key: document for key, document in originals.items() if not document.get('discovery')}
         # Only the immutable initial analysis belongs to a first-seen period.
         # Revisions are current samples, not newly published words in the past.
         for document in originals.values():
@@ -188,6 +213,59 @@ class HistoryArchive:
                 summary['sentiment']['community'] = None
             rows.append({'date': date, 'basis': 'first_seen', **summary,
                          'coverage': sorted(coverage[date]), 'observed_at': stamps[date]})
+        return rows
+
+    def word_daily_backfill(self, keyword):
+        """Words of backfill-discovered documents by publication date (KST).
+
+        Coverage/status come from the permanent 'mentions_backfill' events. Documents
+        already observed by regular runs stay in their first_seen rows and are only
+        reported as previously_observed (the row is then partial for that channel).
+        """
+        rank = {'complete': 2, 'partial': 1}
+        coverage, stamps, known = {}, {}, {}
+        for events in self.events.values():
+            for event in events:
+                if event['keyword'] != keyword or event['kind'] != 'mentions_backfill':
+                    continue
+                channel = event['data']['channel']
+                for date, info in event['data']['dates'].items():
+                    state = coverage.setdefault(date, {})
+                    status = info['status']
+                    if info.get('previously_observed'):
+                        status = 'partial'
+                    previous = state.get(channel)
+                    if previous is None or rank[status] > rank[previous]:
+                        state[channel] = status
+                        known.setdefault(date, {})[channel] = info.get('previously_observed', 0)
+                    current = stamps.get(date)
+                    if current is None or current['utc'] < event['observed_at']['utc']:
+                        stamps[date] = event['observed_at']
+        by_date = {}
+        for events in self.events.values():
+            for event in events:
+                if event['keyword'] != keyword or event['kind'] != 'document':
+                    continue
+                document = event['data']['document']
+                if document.get('discovery') != 'publication_date_backfill':
+                    continue
+                date = kst_date(document.get('published_at'))
+                if date in coverage and document['channel'] in coverage[date]:
+                    by_date.setdefault(date, {})[document['id']] = document
+        rows = []
+        for date in sorted(coverage):
+            summary = summarize(list(by_date.get(date, {}).values()))
+            for channel in summary['documents']:
+                if channel not in coverage[date]:
+                    summary['documents'][channel] = None
+                    summary['channels'][channel] = None
+                    if channel in summary['sentiment']:
+                        summary['sentiment'][channel] = None
+            if not set(coverage[date]).intersection({'blog', 'cafe'}):
+                summary['sentiment']['community'] = None
+            rows.append({'date': date, 'basis': 'publication_date_backfill', **summary,
+                         'coverage': sorted(coverage[date]), 'status': coverage[date],
+                         'previously_observed': known.get(date, {}), 'observed_at': stamps[date]})
         return rows
 
     def save(self):

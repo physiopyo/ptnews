@@ -83,7 +83,7 @@ class FakeClient:
         return Response({'items': docs, 'total': total})
 
 
-class CollectorTests(unittest.TestCase):
+class OfflineCase(unittest.TestCase):
     def setUp(self):
         self.directory = tempfile.TemporaryDirectory(prefix='naver-offline-', dir=STAGE)
         self.root = Path(self.directory.name)
@@ -104,6 +104,8 @@ class CollectorTests(unittest.TestCase):
     def write(self, filename, value):
         config.save(str(self.root / filename), value)
 
+
+class CollectorTests(OfflineCase):
     def test_actual_alias_payload_dedup_totals_words_and_reload_cadence(self):
         client = FakeClient()
         first, used = self.execute(client)
@@ -595,6 +597,180 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         self.assertEqual(set(result['naver']['totals']), {selected['keyword']})
         with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
             collector.main(['--keywords', 'not-a-canonical-keyword'], client=client, credentials={})
+
+def dated(source, url, date, text='기쁨 소식'):
+    """Provider-shaped fixture item published on a KST date."""
+    compact = date.replace('-', '')
+    if source == 'daumcafe':
+        return {'url': url, 'title': text, 'contents': '', 'datetime': date + 'T10:00:00.000+09:00'}
+    day = datetime.strptime(date, '%Y-%m-%d')
+    return {'link': url, 'title': text, 'description': '', 'postdate': compact,
+            'pubDate': day.strftime('%a, %d %b %Y') + ' 10:00:00 +0900'}
+
+
+class PagedClient(FakeClient):
+    """Serves per-(source, term) item lists with real provider pagination."""
+
+    def __init__(self, items):
+        super().__init__(self.serve)
+        self.items = items
+
+    def serve(self, method, url, kwargs):
+        if method != 'get' or 'news.google.com' in url:
+            return None
+        params = kwargs['params']
+        if 'kakao.com' in url:
+            rows = self.items.get(('daumcafe', params['query']), [])
+            page = rows[(params['page'] - 1) * 50: params['page'] * 50]
+            return Response({'documents': page, 'meta': {'total_count': len(rows),
+                                                         'is_end': params['page'] * 50 >= len(rows)}})
+        source = {'blog': 'blog', 'news': 'news', 'cafearticle': 'cafe'}[url.rsplit('/', 1)[-1].split('.')[0]]
+        rows = self.items.get((source, params['query']), [])
+        start = params['start'] - 1
+        return Response({'items': rows[start:start + params['display']], 'total': len(rows)})
+
+
+class BackfillTests(OfflineCase):
+    def fixture(self):
+        items = {}
+        for source in ('news', 'blog', 'daumcafe'):
+            items[(source, '검색어')] = [dated(source, f'https://{source}/a', '2026-01-31'),
+                                        dated(source, f'https://{source}/b', '2026-01-31', '불안 소식'),
+                                        dated(source, f'https://{source}/c', '2026-01-29'),
+                                        dated(source, f'https://{source}/old', '2026-01-20')]
+            items[(source, '검색 어')] = [dated(source, f'https://{source}/a', '2026-01-31'),
+                                         dated(source, f'https://{source}/d', '2026-01-30'),
+                                         dated(source, f'https://{source}/old2', '2026-01-10')]
+        items[('cafe', '검색어')] = [{'link': 'https://cafe/x', 'title': '카페', 'description': ''}]
+        return items
+
+    def test_counts_per_publication_date_dedupe_aliases_and_no_cafearticle(self):
+        client = PagedClient(self.fixture())
+        result, _ = self.execute(client, backfill_days=5)
+        state = self.read('buzz_channel_daily.json')['검색어']
+        daily = state['daily']
+        # a is shared by both aliases -> counted once; 01-28/01-27 are true zeros (fully covered).
+        self.assertEqual({date: daily[date].get('blog') for date in ('2026-01-31', '2026-01-30', '2026-01-29',
+                                                                   '2026-01-28', '2026-01-27')},
+                         {'2026-01-31': 2, '2026-01-30': 1, '2026-01-29': 1, '2026-01-28': 0, '2026-01-27': 0})
+        self.assertNotIn('2026-01-26', daily)
+        self.assertTrue(all('cafe' not in daily[date] for date in ('2026-01-31', '2026-01-28')))
+        self.assertEqual(self.read('buzz_daum_daily.json')['검색어']['2026-01-31'], 2)
+        self.assertEqual(state['backfill']['2026-01-31']['blog']['basis'], 'publication_date_backfill')
+        self.assertEqual(state['backfill']['2026-01-31']['blog']['status'], 'complete')
+        cafe_calls = [call for call in client.calls if 'cafearticle' in call[1]]
+        # Only the regular sample (one short page per alias); cafearticle is never backfilled.
+        self.assertEqual([call[2]['params']['start'] for call in cafe_calls], [1, 1])
+        self.assertFalse(any('cafe' in value for value in state['backfill'].values()))
+        rows = {row['date']: row for row in result['naver']['channel_daily']['검색어']}
+        row = rows['2026-01-28']
+        self.assertEqual((row['news'], row['blog'], row['cafe']), (0, 0, 0))
+        self.assertEqual(row['scope']['backfill']['news']['provider'], 'naver_news')
+        self.assertEqual(row['scope']['cafe']['observed'], ['kakao'])
+        self.assertEqual(row['scope']['cafe']['status'], 'partial')
+        self.assertEqual(row['scope']['total']['status'], 'partial')
+        # RSS date counts (regular path) win over the Naver news backfill.
+        self.assertEqual(rows['2026-01-31']['news'], 2)
+        self.assertNotIn('news', rows['2026-01-31']['scope']['backfill'])
+        self.assertIsNone(rows['2026-01-26']['blog'])
+        self.assertEqual(result['backfill']['days'], 5)
+        self.assertEqual(result['backfill']['requests'], {'naver': 4, 'kakao': 2})
+        self.assertEqual(result['collection']['backfill:검색어:blog']['status'], 'complete')
+
+    def test_truncated_depth_marks_boundary_partial_and_older_unknown(self):
+        items = self.fixture()
+        items[('blog', '검색어')] = ([dated('blog', f'https://blog/p1-{i}', '2026-01-31') for i in range(100)]
+                                    + [dated('blog', f'https://blog/p2-{i}', '2026-01-30') for i in range(100)]
+                                    + [dated('blog', 'https://blog/p3', '2026-01-29')])
+        with patch.dict(collector.BACKFILL_PAGES, {'naver': 2}):
+            result, _ = self.execute(PagedClient(items), backfill_days=5)
+        state = self.read('buzz_channel_daily.json')['검색어']
+        self.assertEqual(state['daily']['2026-01-31']['blog'], 101)
+        self.assertEqual(state['daily']['2026-01-30']['blog'], 101)
+        self.assertEqual(state['backfill']['2026-01-30']['blog'],
+                         {**state['backfill']['2026-01-30']['blog'], 'status': 'partial',
+                          'reason': 'search_depth', 'reached': '2026-01-30'})
+        # Past the reached boundary the backfill stores nothing (01-29 may hold only the
+        # regular sample's published-date observation; 01-28 stays unknown).
+        self.assertNotIn('blog', state['backfill'].get('2026-01-29', {}))
+        self.assertIsNone(state['daily'].get('2026-01-28', {}).get('blog'))
+        rows = {row['date']: row for row in result['naver']['channel_daily']['검색어']}
+        self.assertEqual(rows['2026-01-30']['scope']['total']['status'], 'partial')
+        self.assertIsNone(rows['2026-01-28']['blog'])
+        report = result['collection']['backfill:검색어:blog']
+        self.assertEqual((report['status'], report['reached'], report['covered_from']),
+                         ('partial', '2026-01-30', '2026-01-30'))
+
+    def test_never_overwrites_existing_observations(self):
+        self.write('buzz_channel_daily.json', {'검색어': {'daily': {'2026-01-29': {'blog': 99}}, 'sb': [], 'sc': []}})
+        self.write('buzz_daum_daily.json', {'검색어': {'2026-01-29': 7}})
+        self.write('buzz_news_daily.json', {'검색어': {'2026-01-28': 3}})
+        result, _ = self.execute(PagedClient(self.fixture()), backfill_days=5, credentials=CREDS)
+        state = self.read('buzz_channel_daily.json')['검색어']
+        self.assertEqual(state['daily']['2026-01-29']['blog'], 99)
+        self.assertNotIn('blog', state['backfill'].get('2026-01-29', {}))
+        self.assertEqual(self.read('buzz_daum_daily.json')['검색어']['2026-01-29'], 7)
+        self.assertNotIn('news', state['daily'].get('2026-01-28', {}))
+        rows = {row['date']: row for row in result['naver']['channel_daily']['검색어']}
+        self.assertEqual(rows['2026-01-28']['news'], 3)
+        self.assertEqual(rows['2026-01-29']['blog'], 99)
+
+    def test_document_index_prevents_first_seen_double_count_and_words_by_pub_date(self):
+        client = PagedClient(self.fixture())
+        first, _ = self.execute(client, backfill_days=5)
+        again, _ = self.execute(PagedClient(self.fixture()), now=NOW + config.SIX_HOURS)
+        for result in (first, again):
+            # Regular samples see only already-indexed URLs: no first-seen words today.
+            today = {row['date']: row for row in result['naver']['word_daily']['검색어']}['2026-02-01']
+            self.assertEqual(today['basis'], 'first_seen')
+            # Only out-of-window documents (old, old2, naver cafe x) are newly first seen;
+            # the backfilled a-d are indexed and never re-counted, also not on the next run.
+            self.assertEqual(today['documents'], {'news': 2, 'blog': 2, 'cafe': 3})
+            state = self.read('buzz_channel_daily.json')['검색어']
+            self.assertEqual(state['daily']['2026-01-31']['blog'], 2)
+        words = {row['date']: row for row in again['naver']['word_daily_backfill']['검색어']}
+        row = words['2026-01-31']
+        self.assertEqual(row['basis'], 'publication_date_backfill')
+        self.assertEqual(row['documents'], {'news': 2, 'blog': 2, 'cafe': 2})
+        self.assertEqual({item['w']: item['c'] for item in row['related']}, {'기쁨': 3, '소식': 6, '불안': 3})
+        self.assertEqual(row['status'], {'news': 'complete', 'blog': 'complete', 'cafe': 'complete'})
+        self.assertEqual(words['2026-01-28']['documents'], {'news': 0, 'blog': 0, 'cafe': 0})
+        self.assertNotIn('2026-01-20', words)
+        archive = HistoryArchive(self.root)
+        document = archive.documents[digest(['검색어', 'https://blog/a'])]
+        self.assertEqual(document['discovery'], 'publication_date_backfill')
+        self.assertEqual(document['first_seen']['utc'], '2026-01-31T15:00:00+00:00')
+
+    def test_previously_observed_documents_stay_in_first_seen_rows(self):
+        self.execute(PagedClient(self.fixture()))
+        result, _ = self.execute(PagedClient(self.fixture()), now=NOW + config.SIX_HOURS, backfill_days=5)
+        first_seen = {row['date']: row for row in result['naver']['word_daily']['검색어']}['2026-02-01']
+        self.assertEqual(first_seen['documents']['blog'], 6)  # a,b,c,old,d,old2 from the regular run
+        words = {row['date']: row for row in result['naver']['word_daily_backfill']['검색어']}
+        self.assertEqual(words['2026-01-31']['documents']['blog'], 0)
+        self.assertEqual(words['2026-01-31']['previously_observed']['blog'], 2)
+        self.assertEqual(words['2026-01-31']['status']['blog'], 'partial')
+
+    def test_cli_validation_and_zero_default_makes_no_backfill_requests(self):
+        for argv in (['--backfill-days', '32'], ['--backfill-days', '-1'], ['--backfill-max-requests', '-1']):
+            with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
+                collector.main(argv, client=FakeClient(), credentials={})
+        with self.assertRaises(ValueError):
+            self.execute(backfill_days=32)
+        result, _ = self.execute(PagedClient(self.fixture()))
+        self.assertNotIn('backfill', result)
+        self.assertFalse(any(key.startswith('backfill:') for key in result['collection']))
+        selected = config.SPECS[0]
+        client = PagedClient({})
+        with patch('sys.stdout', new_callable=io.StringIO):
+            result = collector.main(['--output-dir', str(self.root), '--keywords', selected['keyword'],
+                                     '--backfill-days', '3', '--backfill-max-requests', '1',
+                                     '--backfill-kakao-max-requests', '0'],
+                                    client=client, clock=lambda: NOW + config.DAY, kiwi=FakeKiwi(),
+                                    credentials=CREDS, lexicon=LEXICON)
+        self.assertEqual(result['backfill']['requests'], {'naver': 1, 'kakao': 0})
+        blog = result['collection'][f'backfill:{selected["keyword"]}:blog']
+        self.assertEqual(blog['errors'], ['request_budget_exhausted'])
 
 
 if __name__ == '__main__':

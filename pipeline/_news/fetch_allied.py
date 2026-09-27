@@ -5,7 +5,8 @@ import html
 import json
 import os
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from email.utils import parsedate_to_datetime
 from itertools import zip_longest
 from urllib.parse import parse_qsl, quote, urlencode, urljoin, urlsplit, urlunsplit
 from xml.etree import ElementTree as ET
@@ -15,6 +16,12 @@ from buzz_config import CONFIG_HASH, SPECS
 from fetch_press import BAD_PAGE_TITLE, H, decode_gnews, fetch_meta, parse_pub, resolve_chip
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+REGULAR_DAYS = 4
+MAX_DAYS = 31
+# One-shot backfill only: the official news API serves start<=1000 (10 pages of 100).
+BACKFILL_PAGES = 10
+REGULAR_LIMITS = (160, 400)
+BACKFILL_LIMITS = (2500, 3000)
 TOPICS = {
     'psych': ('심리 상담', '심리 상담사', '상담 심리사', '임상 심리사',
               '정신 건강 임상 심리사', '정신 건강 간호사', '정신 건강 사회 복지사',
@@ -181,10 +188,11 @@ class RequestBudget:
         return self.request('post', url, **kwargs)
 
 
-def gnews_rss(session, query):
+def gnews_rss(session, query, days=REGULAR_DAYS):
     # fetch_press.gnews_rss uses a separate global session and hides transport errors.
     response = session.get('https://news.google.com/rss/search',
-                           params={'q': query + ' when:4d', 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'}, timeout=20)
+                           params={'q': query + ' when:%dd' % days, 'hl': 'ko', 'gl': 'KR', 'ceid': 'KR:ko'},
+                           timeout=20)
     root = ET.fromstring(response.content)
     if root.tag != 'rss':
         raise ValueError('not an RSS response')
@@ -208,6 +216,26 @@ def naver_news(session, query, credentials, start=1):
     return [{'title': clean(item.get('title')), 'desc': clean(item.get('description')),
              'url': item.get('originallink') or item.get('link'), 'pub': item.get('pubDate'), 'media': ''}
             for item in payload['items'] if isinstance(item, dict)]
+
+
+def published(value):
+    """Aware UTC datetime of an RFC-822 pubDate, or None when absent/invalid (never guessed)."""
+    try:
+        stamp = parsedate_to_datetime(value)
+    except (TypeError, ValueError, IndexError, OverflowError):
+        return None
+    if stamp is None:
+        return None
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=timezone.utc)
+    return stamp.astimezone(timezone.utc)
+
+
+def limits(days, max_requests=None, max_candidates=None):
+    """Raised default budgets apply only to an explicit backfill (days > 4)."""
+    default_requests, default_candidates = BACKFILL_LIMITS if days > REGULAR_DAYS else REGULAR_LIMITS
+    return (default_requests if max_requests is None else max_requests,
+            default_candidates if max_candidates is None else max_candidates)
 
 
 def article_evidence(row):
@@ -238,12 +266,20 @@ def merge_article(first, second):
     return merged
 
 
-def collect(session, credentials=None, *, known=(), keywords=None, topic=None, max_requests=160,
-            max_candidates=400, pages=2, report=None):
+def collect(session, credentials=None, *, known=(), keywords=None, topic=None, max_requests=None,
+            max_candidates=None, pages=2, report=None, days=REGULAR_DAYS, now=None):
+    """days>4 is a bounded one-shot backfill; days=4 keeps the hourly request pattern."""
+    if not 1 <= days <= MAX_DAYS:
+        raise ValueError('invalid days')
+    max_requests, max_candidates = limits(days, max_requests, max_candidates)
     if max_requests < 0 or max_candidates < 1 or not 1 <= pages <= 2:
         raise ValueError('invalid collection limits')
+    backfill = days > REGULAR_DAYS
+    now = datetime.now(timezone.utc) if now is None else now
+    cutoff = now - timedelta(days=days)
     report = {} if report is None else report
     http = RequestBudget(session, max_requests, report)
+    report.update(days=days, backfill=backfill, cutoff=cutoff.isoformat())
     report['sources']['naver'] = {'requests': 0, 'status': 'pending' if credentials_valid(credentials) else 'missing_credentials'}
     groups = [QUERIES[name] for name in ([topic] if topic else TOPICS)]
     queries = list(dict.fromkeys(keywords if keywords is not None else
@@ -322,7 +358,7 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
         if 'google' not in http.blocked:
             http.source = 'google'
             try:
-                rows = gnews_rss(http, query)
+                rows = gnews_rss(http, query, days)
                 report['sources'].setdefault('google', {'requests': 0})['status'] = 'ok' if rows else 'empty'
                 report['queries'].append({'source': 'google', 'query': query, 'status': 'ok' if rows else 'empty', 'count': len(rows)})
                 for row in rows:
@@ -335,12 +371,12 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
                     state['status'] = 'error'
                 report['queries'].append({'source': 'google', 'query': query, 'status': state['status']})
         if credentials_valid(credentials) and 'naver' not in http.blocked:
-            for page in range(pages):
+            for page in range(BACKFILL_PAGES if backfill else pages):
                 if http.count >= max_requests or len(candidates) >= max_candidates:
                     break
                 http.source = 'naver'
                 try:
-                    rows = naver_news(http, query, credentials, start=1 + page * 100)
+                    rows = raw_rows = naver_news(http, query, credentials, start=1 + page * 100)
                     report['sources']['naver']['status'] = 'ok' if rows else 'empty'
                     report['queries'].append({'source': 'naver', 'query': query, 'page': page + 1,
                                               'status': 'ok' if rows else 'empty', 'count': len(rows)})
@@ -351,11 +387,18 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
                     report['queries'].append({'source': 'naver', 'query': query, 'page': page + 1, 'status': state['status']})
                     break
                 overlap = bool(rows) and all(url_key(row.get('url') or '') in cache for row in rows)
+                older = False
+                if backfill:
+                    stamps = [published(row.get('pub')) for row in rows]
+                    older = any(stamp is not None and stamp < cutoff for stamp in stamps)
+                    # Out-of-window items are dropped; undated items are kept (not guessed).
+                    rows = [row for row, stamp in zip(rows, stamps) if stamp is None or stamp >= cutoff]
                 for row in rows:
                     ingest(row)
                     if len(candidates) >= max_candidates:
                         break
-                if len(rows) < 100 or overlap:
+                # Backfill ignores the all-seen overlap: older unseen pages may follow.
+                if len(raw_rows) < 100 or older or (overlap and not backfill):
                     break
     report.update(candidate_count=len(candidates), accepted=len(result), candidates=list(candidate_records.values()))
     if http.count >= max_requests:
@@ -383,10 +426,15 @@ def main(argv=None):
     parser.add_argument('--output-dir', default=HERE)
     parser.add_argument('--keywords', nargs='+')
     parser.add_argument('--topic', choices=tuple(TOPICS))
-    parser.add_argument('--max-requests', type=int, default=160)
-    parser.add_argument('--max-candidates', type=int, default=400)
+    parser.add_argument('--max-requests', type=int)
+    parser.add_argument('--max-candidates', type=int)
     parser.add_argument('--pages', type=int, choices=(1, 2), default=2)
+    parser.add_argument('--days', type=int, default=REGULAR_DAYS,
+                        help='search window in days (1..31); >4 is a bounded one-shot backfill')
     args = parser.parse_args(argv)
+    if not 1 <= args.days <= MAX_DAYS:
+        parser.error('--days must be between 1 and %d' % MAX_DAYS)
+    args.max_requests, args.max_candidates = limits(args.days, args.max_requests, args.max_candidates)
     if args.max_requests < 0 or args.max_candidates < 1:
         parser.error('max-requests must be nonnegative; max-candidates must be positive')
     credentials = None
@@ -418,7 +466,8 @@ def main(argv=None):
     with requests.Session() as session:
         session.headers.update(H)
         fresh = collect(session, credentials, known=list(merged.values()), keywords=args.keywords, topic=args.topic,
-                        max_requests=args.max_requests, max_candidates=args.max_candidates, pages=args.pages, report=report)
+                        max_requests=args.max_requests, max_candidates=args.max_candidates, pages=args.pages,
+                        report=report, days=args.days)
     for row in fresh:
         key = url_key(row['url'])
         merged[key] = merge_article(merged[key], row) if key in merged else row
@@ -432,7 +481,7 @@ def main(argv=None):
         report[topic] = len(rows)
     report['rejected_archive'] = len(rejected)
     save_json(os.path.join(args.output_dir, 'allied_status.json'), report)
-    print(json.dumps({key: report[key] for key in ('requests', 'stop_reason', 'psych', 'pharm', 'rejected_archive')},
+    print(json.dumps({key: report[key] for key in ('days', 'requests', 'stop_reason', 'psych', 'pharm', 'rejected_archive')},
                      ensure_ascii=False))
     return report
 
