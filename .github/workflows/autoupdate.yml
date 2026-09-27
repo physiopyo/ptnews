@@ -72,7 +72,7 @@ jobs:
         env:
           NAVER_ID: ${{ secrets.NAVER_ID }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
-          KAKAO_KEY: ${{ secrets.KAKAO_KEY }}
+          KAKAO_KEY: ${{ secrets.KAKAO }}
           SKIP_FETCH: ${{ (github.event_name == 'workflow_dispatch' && inputs.skip_fetch) && '1' || '' }}
           BACKFILL_DAYS: ${{ github.event_name == 'workflow_dispatch' && inputs.backfill_days || '0' }}
         run: python pipeline/autoupdate_ci.py
