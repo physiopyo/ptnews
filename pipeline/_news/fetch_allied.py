@@ -18,7 +18,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from fetch_press import BAD_PAGE_TITLE, H, IMGDIR, decode_gnews, dl_img, fetch_meta, parse_pub, resolve_chip
+from fetch_press import BAD_PAGE_TITLE, H, IMGDIR, best_title, decode_gnews, dl_img, fetch_meta, parse_pub, resolve_chip
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REGULAR_DAYS = 4
@@ -118,15 +118,20 @@ def url_key(url):
 PSYCH_CORE = ('공통업무', '임상심리', '심리상담바우처', '심리바우처', '상담바우처', '마음투자', '정신건강전문요원', '정신건강임상심리사', '임상심리사', '상담심리사', '심리상담사법',
               '심리사법', '정신건강복지법시행령', '전문요원업무범위', '한국임상심리학회', '한국상담심리학회',
               '한국심리학회', '한국상담학회', '정신건강간호사', '정신건강사회복지사', '정신건강작업치료사')
-PSYCH_BROAD = ('심리상담', '마음투자', '심리상담바우처', '마음건강')
+PSYCH_BROAD = ('심리상담', '마음투자', '심리상담바우처')
 PSYCH_QUALIFIER = ('자격', '법제화', '입법', '법안', '업무범위', '전문성', '수련', '직역', '국가자격',
-                   '민간자격', '시행령', '전문인력', '인력기준', '공통업무')
+                   '민간자격', '시행령', '공통업무', '누구의역할', '고유업무')
+# Summary-only evidence must name the policy dispute itself, not merely mention a profession.
+PSYCH_STRONG = ('공통업무', '업무범위', '고유업무', '시행령', '심리상담사법', '국가자격', '심리상담바우처',
+                '마음투자')
 PHARM_CORE = ('약배송', '약배달', '의약품배송', '비대면조제', '성분명처방', '대체조제', '공적전자처방',
               '전자처방전', '약사총궐기', '약사궐기', '약사결의대회', '약배송확대', '재택수령', '의약품수령')
 PHARM_BROAD = ('비대면진료', '약사회', '약사', '약국', '약사법')
 PHARM_QUALIFIER = ('비대면', '플랫폼', '성분명', '대체조제', '처방전', '궐기', '집회', '결의대회', '재택수령', '비대위')
 
 
+# Education/training notices mention qualifications without being about the policy dispute.
+PSYCH_NOT_ISSUE = ('자격연수', '연수', '자격증', '학과', '학점', '입학', '모집', '특강', 'Wee', '위센터', '위클래스')
 NOT_PHARMACIST = ('제약사', '제약회사', '신약', '한약사')
 
 
@@ -142,14 +147,18 @@ def issue_topics(title, body):
         title, body = title.replace(word, ' '), body.replace(word, ' ')
     text = title + ' ' + body
     topics = []
+    notice = any(w in title for w in PSYCH_NOT_ISSUE)
     hints = {'psych': ('간호사', '사회복지사', '작업치료사'), 'pharm': ('약사', '약국', '의약품')}
     for topic, core, broad, qualifier in (('psych', PSYCH_CORE, PSYCH_BROAD, PSYCH_QUALIFIER),
                                           ('pharm', PHARM_CORE, PHARM_BROAD, PHARM_QUALIFIER)):
         titled = any(w in title for w in broad + qualifier + hints[topic])
         if (any(w in title for w in core)
-                or (any(w in body for w in core) and titled)
+                or (any(w in body for w in core) and titled
+                    and (topic != 'psych' or any(w in body for w in PSYCH_STRONG)))
                 or (any(w in title for w in broad) and any(w in title for w in qualifier))):
-            topics.append(topic)
+            if not (topic == 'psych' and notice and not any(
+                    w in title for w in ('공통업무', '업무범위', '시행령', '논란', '난립', '규제', '법제화'))):
+                topics.append(topic)
     if ('pharm' not in topics and ('배송' in title or '배달' in title)
             and any(w in title for w in ('약사', '약국', '의약품', '처방약'))
             and not any(w in title for w in ('광고', '차량'))):
@@ -164,7 +173,9 @@ def classify(title, description='', url=''):
     host = (urlsplit(url).hostname or '').lower()
     if not clean(title) or any(host == h or host.endswith('.' + h) for h in BLOCK_HOSTS):
         return []
-    if any(re.sub(r'\s+', '', w) in compact for w in PROMO) and not any(w in compact for w in DEBATE):
+    # Promotion words must start a word ('역할인가' is not '할인').
+    promo = any(re.search(r'(?<![가-힣])' + re.escape(re.sub(r'\s+', '', w)), compact) for w in PROMO)
+    if promo and not any(w in compact for w in DEBATE):
         return []
     return issue_topics(clean(title), clean(description))
 
@@ -300,6 +311,18 @@ def limits(days, max_requests=None, max_candidates=None):
             default_candidates if max_candidates is None else max_candidates)
 
 
+def strip_outlet(title, site):
+    """Drop a trailing ' - 매체명' / ' | 매체명' left by a page <title>; keep the headline intact."""
+    parts = re.split(r'\s+[-|–]\s+', title)
+    if len(parts) > 1:
+        tail = parts[-1].strip()
+        if (site and squeeze(tail) in squeeze(site)) or (len(tail) <= 12 and not re.search(r'[…"“”?!]', tail)):
+            head = ' - '.join(parts[:-1]).strip()
+            if len(head) >= 8:
+                return head
+    return title
+
+
 def image_name(url):
     return 'al_' + hashlib.md5(url_key(url).encode('utf-8')).hexdigest()[:10] + '.jpg'
 
@@ -315,6 +338,31 @@ def attach_image(session, row, image_url):
         row['img'] = 'img/' + name
         return True
     return False
+
+
+def cut_title(title):
+    return len(re.sub(r'\[[^\]]*\]|≪[^≫]*≫|<[^>]*>', '', title or '').strip(' ,…·-')) < 12
+
+
+def repair_titles(session, rows, limit):
+    """Re-read headlines that were saved cut off (e.g. '[데일리팜]', '건보공단,')."""
+    todo = [row for row in rows if row.get('url') and cut_title(row.get('title'))][:limit]
+
+    def one(row):
+        meta = fetch_meta(session, row['url'])
+        if not meta:
+            return False
+        title = clean(best_title(meta.get('title'), meta.get('ptitle'), row.get('title')) or '')
+        title = strip_outlet(title, meta.get('site') or '')
+        if title and not cut_title(title) and title != row.get('title'):
+            row['title'] = title
+            row.setdefault('topic_evidence', []).append({'title': title, 'desc': clean(meta.get('desc'))})
+            return True
+        return False
+
+    with ThreadPoolExecutor(PAGE_WORKERS) as pool:
+        fixed = sum(pool.map(one, todo))
+    return {'tried': len(todo), 'fixed': fixed}
 
 
 def repair_images(session, rows, limit, pause=0.3):
@@ -492,7 +540,8 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
         if not meta_title or any(marker.lower() in meta_title.lower() for marker in BAD_PAGE_TITLE):
             candidate_records[raw_key] = {**evidence, 'status': 'candidate', 'reason': 'metadata_unavailable'}
             return
-        title = clean(meta.get('title') or meta.get('ptitle') or title)
+        title = clean(best_title(meta.get('title'), meta.get('ptitle'), title) or meta_title)
+        title = strip_outlet(title, meta.get('site') or row.get('media') or '')
         desc = clean(meta.get('desc') or row.get('desc'))
         topics = [name for name in TOPICS if name in classify(title, desc, url) + evidence['topics']]
         if not topics:
@@ -642,8 +691,14 @@ def main(argv=None):
     with requests.Session() as images:
         images.headers.update(H)
         rows = sorted(merged.values(), key=lambda row: row.get('dt') or '', reverse=True)
+        report['titles'] = (repair_titles(images, rows, 400) if args.max_requests
+                            else {'tried': 0, 'fixed': 0})
         report['images'] = (repair_images(images, rows, IMAGE_REPAIRS[args.days > REGULAR_DAYS])
                             if args.max_requests else {'tried': 0, 'filled': 0})
+    for key, row in list(merged.items()):
+        row['topics'] = article_topics(row)
+        if not row['topics']:
+            rejected.append({'reason': 'local_topic_rules', 'article': merged.pop(key)})
     # Save the complete rejected originals before replacing any published feed.
     if rejected:
         save_json(rejected_path, rejected)

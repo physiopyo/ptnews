@@ -393,9 +393,10 @@ def fetch_meta(sess, url):
         return None
 
     def og(prop):
-        m = (re.search(r'<meta[^>]+property=["\']%s["\'][^>]+content=["\']([^"\']+)' % prop, t)
-             or re.search(r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']%s["\']' % prop, t))
-        return html.unescape(m.group(1)) if m else None
+        # Match the value up to its own closing quote: a title may contain the other quote kind.
+        m = (re.search(r'<meta[^>]+property=["\']%s["\'][^>]+content=(["\'])(.+?)\1' % re.escape(prop), t, re.S)
+             or re.search(r'<meta[^>]+content=(["\'])(.+?)\1[^>]+property=["\']%s["\']' % re.escape(prop), t, re.S))
+        return html.unescape(html.unescape(m.group(2))).strip() if m else None
     img = og('og:image')
     site = og('og:site_name')
     title = og('og:title')
@@ -406,6 +407,11 @@ def fetch_meta(sess, url):
     desc = re.sub(r'\s+', ' ', (desc or '')).strip()[:400]
     mtt = re.search(r'<title[^>]*>(.*?)</title>', t, re.S)
     ptitle = html.unescape(mtt.group(1)).strip() if mtt else None
+    if ptitle:
+        ptitle = re.sub(r'\s+', ' ', html.unescape(ptitle))
+    # A page <title> that extends a shorter og:title means the og value was cut.
+    if ptitle and (not title or (len(ptitle) > len(title) + 4 and ptitle.startswith(title.rstrip()))):
+        title = ptitle
     published = None
     for pat in (
             r'article:published_time["\'][^>]+content=["\']([^"\']+)',

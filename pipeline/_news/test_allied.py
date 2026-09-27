@@ -409,6 +409,27 @@ class AlliedTests(unittest.TestCase):
         self.assertEqual(session.get.call_count, 50)
         self.assertEqual(report['sources']['metadata']['requests'], 50)
 
+    def test_cut_titles_are_detected_and_outlet_suffix_removed(self):
+        for title in ('[데일리팜]', '건보공단,', '[이코노믹', '약사회-건보공단'):
+            self.assertTrue(allied.cut_title(title), title)
+        self.assertFalse(allied.cut_title('[데일리팜]"피 토하는 심정"…약대생들 쓴소리'))
+        self.assertEqual(allied.strip_outlet('약 배송 확대 반대 집회 열려 - 데일리팜', '데일리팜'), '약 배송 확대 반대 집회 열려')
+        self.assertEqual(allied.strip_outlet('"접근성" vs "안전"…약 배송 갈등', ''), '"접근성" vs "안전"…약 배송 갈등')
+
+    @patch.object(allied, 'fetch_meta', return_value={'title': '[데일리팜]', 'ptitle': '[데일리팜]"피 토하는 심정"…약 배송 반대 약대생들 - 데일리팜', 'site': '데일리팜'})
+    def test_repair_titles_rereads_cut_headlines(self, meta):
+        rows = [{'url': 'https://d.kr/1', 'title': '[데일리팜]'}, {'url': 'https://d.kr/2', 'title': '약 배송 확대 반대 약사 총궐기'}]
+        self.assertEqual(allied.repair_titles(Mock(), rows, 10), {'tried': 1, 'fixed': 1})
+        self.assertEqual(rows[0]['title'], '[데일리팜]"피 토하는 심정"…약 배송 반대 약대생들')
+        self.assertEqual(rows[1]['title'], '약 배송 확대 반대 약사 총궐기')
+
+    def test_psych_training_notices_and_workplace_programs_excluded(self):
+        for title, desc in (('보령교육지원청 위기심리상담사 자격연수 운영', '정신건강전문요원 업무범위'),
+                            ('한수원, 사내 마음건강 프로그램 운영', '정신건강전문요원 참여'),
+                            ('충북교육청, 정신건강전문인력 직무 스트레스 완화', '정신건강전문요원 대상')):
+            self.assertEqual(allied.classify(title, desc), [], title)
+        self.assertEqual(allied.classify('심리상담은 누구의 역할인가', '심리상담을 정신건강전문요원 공통업무로'), ['psych'])
+
     def test_cli_days_validation_and_status_report(self):
         for value in ('0', '32'):
             with patch('sys.stderr', new_callable=io.StringIO), self.assertRaises(SystemExit):
