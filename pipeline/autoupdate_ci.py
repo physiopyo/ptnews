@@ -110,7 +110,6 @@ def main():
     try:
         write_keys()
         if not skip:
-            run([PY, os.path.join(NEWS, 'fetch_coaction.py')], 'coaction')
             run([PY, os.path.join(NEWS, 'fetch_press.py')], 'press')
             run([PY, os.path.join(NEWS, 'fetch_ko.py')], 'ko')
             run([PY, os.path.join(NEWS, 'fetch_insure.py')], 'insure')
