@@ -306,6 +306,8 @@ def repair_images(session, rows, limit, pause=0.3):
         if row.get('img') or row.get('img_checked') or not row.get('url'):
             continue
         tried += 1
+        if tried % 50 == 0:
+            print('[allied 썸네일] 시도 %d/%d, 성공 %d' % (tried, limit, done), flush=True)
         meta = fetch_meta(session, row['url'])
         if not meta:
             continue  # page unreachable now: retry in a later run instead of giving up
@@ -439,7 +441,11 @@ def collect(session, credentials=None, *, known=(), keywords=None, topic=None, m
                        'img': '', 'img_meta': meta.get('img') or '', 'source': 'news-search', 'retrieval_status': 'retrieved',
                        'topic_evidence': article_evidence(evidence), **aliases}
 
-    for query in queries:
+    started = time.monotonic()
+    for number, query in enumerate(queries, 1):
+        print('[allied %d/%d] %s | 요청 %d/%d | 후보 %d/%d | 채택 %d | 경과 %d분' % (
+            number, len(queries), query, http.count, max_requests, len(candidates), max_candidates,
+            len(result), (time.monotonic() - started) // 60), flush=True)
         if http.count >= max_requests or len(candidates) >= max_candidates:
             report['stop_reason'] = 'request_budget' if http.count >= max_requests else 'candidate_budget'
             break

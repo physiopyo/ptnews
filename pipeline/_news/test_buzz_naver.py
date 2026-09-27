@@ -224,7 +224,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
                 process = subprocess.run([sys.executable, '-B', '-c', script, str(self.root), str(NOW + elapsed)],
                                          cwd=Path(__file__).resolve().parent, check=True,
                                          capture_output=True, text=True)
-                receipt = json.loads(process.stdout)
+                receipt = json.loads(process.stdout.strip().splitlines()[-1])
                 self.assertEqual(receipt['used'], expected_calls)
                 self.assertEqual(len(receipt['queries']), expected_calls)
                 saved = self.read('buzz.json')

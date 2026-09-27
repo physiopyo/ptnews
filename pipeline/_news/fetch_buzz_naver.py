@@ -683,8 +683,13 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
         # publication-date cells; separate bounded budgets per provider.
         clients = {provider: RequestBudget(client, collection, backfill_limits[provider], now)
                    for provider in ('naver', 'kakao')}
-        details = {spec['keyword']: run_backfill(clients, spec, headers, kakao_headers, histories,
-                                                 archive, analyzer, now, backfill_days) for spec in specs}
+        details = {}
+        for number, spec in enumerate(specs, 1):
+            print('[여론 소급 %d/%d] %s | 네이버 요청 %d/%d | 카카오 요청 %d/%d' % (
+                number, len(specs), spec['keyword'], clients['naver'].used, backfill_limits['naver'],
+                clients['kakao'].used, backfill_limits['kakao']), flush=True)
+            details[spec['keyword']] = run_backfill(clients, spec, headers, kakao_headers, histories,
+                                                    archive, analyzer, now, backfill_days)
         buzz['backfill'] = {
             'days': backfill_days, 'basis': BACKFILL_BASIS, 'observed_at': stamp,
             'sources': list(BACKFILL_SOURCES), 'not_backfilled': {'cafearticle': 'no_publication_date'},
@@ -697,8 +702,9 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
             backfill_days, clients['naver'].used, backfill_limits['naver'], clients['kakao'].used,
             backfill_limits['kakao'], json.dumps(buzz['backfill']['status'])))
     successes = set()
-    for spec in specs:
+    for number, spec in enumerate(specs, 1):
         keyword = spec['keyword']
+        print('[여론 %d/%d] %s | 요청 %d/%d' % (number, len(specs), keyword, http.used, max_requests), flush=True)
         for source in ('blog', 'news', 'cafe', 'daumcafe'):
             key = f'mentions:{keyword}:{source}'
             if not due(collection, key, config.SIX_HOURS, now, force):
