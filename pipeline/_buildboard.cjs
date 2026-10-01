@@ -376,7 +376,8 @@ html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-u
 .labor-map-panel{padding:18px;min-width:0;max-height:520px;overflow:auto}.labor-map-office{padding:15px 0;border-top:1px solid var(--line)}.labor-map-office-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;margin-bottom:10px}
 .labor-map-office:first-of-type{border-top:none}.labor-map-office strong{font:700 14px/1.5 serif;word-break:keep-all}.labor-map-office a{font-size:13px;font-weight:800;color:#1a1a1a}.labor-map-office .labor-meta{grid-template-columns:52px minmax(0,1fr);font-size:12px;gap:4px 10px}
 .labor-source{color:#39362f!important;font:inherit!important;font-weight:500!important;text-decoration:none;overflow-wrap:anywhere}.labor-source:hover{text-decoration:underline;text-underline-offset:3px}
-@media(max-width:900px){.hero{margin:0 0 4px!important}.herobox{height:150px!important;border-radius:0!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.herotxt{padding:14px 18px 0!important}.heroctl{left:18px!important;bottom:8px!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}.updbar{display:none!important}.updm{display:block!important}.labor-tools{grid-template-columns:1fr}.labor-row{padding:14px}.labor-meta{grid-template-columns:76px minmax(0,1fr)}.labor-map-shell{grid-template-columns:1fr}.labor-map-side{border-right:0;border-bottom:1px solid var(--line);padding:14px}.labor-map-svg{width:min(100%,500px);height:auto;aspect-ratio:390/317}.labor-map-panel{padding:14px;max-height:none;overflow:visible}}`;
+.credit{margin:0 40px;padding:22px 0 40px;border-top:1px solid var(--line);color:#6b6b6b;font-size:13px;line-height:1.6;text-align:center}
+@media(max-width:900px){.credit{margin:0 18px;padding:18px 0 32px}.hero{margin:0 0 4px!important}.herobox{height:150px!important;border-radius:0!important}.grid{grid-template-columns:1fr!important;gap:22px!important;padding:20px 0 60px!important}.wrap{padding:0 18px!important}nav.topnav{padding:14px 0 0!important;margin:0 18px!important}aside.rail{display:none!important}.herotxt{padding:14px 18px 0!important}.heroctl{left:18px!important;bottom:8px!important}.hero h2{font-size:34px!important;letter-spacing:-1.2px!important}.updbar{display:none!important}.updm{display:block!important}.labor-tools{grid-template-columns:1fr}.labor-row{padding:14px}.labor-meta{grid-template-columns:76px minmax(0,1fr)}.labor-map-shell{grid-template-columns:1fr}.labor-map-side{border-right:0;border-bottom:1px solid var(--line);padding:14px}.labor-map-svg{width:min(100%,500px);height:auto;aspect-ratio:390/317}.labor-map-panel{padding:14px;max-height:none;overflow:visible}}`;
 
 const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:0 auto">
   <div id="hero" class="hero">
@@ -403,6 +404,7 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
       <aside class="rail" id="rail" style="position:sticky;top:20px;display:flex;flex-direction:column;gap:16px"></aside>
     </div>
   </div>
+  <footer class="credit">by. 전물연 학생부대표 김경표</footer>
 </div></div><div id="lb"></div>`;
 
 const CLIENT = `(function(){

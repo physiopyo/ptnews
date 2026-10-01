@@ -113,6 +113,10 @@ if (require.main === module) {
   assert.match(output, /심리상담/);
   assert.match(output, /정책 찬반·직역 지지율이 아닙니다/);
   assert.match(output, /최초 발견일 기준/);
+  assert.match(
+    output,
+    /<footer class="credit">by\. 전물연 학생부대표 김경표<\/footer>/,
+  );
   assert.match(output, /button\(\s*["']buzzsubject["']/);
   assert.match(output, /PTBuzz\.render\(DATA\.buzz/);
   const attack = "</script><script>globalThis.untrustedExecuted=true</script>";
