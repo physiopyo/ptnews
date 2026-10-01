@@ -168,7 +168,7 @@ var PTBuzz = (function () {
     return Chart.render(dates, series, unit);
   }
   var STYLE =
-    '.pt-buzz{border:1px solid var(--line,#ececec);border-radius:16px;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.05);min-width:0}.pt-buzz button,.pt-buzz input,.pt-buzz select,.pt-buzz summary{font-family:inherit}.pt-bz-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#faf8f4;border-bottom:1px solid #ececec;border-radius:16px 16px 0 0}.pt-bz-tabs{display:flex;flex-wrap:wrap;gap:6px}.pt-bz-upd{font-size:12px;color:#8c8c8c;font-weight:600;white-space:nowrap}.pt-bz-body{padding:14px 16px 18px}.pt-bz-btn{flex:none;cursor:pointer;font-size:13px;font-weight:700;padding:6px 12px;border-radius:8px;white-space:nowrap;border:1px solid #e2ddd3;background:#fff;color:#57534b;line-height:1.4}.pt-bz-btn:hover{border-color:#cfc8bb}.pt-bz-btn.active{border-color:var(--c,#1a1a1a);background:var(--c,#1a1a1a);color:#fff}.pt-bz-sm{font-size:12px;padding:4px 10px;border-radius:7px}.pt-bz-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px}.pt-bz-views{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;border-bottom:1px solid #ececec;padding-bottom:8px}.pt-bz-title{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:0 0 8px}.pt-bz-title h3{margin:0;font-size:14px;font-weight:800;color:#1a1a1a}.pt-bz-title h3 span{font-size:12px;font-weight:600;color:#8c8c8c}.pt-bz-spacer{flex:1}.pt-buzz-dates{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;overflow-x:auto;margin:0 0 10px;padding:7px 10px;background:#faf8f4;border:1px solid #f0ece5;border-radius:10px}.pt-buzz-dates .pt-bz-row{flex-wrap:nowrap}.pt-bz-range{margin-left:auto;font-size:12px;font-weight:700;color:#8c8c8c;white-space:nowrap}.pt-bz-date{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#8c8c8c}.pt-bz-date input,.pt-bz-select{height:28px;border:1px solid #e2ddd3;border-radius:7px;background:#fff;color:#57534b;font-size:12px;font-weight:700;padding:0 7px}.pt-bz-select{height:30px;font-size:13px;color:#1a1a1a;padding:0 8px;max-width:190px}.pt-bz-status{font-size:11.5px;color:#8c8c8c;margin:-2px 0 8px;line-height:1.5}.pt-bz-note{font-size:11.5px;color:#8c8c8c;margin:0 0 6px;line-height:1.6}.pt-bz-notes{margin:6px 0 0;font-size:11.5px;color:#8c8c8c}.pt-bz-notes>summary,.pt-bz-more>summary{cursor:pointer;font-weight:700;color:#8c8c8c;width:max-content;margin:4px 0}.pt-bz-more{margin:10px 0 0;font-size:12.5px;color:#57534b}.pt-bz-more h4{font-size:12.5px;margin:10px 0 4px;color:#1a1a1a}.pt-bz-more table,.pt-bz-notes table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}.pt-bz-more th,.pt-bz-more td{padding:5px 6px;border-bottom:1px solid #f0ece5}.pt-bz-more th{color:#8c8c8c;font-weight:700}.pt-bz-empty{border:1px dashed #e2ddd3;border-radius:12px;background:#faf9f6;color:#8c8c8c;font-size:13px;padding:34px 16px;text-align:center;line-height:1.6}.pt-bz-cloudrow{display:flex;gap:18px;align-items:stretch;margin-bottom:12px;height:300px}.pt-bz-counts{flex:none;display:flex;flex-direction:column;justify-content:center;gap:10px;font-size:13.5px;font-weight:800;line-height:1}.pt-bz-cloud{position:relative;flex:1;min-width:0;overflow:hidden;border:1px solid #ececec;border-radius:12px;background:#faf9f6}.pt-bz-cloud .pt-bz-empty{border:0;position:absolute;inset:0;display:flex;align-items:center;justify-content:center}.pt-bz-ranks{display:flex;gap:12px;align-items:stretch;overflow-x:auto;padding-bottom:2px}.pt-bz-card{flex:1;min-width:160px;border:1px solid #ececec;border-radius:12px;padding:11px 13px;background:#faf9f6}.pt-bz-card h5{font-size:13.5px;font-weight:800;color:#1a1a1a;margin:0 0 8px}.pt-bz-card h5 span{font-size:11px;font-weight:600;color:#a3a3a3}.pt-bz-rank{display:flex;align-items:center;gap:4px;font-size:13px;padding:2px 0}.pt-bz-rank b{flex:none;width:15px;color:#a3a3a3;font-weight:800}.pt-bz-rank span{flex:1;min-width:0;color:#1a1a1a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pt-bz-rank i{flex:none;font-style:normal;font-size:11px;font-weight:700}.pt-bz-panel{flex:none;width:168px;border:1px solid #ececec;border-radius:12px;padding:12px 13px;background:#faf9f6;display:flex;flex-direction:column;gap:6px}.pt-bz-panel div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:4px 0;border-top:1px solid #ececec}.pt-bz-panel div span{font-size:12.5px;color:#57534b;font-weight:700}.pt-bz-panel div strong{font-size:16px;font-weight:800}.pt-bz-h3{margin:4px 0 8px;font-size:14px;font-weight:800;color:#1a1a1a}.pt-buzz-picker{position:relative}.pt-buzz-picker summary{list-style:none;cursor:pointer;font-size:13px;font-weight:700;padding:6px 28px 6px 12px;border-radius:8px;white-space:nowrap;border:1px solid #e2ddd3;background:#fff;color:#1a1a1a;position:relative;line-height:1.4}.pt-buzz-picker summary::-webkit-details-marker{display:none}.pt-buzz-picker summary:after{content:"▾";position:absolute;right:10px;top:6px;color:#8c8c8c;font-size:11px}.pt-buzz-picker[open] summary{border-color:#1a1a1a}.pt-buzz-options{position:absolute;top:calc(100% + 6px);left:0;z-index:40;width:280px;max-width:calc(100vw - 48px);border:1px solid #e2ddd3;border-radius:12px;background:#fff;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px}.pt-buzz-options fieldset{border:0;margin:0;padding:0}.pt-buzz-options legend{font-size:11px;color:#a3a3a3;font-weight:700;padding:5px 8px}.pt-buzz-options label{display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;border-radius:7px;font-size:13px;font-weight:600;color:#1a1a1a}.pt-buzz-options label:hover{background:#faf8f4}.pt-buzz-options input{accent-color:#1a1a1a;width:15px;height:15px;flex:none;margin:0}.pt-bz-dot{width:9px;height:9px;border-radius:50%;flex:none}.pt-buzz-all{font-weight:800!important;border-bottom:1px solid #f0ece5;border-radius:7px 7px 0 0!important}.pt-buzz-key-list{max-height:300px;overflow:auto;overscroll-behavior:contain}.pt-buzz :focus-visible{outline:2px solid #1a1a1a;outline-offset:2px}@media(max-width:640px){.pt-bz-cloudrow{flex-direction:column;height:auto}.pt-bz-cloud{height:260px;flex:none}.pt-bz-counts{flex-direction:row;gap:14px}.pt-bz-title .pt-bz-spacer{flex-basis:100%}}';
+    '.pt-buzz{border:1px solid var(--line,#ececec);border-radius:16px;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.05);min-width:0}.pt-buzz button,.pt-buzz input,.pt-buzz select,.pt-buzz summary{font-family:inherit}.pt-bz-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;background:#faf8f4;border-bottom:1px solid #ececec;border-radius:16px 16px 0 0}.pt-bz-tabs{display:flex;flex-wrap:wrap;gap:6px}.pt-bz-upd{font-size:12px;color:#8c8c8c;font-weight:600;white-space:nowrap}.pt-bz-body{padding:14px 16px 18px}.pt-bz-btn{flex:none;cursor:pointer;font-size:13px;font-weight:700;padding:6px 12px;border-radius:8px;white-space:nowrap;border:1px solid #e2ddd3;background:#fff;color:#57534b;line-height:1.4}.pt-bz-btn:hover{border-color:#cfc8bb}.pt-bz-btn.active{border-color:var(--c,#1a1a1a);background:var(--c,#1a1a1a);color:#fff}.pt-bz-sm{font-size:12px;padding:4px 10px;border-radius:7px}.pt-bz-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px}.pt-bz-views{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;border-bottom:1px solid #ececec;padding-bottom:8px}.pt-bz-title{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:0 0 8px}.pt-bz-title h3{margin:0;font-size:14px;font-weight:800;color:#1a1a1a}.pt-bz-title h3 span{font-size:12px;font-weight:600;color:#8c8c8c}.pt-bz-spacer{flex:1}.pt-buzz-dates{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;overflow-x:auto;margin:0 0 10px;padding:7px 10px;background:#faf8f4;border:1px solid #f0ece5;border-radius:10px}.pt-buzz-dates .pt-bz-row{flex-wrap:nowrap}.pt-bz-range{margin-left:auto;font-size:12px;font-weight:700;color:#8c8c8c;white-space:nowrap}.pt-bz-date{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#8c8c8c}.pt-bz-date input,.pt-bz-select{height:28px;border:1px solid #e2ddd3;border-radius:7px;background:#fff;color:#57534b;font-size:12px;font-weight:700;padding:0 7px}.pt-bz-select{height:30px;font-size:13px;color:#1a1a1a;padding:0 8px;max-width:190px}.pt-bz-status{font-size:11.5px;color:#8c8c8c;margin:-2px 0 8px;line-height:1.5}.pt-bz-note{font-size:11.5px;color:#8c8c8c;margin:0 0 6px;line-height:1.6}.pt-bz-notes{margin:6px 0 0;font-size:11.5px;color:#8c8c8c}.pt-bz-notes>summary,.pt-bz-more>summary{cursor:pointer;font-weight:700;color:#8c8c8c;width:max-content;margin:4px 0}.pt-bz-more{margin:10px 0 0;font-size:12.5px;color:#57534b}.pt-bz-more h4{font-size:12.5px;margin:10px 0 4px;color:#1a1a1a}.pt-bz-more table,.pt-bz-notes table{width:100%;border-collapse:collapse;font-size:12px;text-align:left}.pt-bz-more th,.pt-bz-more td{padding:5px 6px;border-bottom:1px solid #f0ece5}.pt-bz-more th{color:#8c8c8c;font-weight:700}.pt-bz-empty{border:1px dashed #e2ddd3;border-radius:12px;background:#faf9f6;color:#8c8c8c;font-size:13px;padding:34px 16px;text-align:center;line-height:1.6}.pt-bz-cloudrow{display:flex;gap:18px;align-items:stretch;margin-bottom:12px;height:300px}.pt-bz-counts{flex:none;display:flex;flex-direction:column;justify-content:center;gap:10px;font-size:13.5px;font-weight:800;line-height:1}.pt-bz-cloud{position:relative;flex:1;min-width:0;overflow:hidden;border:1px solid #ececec;border-radius:12px;background:#faf9f6}.pt-bz-cloud .pt-bz-empty{border:0;position:absolute;inset:0;display:flex;align-items:center;justify-content:center}.pt-bz-ranks{display:flex;gap:12px;align-items:stretch;overflow-x:auto;padding-bottom:2px}.pt-bz-track{display:flex;flex:1;min-width:0;gap:12px;align-items:stretch;overflow-x:auto;padding-bottom:6px;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin}.pt-bz-track[data-scrollable]{cursor:grab;-webkit-user-select:none;user-select:none}.pt-bz-track[data-dragging]{cursor:grabbing;scroll-snap-type:none}.pt-bz-track .pt-bz-card{flex:none;width:200px;scroll-snap-align:start}.pt-bz-hint{margin-left:8px;font-size:11px;font-weight:600;color:#a3a3a3}.pt-bz-meta{margin-top:8px;padding-top:6px;border-top:1px dashed #e7e2d8;font-size:11px;color:#a3a3a3}.pt-bz-card{flex:1;min-width:160px;border:1px solid #ececec;border-radius:12px;padding:11px 13px;background:#faf9f6}.pt-bz-card h5{font-size:13.5px;font-weight:800;color:#1a1a1a;margin:0 0 8px}.pt-bz-card h5 span{font-size:11px;font-weight:600;color:#a3a3a3}.pt-bz-rank{display:flex;align-items:center;gap:4px;font-size:13px;padding:2px 0}.pt-bz-rank b{flex:none;width:15px;color:#a3a3a3;font-weight:800}.pt-bz-rank span{flex:1;min-width:0;color:#1a1a1a;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pt-bz-rank i{flex:none;font-style:normal;font-size:11px;font-weight:700}.pt-bz-panel{flex:none;width:168px;border:1px solid #ececec;border-radius:12px;padding:12px 13px;background:#faf9f6;display:flex;flex-direction:column;gap:6px}.pt-bz-panel div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;padding:4px 0;border-top:1px solid #ececec}.pt-bz-panel div span{font-size:12.5px;color:#57534b;font-weight:700}.pt-bz-panel div strong{font-size:16px;font-weight:800}.pt-bz-h3{margin:4px 0 8px;font-size:14px;font-weight:800;color:#1a1a1a}.pt-buzz-picker{position:relative}.pt-buzz-picker summary{list-style:none;cursor:pointer;font-size:13px;font-weight:700;padding:6px 28px 6px 12px;border-radius:8px;white-space:nowrap;border:1px solid #e2ddd3;background:#fff;color:#1a1a1a;position:relative;line-height:1.4}.pt-buzz-picker summary::-webkit-details-marker{display:none}.pt-buzz-picker summary:after{content:"▾";position:absolute;right:10px;top:6px;color:#8c8c8c;font-size:11px}.pt-buzz-picker[open] summary{border-color:#1a1a1a}.pt-buzz-options{position:absolute;top:calc(100% + 6px);left:0;z-index:40;width:280px;max-width:calc(100vw - 48px);border:1px solid #e2ddd3;border-radius:12px;background:#fff;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px}.pt-buzz-options fieldset{border:0;margin:0;padding:0}.pt-buzz-options legend{font-size:11px;color:#a3a3a3;font-weight:700;padding:5px 8px}.pt-buzz-options label{display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;border-radius:7px;font-size:13px;font-weight:600;color:#1a1a1a}.pt-buzz-options label:hover{background:#faf8f4}.pt-buzz-options input{accent-color:#1a1a1a;width:15px;height:15px;flex:none;margin:0}.pt-bz-dot{width:9px;height:9px;border-radius:50%;flex:none}.pt-buzz-all{font-weight:800!important;border-bottom:1px solid #f0ece5;border-radius:7px 7px 0 0!important}.pt-buzz-key-list{max-height:300px;overflow:auto;overscroll-behavior:contain}.pt-buzz :focus-visible{outline:2px solid #1a1a1a;outline-offset:2px}@media(max-width:640px){.pt-bz-ranks{flex-direction:column}.pt-bz-ranks>.pt-bz-panel{width:auto}.pt-bz-cloudrow{flex-direction:column;height:auto}.pt-bz-cloud{height:260px;flex:none}.pt-bz-counts{flex-direction:row;gap:14px}.pt-bz-title .pt-bz-spacer{flex-basis:100%}}';
   function selection(b, state) {
     var all = b.keywords || [],
       subject = (b.subjects || []).find(function (s) {
@@ -239,9 +239,117 @@ var PTBuzz = (function () {
     if (root.__buzzCleanup) root.__buzzCleanup();
     root.__buzzCleanup = null;
   }
+  function dragScroll(track, state) {
+    var key = track.getAttribute("data-buzz-rank-key"),
+      drag = null,
+      moved = false;
+    // The newest card sits at the right edge, so the position is remembered as
+    // the distance from that edge: cards that arrive later (words load lazily)
+    // are added on the left and never push the newest period out of view.
+    if (!state.buzzRankScroll || state.buzzRankScroll.key !== key)
+      state.buzzRankScroll = { key: key, fromEnd: 0 };
+    var saved = state.buzzRankScroll;
+    function fit() {
+      track.toggleAttribute(
+        "data-scrollable",
+        track.scrollWidth > track.clientWidth,
+      );
+    }
+    fit();
+    track.scrollLeft = track.scrollWidth - track.clientWidth - saved.fromEnd;
+    function stop(event) {
+      if (!drag || (event && event.pointerId !== drag.id)) return;
+      var id = drag.id;
+      drag = null;
+      track.removeAttribute("data-dragging");
+      if (track.releasePointerCapture && track.hasPointerCapture)
+        try {
+          if (track.hasPointerCapture(id)) track.releasePointerCapture(id);
+        } catch (_) {
+          /* The browser may already have released the pointer. */
+        }
+    }
+    function down(event) {
+      // Touch and pen scroll natively; handling them too would double the move.
+      if (event.pointerType && event.pointerType !== "mouse") return;
+      if (event.button || event.buttons !== 1) return;
+      if (track.scrollWidth <= track.clientWidth) return;
+      drag = { id: event.pointerId, x: event.clientX, left: track.scrollLeft };
+      moved = false;
+      if (track.setPointerCapture)
+        try {
+          track.setPointerCapture(event.pointerId);
+        } catch (_) {
+          /* Synthetic or finished pointers cannot be captured. */
+        }
+    }
+    function move(event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      if (event.pointerType === "mouse" && event.buttons === 0) {
+        stop(event);
+        return;
+      }
+      var dx = event.clientX - drag.x;
+      if (!moved && Math.abs(dx) < 4) return;
+      moved = true;
+      track.setAttribute("data-dragging", "true");
+      track.scrollLeft = drag.left - dx;
+    }
+    function scrolled() {
+      saved.fromEnd = Math.max(
+        0,
+        track.scrollWidth - track.clientWidth - track.scrollLeft,
+      );
+    }
+    function keydown(event) {
+      if (event.target !== track) return;
+      var step = Math.max(120, track.clientWidth * 0.8),
+        to = null;
+      if (event.key === "ArrowLeft") to = track.scrollLeft - step;
+      else if (event.key === "ArrowRight") to = track.scrollLeft + step;
+      else if (event.key === "Home") to = 0;
+      else if (event.key === "End") to = track.scrollWidth;
+      if (to === null) return;
+      event.preventDefault();
+      track.scrollLeft = to;
+    }
+    track.addEventListener("pointerenter", fit);
+    track.addEventListener("pointerdown", down);
+    track.addEventListener("pointermove", move);
+    track.addEventListener("pointerup", stop);
+    track.addEventListener("pointercancel", stop);
+    track.addEventListener("lostpointercapture", stop);
+    track.addEventListener("scroll", scrolled);
+    track.addEventListener("keydown", keydown);
+    return function () {
+      stop();
+      track.removeEventListener("pointerenter", fit);
+      track.removeEventListener("pointerdown", down);
+      track.removeEventListener("pointermove", move);
+      track.removeEventListener("pointerup", stop);
+      track.removeEventListener("pointercancel", stop);
+      track.removeEventListener("lostpointercapture", stop);
+      track.removeEventListener("scroll", scrolled);
+      track.removeEventListener("keydown", keydown);
+    };
+  }
   function mount(root, b, state, refresh) {
     unmount(root);
     var charts = Chart.mountAll(root);
+    var stops = Array.from(root.querySelectorAll("[data-buzz-rank-track]")).map(
+      function (track) {
+        return dragScroll(track, state);
+      },
+    );
+    function cleanup() {
+      charts.forEach(function (chart) {
+        chart.destroy();
+      });
+      stops.forEach(function (stop) {
+        stop();
+      });
+    }
+    root.__buzzCleanup = cleanup;
     var pending = root.querySelector("[data-buzz-words-pending]");
     if (pending) {
       var wordKey = pending.getAttribute("data-buzz-words-pending"),
@@ -320,9 +428,7 @@ var PTBuzz = (function () {
     doc.addEventListener("pointerdown", outside);
     doc.addEventListener("keydown", key);
     root.__buzzCleanup = function () {
-      charts.forEach(function (chart) {
-        chart.destroy();
-      });
+      cleanup();
       doc.removeEventListener("pointerdown", outside);
       doc.removeEventListener("keydown", key);
       details.removeEventListener("change", changed);
@@ -554,7 +660,7 @@ var PTBuzz = (function () {
       "</details>"
     );
   }
-  function rankCard(title, sub, items, previous, compare) {
+  function rankCard(title, sub, items, previous, compare, meta) {
     var prev = {};
     (previous || []).forEach(function (it, i) {
       prev[JSON.stringify([it.w, it.p])] = i;
@@ -596,8 +702,72 @@ var PTBuzz = (function () {
       (rows.length
         ? rows.join("")
         : '<div class="pt-bz-note" style="padding:18px 0;text-align:center">관측 자료 없음</div>') +
+      (meta ? '<div class="pt-bz-meta">' + esc(meta) + "</div>" : "") +
       "</div>"
     );
+  }
+  var RANK_MAX_PERIODS = 26;
+  function coverage(observed, total, label) {
+    return total && observed < total
+      ? (label || "관측") + " " + observed + "/" + total + "일"
+      : "";
+  }
+  function joined(parts) {
+    return parts
+      .filter(function (part) {
+        return part;
+      })
+      .join(" · ");
+  }
+  var PERIOD_UNIT = {
+    "1일": [1, "일"],
+    "1주일": [1, "주"],
+    "1개월": [1, "개월"],
+    "3개월": [3, "개월"],
+  };
+  function periodTitle(wp, back) {
+    if (back === 0) return "이번 기간";
+    if (back === 1) return "직전 기간";
+    var unit = PERIOD_UNIT[wp] || [1, "기간"];
+    return back * unit[0] + unit[1] + " 전";
+  }
+  function oldestDay(rows) {
+    var oldest = "";
+    (rows || []).forEach(function (row) {
+      if (day(row.date) && (!oldest || row.date < oldest)) oldest = row.date;
+    });
+    return oldest;
+  }
+  function rankTrack(source, end, wp, channel) {
+    var oldest = oldestDay(source),
+      ranges = [bounds(end, wp, 0), bounds(end, wp, 1)];
+    while (
+      oldest &&
+      ranges.length < RANK_MAX_PERIODS &&
+      ranges[ranges.length - 1].start > oldest
+    )
+      ranges.push(bounds(end, wp, ranges.length));
+    var data = ranges.map(function (range) {
+      return words(source, range, channel);
+    });
+    var html = "";
+    for (var i = ranges.length - 1; i >= 0; i--) {
+      var older = data[i + 1];
+      html += rankCard(
+        periodTitle(wp, i),
+        shortRange(ranges[i]),
+        data[i].related,
+        older ? older.related : [],
+        !!older && older.relatedDays > 0,
+        joined([
+          coverage(data[i].relatedDays, ranges[i].days),
+          older
+            ? coverage(older.relatedDays, ranges[i + 1].days, "비교 기간")
+            : "",
+        ]),
+      );
+    }
+    return { count: ranges.length, html: html };
   }
   function render(b, state) {
     var subjects = b.subjects || [],
@@ -895,9 +1065,16 @@ var PTBuzz = (function () {
         });
         return sums;
       };
-      var sums = span(daily[kw], wr);
+      var sums = span(daily[kw], wr),
+        track = rankTrack(source, end, wp, channel);
       body +=
-        '<h3 class="pt-bz-h3">연관어 순위변화</h3><div class="pt-bz-ranks"><div class="pt-bz-panel"><strong style="font-size:12px;color:#8c8c8c;font-weight:700">최근 언급량 · ' +
+        '<h3 class="pt-bz-h3">연관어 순위변화' +
+        (track.count > 2
+          ? '<span class="pt-bz-hint">좌우로 끌면 이전 기간 순위를 볼 수 있어요 · ' +
+            track.count +
+            "개 기간</span>"
+          : "") +
+        '</h3><div class="pt-bz-ranks"><div class="pt-bz-panel"><strong style="font-size:12px;color:#8c8c8c;font-weight:700">최근 언급량 · ' +
         esc(wp) +
         "</strong>" +
         [
@@ -917,23 +1094,22 @@ var PTBuzz = (function () {
             );
           })
           .join("") +
-        "</div>" +
-        rankCard("직전 기간", shortRange(pr), prev.related, [], false) +
-        rankCard(
-          "이번 기간",
-          shortRange(wr),
-          cur.related,
-          prev.related,
-          prev.relatedDays > 0,
-        ) +
+        '</div><div class="pt-bz-track" data-buzz-rank-track data-buzz-rank-key="' +
+        esc([wp, end, kw].join("|")) +
+        '" tabindex="0" role="group" aria-label="연관어 기간별 순위 · 좌우로 끌거나 스크롤">' +
+        track.html +
         rankCard(
           "감성 표현",
           shortRange(wr),
           cur.sentiment,
           prev.sentiment,
           prev.days > 0,
+          joined([
+            coverage(cur.days, wr.days),
+            coverage(prev.days, pr.days, "비교 기간"),
+          ]),
         ) +
-        "</div>";
+        "</div></div>";
       var rd = function (rows, r) {
         return (rows || [])
           .filter(function (x) {
@@ -1211,6 +1387,7 @@ var PTBuzz = (function () {
     bounds: bounds,
     align: align,
     words: words,
+    rankTrack: rankTrack,
     chart: chart,
   };
 })();

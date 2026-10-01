@@ -21,9 +21,9 @@
   var EMPTY =
     "이 기간에 수집된 값이 없습니다. 미수집을 0건으로 표시하지 않습니다.";
   var HELP =
-    "선이나 점에 마우스를 올리면 날짜별 수치가 여기에 표시됩니다 · 그래프 위에서 휠을 돌리면 그 위치를 기준으로 확대/축소";
+    "선이나 점에 마우스를 올리면 날짜별 수치가 여기에 표시됩니다 · 그래프 위에서 휠을 돌리면 그 위치를 기준으로 확대/축소 · 확대한 뒤 마우스로 끌면 좌우상하로 이동";
   var CSS =
-    '.pt-buzz-chart{position:relative;margin:0 0 8px;padding:6px 8px 4px;border:1px solid #ececec;border-radius:12px;background:#faf9f6;color:#1a1a1a;font:inherit}.pt-buzz-chart *{box-sizing:border-box}.pt-buzz-chart .pt-chart-legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:4px 118px 7px 2px;padding:0;list-style:none}.pt-buzz-chart .pt-chart-legend button{display:inline-flex;align-items:center;gap:5px;border:0;background:none;padding:2px 0;font:inherit;font-size:12.5px;font-weight:700;color:var(--pt-series-color);cursor:pointer;transition:opacity .12s}.pt-buzz-chart .pt-chart-legend button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:3px}.pt-buzz-chart .pt-chart-swatch{width:9px;height:9px;border-radius:50%;background:var(--pt-series-color);flex:none}.pt-buzz-chart .pt-chart-tools{position:absolute;top:8px;right:10px;display:flex;align-items:center;gap:5px;z-index:3}.pt-buzz-chart .pt-chart-tools button{cursor:pointer;width:26px;height:26px;border-radius:7px;border:1px solid #e2ddd3;background:#fff;color:#57534b;font-size:15px;font-weight:800;line-height:1;padding:0;font-family:inherit}.pt-buzz-chart .pt-chart-tools button:hover{border-color:#bdb6aa;color:#1a1a1a}.pt-buzz-chart .pt-chart-zoom{font-size:11px;font-weight:700;color:#8c8c8c;background:#fff;border:1px solid #e2ddd3;padding:3px 7px;border-radius:6px}.pt-buzz-chart[data-zoom="1"] .pt-chart-zoom{display:none}.pt-buzz-chart[data-zoom="1"] [data-chart-action="reset"]{opacity:.45}.pt-buzz-chart .pt-chart-unavailable{margin:-3px 2px 4px;font-size:11.5px;color:#a3a3a3}.pt-buzz-chart .pt-chart-unavailable summary{cursor:pointer;width:max-content}.pt-buzz-chart .pt-chart-unavailable ul{display:flex;flex-wrap:wrap;gap:2px 10px;margin:4px 0;padding:0;list-style:none}.pt-buzz-chart .pt-chart-stage svg{display:block;width:100%;height:auto;overflow:hidden;outline:none}.pt-buzz-chart .pt-chart-grid{stroke:rgba(0,0,0,.07)}.pt-buzz-chart .pt-chart-tick{font-size:13px;fill:#8c8c8c}.pt-buzz-chart .pt-chart-line{stroke-linejoin:round;stroke-linecap:round;transition:opacity .12s}.pt-buzz-chart .pt-chart-dots{transition:opacity .12s}.pt-buzz-chart .pt-chart-detail{min-height:30px;margin:2px 0 2px;padding:6px 8px;border-top:1px dashed #e7e2d8;font-size:12px;color:#a3a3a3;line-height:1.5}.pt-buzz-chart[data-active-series] .pt-chart-detail{color:#1a1a1a;font-size:13.5px;font-weight:800}.pt-buzz-chart[data-active-series] .pt-chart-detail::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--pt-active-color,#1a1a1a);vertical-align:1px}.pt-buzz-chart .pt-chart-empty{color:#8c8c8c;font-size:13px;padding:30px 16px;text-align:center;line-height:1.6;margin:0}.pt-buzz-chart button:focus-visible,.pt-buzz-chart svg:focus-visible{outline:2px solid #1a1a1a;outline-offset:2px}';
+    '.pt-buzz-chart{position:relative;margin:0 0 8px;padding:6px 8px 4px;border:1px solid #ececec;border-radius:12px;background:#faf9f6;color:#1a1a1a;font:inherit}.pt-buzz-chart *{box-sizing:border-box}.pt-buzz-chart .pt-chart-legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;margin:4px 118px 7px 2px;padding:0;list-style:none}.pt-buzz-chart .pt-chart-legend button{display:inline-flex;align-items:center;gap:5px;border:0;background:none;padding:2px 0;font:inherit;font-size:12.5px;font-weight:700;color:var(--pt-series-color);cursor:pointer;transition:opacity .12s}.pt-buzz-chart .pt-chart-legend button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:3px}.pt-buzz-chart .pt-chart-swatch{width:9px;height:9px;border-radius:50%;background:var(--pt-series-color);flex:none}.pt-buzz-chart .pt-chart-tools{position:absolute;top:8px;right:10px;display:flex;align-items:center;gap:5px;z-index:3}.pt-buzz-chart .pt-chart-tools button{cursor:pointer;width:26px;height:26px;border-radius:7px;border:1px solid #e2ddd3;background:#fff;color:#57534b;font-size:15px;font-weight:800;line-height:1;padding:0;font-family:inherit}.pt-buzz-chart .pt-chart-tools button:hover{border-color:#bdb6aa;color:#1a1a1a}.pt-buzz-chart .pt-chart-zoom{font-size:11px;font-weight:700;color:#8c8c8c;background:#fff;border:1px solid #e2ddd3;padding:3px 7px;border-radius:6px}.pt-buzz-chart[data-zoom="1"] .pt-chart-zoom{display:none}.pt-buzz-chart[data-zoom="1"] [data-chart-action="reset"]{opacity:.45}.pt-buzz-chart .pt-chart-unavailable{margin:-3px 2px 4px;font-size:11.5px;color:#a3a3a3}.pt-buzz-chart .pt-chart-unavailable summary{cursor:pointer;width:max-content}.pt-buzz-chart .pt-chart-unavailable ul{display:flex;flex-wrap:wrap;gap:2px 10px;margin:4px 0;padding:0;list-style:none}.pt-buzz-chart .pt-chart-stage svg{display:block;width:100%;height:auto;overflow:hidden;outline:none}.pt-buzz-chart .pt-chart-stage svg{touch-action:pan-y pinch-zoom}.pt-buzz-chart[data-zoom]:not([data-zoom="1"]) .pt-chart-stage svg{cursor:grab;-webkit-user-select:none;user-select:none}.pt-buzz-chart[data-panning] .pt-chart-stage svg{cursor:grabbing}.pt-buzz-chart .pt-chart-grid{stroke:rgba(0,0,0,.07)}.pt-buzz-chart .pt-chart-tick{font-size:13px;fill:#8c8c8c}.pt-buzz-chart .pt-chart-line{stroke-linejoin:round;stroke-linecap:round;transition:opacity .12s}.pt-buzz-chart .pt-chart-dots{transition:opacity .12s}.pt-buzz-chart .pt-chart-detail{min-height:30px;margin:2px 0 2px;padding:6px 8px;border-top:1px dashed #e7e2d8;font-size:12px;color:#a3a3a3;line-height:1.5}.pt-buzz-chart[data-active-series] .pt-chart-detail{color:#1a1a1a;font-size:13.5px;font-weight:800}.pt-buzz-chart[data-active-series] .pt-chart-detail::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--pt-active-color,#1a1a1a);vertical-align:1px}.pt-buzz-chart .pt-chart-empty{color:#8c8c8c;font-size:13px;padding:30px 16px;text-align:center;line-height:1.6;margin:0}.pt-buzz-chart button:focus-visible,.pt-buzz-chart svg:focus-visible{outline:2px solid #1a1a1a;outline-offset:2px}';
   function esc(value) {
     return String(value == null ? "" : value).replace(/[&<>"']/g, function (c) {
       return {
@@ -125,6 +125,11 @@
     var start = anchor - ((anchor - domain[0]) / span) * nextSpan;
     start = clamp(start, bounds[0], bounds[1] - nextSpan);
     return [start, start + nextSpan];
+  }
+  function panDomain(domain, bounds, shift) {
+    var span = domain[1] - domain[0];
+    var start = clamp(domain[0] + shift, bounds[0], bounds[1] - span);
+    return [start, start + span];
   }
   function xAt(time, domain) {
     return PLOT.x + ((time - domain[0]) / (domain[1] - domain[0])) * PLOT.width;
@@ -337,7 +342,7 @@
       esc(model.unit + " 추이: 실제 관측점만 표시") +
       '</title><desc id="' +
       id +
-      '-help">좌우 방향키: 이전·다음 관측일. 위아래 방향키: 계열 변경. Home·End: 처음·마지막 관측값. 그래프 안에서 휠로 확대·축소.</desc><defs><clipPath id="' +
+      '-help">좌우 방향키: 이전·다음 관측일. 위아래 방향키: 계열 변경. Home·End: 처음·마지막 관측값. 그래프 안에서 휠로 확대·축소, 확대 후 마우스로 끌어 이동.</desc><defs><clipPath id="' +
       clip +
       '" clipPathUnits="userSpaceOnUse"><rect x="' +
       PLOT.x +
@@ -513,6 +518,7 @@
       active = null,
       geometries = [],
       destroyed = false,
+      drag = null,
       frame = null,
       revealProgress = 1;
     var listeners = [],
@@ -635,6 +641,25 @@
       draw();
       return true;
     }
+    function moveTo(nx, ny) {
+      if (nx[0] === x[0] && ny[0] === y[0]) return false;
+      finishReveal();
+      x = nx;
+      y = ny;
+      highlight(null);
+      draw();
+      return true;
+    }
+    function pan(dx, dy) {
+      if (!svg || destroyed) return false;
+      return moveTo(panDomain(x, model.x, dx), panDomain(y, model.y, dy));
+    }
+    function atFullExtent() {
+      return (
+        x[1] - x[0] >= model.x[1] - model.x[0] &&
+        y[1] - y[0] >= model.y[1] - model.y[0]
+      );
+    }
     function reset() {
       if (!svg || destroyed) return;
       finishReveal();
@@ -663,6 +688,7 @@
     function destroy() {
       if (destroyed) return;
       destroyed = true;
+      endDrag();
       finishReveal();
       listeners.forEach(function (remove) {
         remove();
@@ -674,6 +700,7 @@
     var controller = {
       destroy: destroy,
       reset: reset,
+      pan: pan,
       getState: function () {
         return {
           x: x.slice(),
@@ -710,8 +737,70 @@
       },
       { passive: false },
     );
+    function endDrag(event) {
+      if (!drag || (event && event.pointerId !== drag.id)) return;
+      var id = drag.id;
+      drag = null;
+      element.removeAttribute("data-panning");
+      if (svg.releasePointerCapture && svg.hasPointerCapture)
+        try {
+          if (svg.hasPointerCapture(id)) svg.releasePointerCapture(id);
+        } catch (_) {
+          /* The pointer may already be released by the browser. */
+        }
+    }
+    listen(svg, "pointerdown", function (event) {
+      if (
+        event.button ||
+        (event.pointerType === "mouse" && event.buttons !== 1)
+      )
+        return;
+      var point = toSvgPoint(svg, event.clientX, event.clientY);
+      if (!inPlot(point) || atFullExtent()) return;
+      drag = {
+        id: event.pointerId,
+        point: point,
+        x: x.slice(),
+        y: y.slice(),
+        moved: false,
+      };
+      if (svg.setPointerCapture)
+        try {
+          svg.setPointerCapture(event.pointerId);
+        } catch (_) {
+          /* Synthetic or already-ended pointers cannot be captured. */
+        }
+    });
+    listen(svg, "pointerup", endDrag);
+    listen(svg, "pointercancel", endDrag);
+    listen(svg, "lostpointercapture", endDrag);
     listen(svg, "pointermove", function (event) {
       var point = toSvgPoint(svg, event.clientX, event.clientY);
+      if (drag && event.pointerId === drag.id) {
+        if (event.pointerType === "mouse" && event.buttons === 0) {
+          endDrag(event);
+          return;
+        }
+        if (!point) return;
+        var dxPx = point.x - drag.point.x,
+          dyPx = point.y - drag.point.y;
+        if (!drag.moved && Math.abs(dxPx) + Math.abs(dyPx) < 3) return;
+        drag.moved = true;
+        element.setAttribute("data-panning", "true");
+        moveTo(
+          panDomain(
+            drag.x,
+            model.x,
+            (-dxPx / PLOT.width) * (drag.x[1] - drag.x[0]),
+          ),
+          panDomain(
+            drag.y,
+            model.y,
+            (dyPx / PLOT.height) * (drag.y[1] - drag.y[0]),
+          ),
+        );
+        return;
+      }
       highlight(
         inPlot(point)
           ? nearest(
@@ -859,6 +948,7 @@
       normalize: normalize,
       geometry: geometry,
       zoomDomain: zoomDomain,
+      panDomain: panDomain,
       toSvgPoint: toSvgPoint,
       plot: PLOT,
     },

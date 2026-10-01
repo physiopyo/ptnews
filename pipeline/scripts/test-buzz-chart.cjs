@@ -2,7 +2,8 @@
 const assert = require("node:assert/strict");
 const { JSDOM } = require("jsdom");
 const Chart = require("../buzz_chart.js");
-const { normalize, geometry, zoomDomain, toSvgPoint, plot } = Chart.helpers;
+const { normalize, geometry, zoomDomain, panDomain, toSvgPoint, plot } =
+  Chart.helpers;
 const DAY = 86400000;
 const dates = [
   "2026-09-20",
@@ -68,6 +69,31 @@ function harness(html = Chart.render(dates, series, "건"), reduced = true) {
       new win.MouseEvent("pointermove", { ...client(point), bubbles: true }),
     );
   }
+  const captured = new Set();
+  if (svg) {
+    svg.setPointerCapture = (id) => captured.add(id);
+    svg.releasePointerCapture = (id) => captured.delete(id);
+    svg.hasPointerCapture = (id) => captured.has(id);
+  }
+  function drag(type, point, extra = {}) {
+    // JSDOM has no PointerEvent: a MouseEvent carries the pointer fields.
+    const event = new win.MouseEvent(type, {
+      ...client(point),
+      button: 0,
+      buttons: type === "pointerup" || type === "pointercancel" ? 0 : 1,
+      bubbles: true,
+      cancelable: true,
+      ...extra,
+    });
+    Object.defineProperty(event, "pointerId", {
+      value: extra.pointerId === undefined ? 7 : extra.pointerId,
+    });
+    Object.defineProperty(event, "pointerType", {
+      value: extra.pointerType || "mouse",
+    });
+    svg.dispatchEvent(event);
+    return event;
+  }
   function tick(time) {
     const current = [...frames.values()];
     frames.clear();
@@ -91,6 +117,8 @@ function harness(html = Chart.render(dates, series, "건"), reduced = true) {
     client,
     wheel,
     pointer,
+    drag,
+    captured,
     tick,
     close,
   };
@@ -267,6 +295,127 @@ async function main() {
   h.wheel(point, -5, 1);
   assert.ok(controller.getState().zoom > 1);
   controller.reset();
+
+  // Dragging pans the zoomed view without changing the zoom level.
+  const full = controller.getState();
+  const mid = { x: plot.x + plot.width / 2, y: plot.y + plot.height / 2 };
+  h.drag("pointerdown", mid);
+  assert.equal(h.captured.size, 0, "full extent has nothing to pan");
+  h.drag("pointermove", { x: mid.x - 200, y: mid.y });
+  assert.deepEqual(controller.getState().x, full.x);
+  h.drag("pointerup", mid);
+  element.querySelector('[data-chart-action="zoom-in"]').click();
+  element.querySelector('[data-chart-action="zoom-in"]').click();
+  const base = controller.getState();
+  closeTo(base.zoom, 4);
+  const span = base.x[1] - base.x[0];
+  assert.equal(
+    h.drag("pointerdown", mid, { button: 2, buttons: 2 }).defaultPrevented,
+    false,
+  );
+  assert.equal(h.captured.size, 0, "secondary button does not pan");
+  h.drag("pointerdown", { x: 20, y: 20 });
+  assert.equal(h.captured.size, 0, "axis margin does not pan");
+  h.drag("pointerdown", mid);
+  assert.ok(
+    h.captured.has(7),
+    "pointer capture keeps the drag alive outside the SVG",
+  );
+  h.drag("pointermove", { x: mid.x + 1, y: mid.y + 1 });
+  assert.deepEqual(
+    controller.getState().x,
+    base.x,
+    "sub-threshold jitter is a click",
+  );
+  assert.equal(element.hasAttribute("data-panning"), false);
+  h.drag(
+    "pointermove",
+    { x: mid.x + plot.width / 8, y: mid.y },
+    { pointerId: 99 },
+  );
+  assert.deepEqual(
+    controller.getState().x,
+    base.x,
+    "foreign pointer is ignored",
+  );
+  h.drag("pointermove", { x: mid.x + plot.width / 8, y: mid.y });
+  state = controller.getState();
+  assert.equal(element.getAttribute("data-panning"), "true");
+  closeTo(state.x[0], base.x[0] - span / 8, 1e-3);
+  closeTo(state.x[1] - state.x[0], span, 1e-3);
+  closeTo(state.zoom, 4, 1e-9);
+  assert.deepEqual(state.y, base.y, "horizontal drag leaves y untouched");
+  assert.equal(controller.getState().active, null, "no hover while dragging");
+  h.drag("pointermove", {
+    x: mid.x + plot.width / 8,
+    y: mid.y - plot.height / 8,
+  });
+  const up = controller.getState();
+  closeTo(up.x[0], state.x[0], 1e-3);
+  assert.ok(up.y[0] < base.y[0], "dragging the data up shows lower values");
+  closeTo(up.y[1] - up.y[0], base.y[1] - base.y[0], 1e-6);
+  h.drag("pointermove", { x: mid.x + 4000, y: mid.y - 4000 });
+  state = controller.getState();
+  closeTo(state.x[0], full.x[0], 1e-6);
+  assert.ok(
+    state.y[1] <= full.y[1] + 1e-6 && state.y[0] >= full.y[0] - 1e-6,
+    "pan never leaves data bounds",
+  );
+  h.drag("pointermove", { x: mid.x - 4000, y: mid.y + 4000 });
+  state = controller.getState();
+  closeTo(state.x[1], full.x[1], 1e-6);
+  assert.ok(state.y[0] >= full.y[0] - 1e-6);
+  h.drag("pointerup", mid);
+  assert.equal(h.captured.size, 0, "pointer capture is released on pointerup");
+  assert.equal(element.hasAttribute("data-panning"), false);
+  const parked = controller.getState().x.slice();
+  h.drag("pointermove", { x: mid.x - 80, y: mid.y }, { buttons: 0 });
+  assert.deepEqual(
+    controller.getState().x,
+    parked,
+    "moving after release does not pan",
+  );
+  h.drag("pointerdown", mid);
+  h.drag("pointermove", { x: mid.x + 60, y: mid.y });
+  assert.equal(element.getAttribute("data-panning"), "true");
+  h.drag("pointermove", { x: mid.x + 90, y: mid.y }, { buttons: 0 });
+  assert.equal(
+    element.hasAttribute("data-panning"),
+    false,
+    "a missed mouseup ends the drag",
+  );
+  h.drag("pointerdown", mid, { pointerType: "touch" });
+  h.drag("pointermove", { x: mid.x + 60, y: mid.y }, { pointerType: "touch" });
+  assert.equal(
+    element.getAttribute("data-panning"),
+    "true",
+    "touch drags pan too",
+  );
+  h.drag("pointercancel", mid, { pointerType: "touch" });
+  assert.equal(
+    element.hasAttribute("data-panning"),
+    false,
+    "pointercancel ends the drag",
+  );
+  assert.equal(h.captured.size, 0);
+  controller.reset();
+  closeTo(controller.getState().zoom, 1);
+  assert.equal(
+    controller.pan(50 * DAY, 10),
+    false,
+    "programmatic pan at full extent is a no-op",
+  );
+  element.querySelector('[data-chart-action="zoom-in"]').click();
+  assert.equal(controller.pan(DAY, 0), true);
+  const panned = controller.getState();
+  assert.ok(panned.x[0] > full.x[0], "controller.pan moves the window");
+  controller.reset();
+  closeTo(panDomain([20, 40], [0, 100], 70)[1], 100);
+  assert.deepEqual(panDomain([20, 40], [0, 100], -70), [0, 20]);
+  assert.deepEqual(panDomain([20, 40], [0, 100], 10), [30, 50]);
+  assert.deepEqual(panDomain([0, 100], [0, 100], 25), [0, 100]);
+  assert.match(element.querySelector("svg desc").textContent, /끌어/);
+  assert.match(detail.textContent, /마우스로 끌면/);
 
   // Proximity is to drawn segments; details choose an actual endpoint, never interpolate.
   const a = g.points[0],
