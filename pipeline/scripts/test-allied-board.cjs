@@ -24,6 +24,8 @@ function buildBoard(fixtures = {}) {
         return fs.readFileSync(p, encoding);
       }
       const name = path.basename(p);
+      if (fixtures.__guides && p.includes("/../guide/") && Object.hasOwn(fixtures.__guides, name))
+        return JSON.stringify(fixtures.__guides[name]);
       if (p === "_news/" + name && Object.hasOwn(fixtures, name))
         return JSON.stringify(fixtures[name]);
       throw new Error("fixture absent: " + p);
@@ -55,6 +57,11 @@ function buildBoard(fixtures = {}) {
     source + "\nglobalThis.result = DATA; globalThis.sourceBuzz = buzz;",
     context,
   );
+  const dataTag = /<script src="data\.js\?v=[0-9a-f]+"><\/script>/;
+  assert.match(output, dataTag, "page loads data from a separate script");
+  assert.ok(!/var DATA=/.test(output), "data is not inlined in the page");
+  // Tests run the page as one document, so put the data script back in place.
+  output = output.replace(dataTag, () => "<script>" + extra["웹/board/data.js"] + "</script>");
   for (const match of output.matchAll(
     /<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g,
   )) {
@@ -63,9 +70,9 @@ function buildBoard(fixtures = {}) {
     else new vm.Script(match[1]);
   }
   assert.deepEqual(
-    writes.filter((p) => !p.startsWith("웹/board/buzzwords/")),
-    ["웹/board/index.html"],
-    "builder never writes source datasets",
+    writes.filter((p) => !p.startsWith("웹/board/buzzwords/") && !p.startsWith("웹/board/guide/")),
+    ["웹/board/data.js", "웹/board/index.html", "웹/board/sitemap.xml"],
+    "builder writes only generated site files",
   );
   return {
     output,
@@ -117,7 +124,7 @@ if (require.main === module) {
   assert.match(output, /최초 발견일 기준/);
   assert.match(
     output,
-    /<footer class="credit"><strong>PTJoin \(PT뉴스\)<\/strong> · 운영 전국임상물리치료사연대 · 문의 <a href="mailto:pyo@ptjoin\.com">pyo@ptjoin\.com<\/a> · <a href="\/about\/">소개 · About<\/a><br>by\. 전물연 학생부대표 김경표<\/footer>/,
+    /<footer class="credit"><strong>© 2026 PTJoin \(PT뉴스\)<\/strong> · 운영 전국임상물리치료사연대 · 문의 <a href="mailto:pyo@ptjoin\.com">pyo@ptjoin\.com<\/a> · <a href="\/about\/">소개 · About<\/a> · <a href="\/privacy\/">개인정보처리방침<\/a><br>by\. 전물연 학생부대표 김경표<\/footer>/,
   );
   const org = JSON.parse(
     output.match(/<script type="application\/ld\+json">(.*?)<\/script>/)[1],
@@ -245,6 +252,37 @@ if (require.main === module) {
     !worded.output.includes("단어399"),
     "word rows are not embedded in the page",
   );
+  const stat = buildBoard({
+    "press.json": [
+      { title: "정적 <기사>", url: "javascript:alert(1)", dt: "2026-09-20T10:00:00+09:00", chip: "언론" },
+      { title: "두번째 기사", url: "https://x.kr/2", dt: "2026-09-20T09:00:00+09:00", chip: "매체" },
+    ],
+    "psych.json": [{ title: "심리 전용 기사", url: "https://y.kr/1", dt: "2026-09-20T11:00:00+09:00" }],
+    __guides: {
+      "dosu-patient.sections.json": {
+        title: "환자 <안내>",
+        sections: [{ h: "개요", html: "<p>요약 문장</p>" }, { h: "1. 비용", html: "<p>본문</p>" }],
+      },
+    },
+  });
+  const staticBody = stat.output.slice(stat.output.indexOf("<body>"), stat.output.indexOf('<div id="lb">'));
+  assert.match(staticBody, /<h1>PTJoin \(PT뉴스\)/, "page has a static heading");
+  assert.match(staticBody, /수집 기사 3건/, "static facts count every article");
+  assert.match(staticBody, /정적 &lt;기사&gt;/, "titles are escaped in static list");
+  assert.ok(!staticBody.includes("javascript:"), "non-web links are not rendered");
+  assert.match(staticBody, /<a href="https:\/\/x\.kr\/2" rel="nofollow noopener"/);
+  assert.ok(!staticBody.includes("심리 전용 기사"), "static list shows physical-therapy channels only");
+  assert.match(staticBody, /<a href="\/guide\/dosu-patient\/">환자 &lt;안내&gt;<\/a>/);
+  const guidePage = stat.extra["웹/board/guide/dosu-patient/index.html"];
+  assert.match(guidePage, /<title>환자 &lt;안내&gt; · PTJoin<\/title>/);
+  assert.match(guidePage, /<link rel="canonical" href="https:\/\/ptjoin\.com\/guide\/dosu-patient\/">/);
+  assert.match(guidePage, /<meta name="description" content="요약 문장">/);
+  assert.match(guidePage, /<h2>1\. 비용<\/h2><p>본문<\/p>/);
+  assert.match(guidePage, /개인정보처리방침/);
+  const sitemap = stat.extra["웹/board/sitemap.xml"];
+  for (const loc of ["/", "/about/", "/privacy/", "/guide/dosu-patient/"])
+    assert.ok(sitemap.includes("<loc>https://ptjoin.com" + loc + "</loc>"), "sitemap lists " + loc);
+  assert.ok(!sitemap.includes("eswt-patient"), "missing guides are not listed");
   console.log(
     "allied board: URL identity, source preservation, membership, UI and generated JS passed",
   );

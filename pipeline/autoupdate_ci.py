@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """GitHub Actions 자동갱신 오케스트레이터 (PC 독립 실행).
 
-흐름: _news/fetch_*.py 수집 -> _buildboard.cjs 빌드(_news/*.json -> 웹/board/index.html)
-      -> 레포 루트 index.html + img/ 동기화.
+흐름: _news/fetch_*.py 수집 -> _buildboard.cjs 빌드(_news/*.json -> 웹/board/index.html·data.js·sitemap.xml·guide/*/)
+      -> 레포 루트 index.html·data.js·sitemap.xml·guide/<slug>/index.html + img/ 동기화.
 키: 환경변수(GitHub Secrets)에서 받아 _news/*key*.json 으로 런타임 생성하고, 끝나면 삭제한다.
     (.gitignore 가 *key*.json 을 차단하므로 커밋되지 않는다.)
 수집 단계는 실패해도 계속 진행(이전 데이터 보존), 빌드 실패만 중단한다.
@@ -54,12 +54,21 @@ def remove_keys():
 
 
 def sync_output():
-    src_html = os.path.join(PIPE, '웹', 'board', 'index.html')
-    if not os.path.isfile(src_html):
-        log('index.html 미생성 -> 동기화 중단')
-        sys.exit(1)
-    shutil.copy(src_html, os.path.join(REPO, 'index.html'))
-    html = open(src_html, encoding='utf-8').read()
+    board = os.path.join(PIPE, '웹', 'board')
+    for name in ('index.html', 'data.js', 'sitemap.xml'):
+        src = os.path.join(board, name)
+        if not os.path.isfile(src):
+            log('%s 미생성 -> 동기화 중단' % name)
+            sys.exit(1)
+        shutil.copy(src, os.path.join(REPO, name))
+    guide_src = os.path.join(board, 'guide')
+    for slug in sorted(os.listdir(guide_src)) if os.path.isdir(guide_src) else []:
+        page = os.path.join(guide_src, slug, 'index.html')
+        if os.path.isfile(page):
+            os.makedirs(os.path.join(REPO, 'guide', slug), exist_ok=True)
+            shutil.copy(page, os.path.join(REPO, 'guide', slug, 'index.html'))
+    # Image paths live in both the page and the data script; keep every referenced file.
+    html = ''.join(open(os.path.join(board, n), encoding='utf-8').read() for n in ('index.html', 'data.js'))
     refs = set(re.findall(r'img/([\w\-./]+\.(?:jpg|jpeg|png|webp|gif|svg))', html))
     src_img = os.path.join(PIPE, '웹', 'board', 'img')
     dst_img = os.path.join(REPO, 'img')
@@ -79,7 +88,7 @@ def sync_output():
             if rel not in refs:
                 os.remove(os.path.join(root, fn))
                 removed += 1
-    log('sync | index.html + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
+    log('sync | index.html + data.js + sitemap + guide + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
 
 
 MAX_BACKFILL_DAYS = 31
