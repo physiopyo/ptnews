@@ -57,7 +57,7 @@ function runPage(input, check, recovered = {}) {
   const { window } = dom;
   const document = window.document;
   try {
-    for (const script of document.querySelectorAll("script:not([src])"))
+    for (const script of document.querySelectorAll("script:not([src]):not([type])"))
       window.eval(script.textContent);
     const center = () => document.getElementById("center");
     const text = () => center().textContent;
@@ -747,7 +747,7 @@ async function lazyWords() {
           : { ok: false, status: 404 },
       );
     };
-    for (const script of window.document.querySelectorAll("script:not([src])"))
+    for (const script of window.document.querySelectorAll("script:not([src]):not([type])"))
       window.eval(script.textContent);
     const center = () => window.document.getElementById("center");
     const input = center().querySelector("[data-buzz-end]");

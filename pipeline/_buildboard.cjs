@@ -404,7 +404,7 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
       <aside class="rail" id="rail" style="position:sticky;top:20px;display:flex;flex-direction:column;gap:16px"></aside>
     </div>
   </div>
-  <footer class="credit">by. 전물연 학생부대표 김경표 · <a href="/about/">PTJoin 소개 · About</a></footer>
+  <footer class="credit"><strong>PTJoin (PT뉴스)</strong> · 운영 전국임상물리치료사연대 · 문의 <a href="mailto:pyo@ptjoin.com">pyo@ptjoin.com</a> · <a href="/about/">소개 · About</a><br>by. 전물연 학생부대표 김경표</footer>
 </div></div><div id="lb"></div>`;
 
 const CLIENT = `(function(){
@@ -678,9 +678,11 @@ const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta n
   // The old pages.dev address and www keep working but move visitors to the one public address.
   + '<script>(function(h){if(h==="ptnews.pages.dev"||h==="www.ptjoin.com")location.replace("' + SITE + '"+location.pathname+location.search+location.hash)})(location.hostname)</script>'
   + '<link rel="canonical" href="' + SITE + '/">'
-  + '<title>PT뉴스 — 물리치료사를 위한 공간</title>'
+  + '<title>PTJoin · PT뉴스 — 물리치료사를 위한 공간</title>'
+  + '<meta name="description" content="PTJoin(PT뉴스)은 전국임상물리치료사연대가 운영하는 물리치료사를 위한 뉴스·보건정책 사이트입니다. PTJoin is a news and health-policy site for physical therapists in South Korea, run by 전국임상물리치료사연대. Contact: pyo@ptjoin.com">'
+  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스', '전국임상물리치료사연대'], url: SITE + '/', email: 'pyo@ptjoin.com', foundingDate: '2026-06', description: 'News and health-policy site for physical therapists in South Korea, run by 전국임상물리치료사연대.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
-  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PT뉴스"><meta property="og:url" content="' + SITE + '/">'
+  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta property="og:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
   + '<meta property="og:image" content="' + SITE + '/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
   + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta name="twitter:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·가이드를 한눈에."><meta name="twitter:image" content="' + SITE + '/img/hero-1.jpg">'
