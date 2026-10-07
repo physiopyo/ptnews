@@ -115,7 +115,7 @@ if (require.main === module) {
   assert.match(output, /최초 발견일 기준/);
   assert.match(
     output,
-    /<footer class="credit">by\. 전물연 학생부대표 김경표<\/footer>/,
+    /<footer class="credit">by\. 전물연 학생부대표 김경표 · <a href="\/about\/">PTJoin 소개 · About<\/a><\/footer>/,
   );
   assert.match(output, /button\(\s*["']buzzsubject["']/);
   assert.match(output, /PTBuzz\.render\(DATA\.buzz/);

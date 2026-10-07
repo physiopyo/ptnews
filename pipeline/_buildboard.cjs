@@ -404,7 +404,7 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
       <aside class="rail" id="rail" style="position:sticky;top:20px;display:flex;flex-direction:column;gap:16px"></aside>
     </div>
   </div>
-  <footer class="credit">by. 전물연 학생부대표 김경표</footer>
+  <footer class="credit">by. 전물연 학생부대표 김경표 · <a href="/about/">PTJoin 소개 · About</a></footer>
 </div></div><div id="lb"></div>`;
 
 const CLIENT = `(function(){
