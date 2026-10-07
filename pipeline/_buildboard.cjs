@@ -673,13 +673,17 @@ render();
 (function(){var tipEl=document.createElement('div');tipEl.style.cssText='position:fixed;z-index:250;pointer-events:none;background:#0B0E16;color:#EDEFF5;font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.2);box-shadow:0 10px 26px rgba(0,0,0,.6);white-space:nowrap;opacity:0;transition:opacity .12s ease;display:none;left:0;top:0;';document.body.appendChild(tipEl);var curT=null;function show(t){var tip=t.getAttribute('data-tip');if(!tip)return;curT=t;tipEl.textContent=tip;tipEl.style.display='block';var r=t.getBoundingClientRect(),tw=tipEl.offsetWidth,th=tipEl.offsetHeight;var left=r.left+r.width/2-tw/2;left=Math.max(8,Math.min(left,window.innerWidth-tw-8));var top=r.bottom+8;if(top+th>window.innerHeight-8)top=r.top-th-8;if(top<8)top=8;tipEl.style.left=Math.round(left)+'px';tipEl.style.top=Math.round(top)+'px';requestAnimationFrame(function(){tipEl.style.opacity='1';});}function hide(){curT=null;tipEl.style.opacity='0';tipEl.style.display='none';}document.addEventListener('mouseover',function(e){var t=e.target.closest&&e.target.closest('[data-tip]');if(t&&t!==curT)show(t);});document.addEventListener('mouseout',function(e){var t=e.target.closest&&e.target.closest('[data-tip]');if(t)hide();});})();
 })();`;
 
+const SITE = 'https://ptjoin.com';
 const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+  // The old pages.dev address and www keep working but move visitors to the one public address.
+  + '<script>(function(h){if(h==="ptnews.pages.dev"||h==="www.ptjoin.com")location.replace("' + SITE + '"+location.pathname+location.search+location.hash)})(location.hostname)</script>'
+  + '<link rel="canonical" href="' + SITE + '/">'
   + '<title>PT뉴스 — 물리치료 관리급여 대응</title>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
-  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PT뉴스"><meta property="og:url" content="https://ptnews.pages.dev/">'
+  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PT뉴스"><meta property="og:url" content="' + SITE + '/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta property="og:description" content="도수치료 관리급여 정책 대응 상황판. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
-  + '<meta property="og:image" content="https://ptnews.pages.dev/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
-  + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta name="twitter:description" content="도수치료 관리급여 정책 대응 상황판."><meta name="twitter:image" content="https://ptnews.pages.dev/img/hero-1.jpg">'
+  + '<meta property="og:image" content="' + SITE + '/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
+  + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료 관리급여 대응 상황판"><meta name="twitter:description" content="도수치료 관리급여 정책 대응 상황판."><meta name="twitter:image" content="' + SITE + '/img/hero-1.jpg">'
   + '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
   + '<link rel="icon" href="data:,">'
   + '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">'
