@@ -356,7 +356,7 @@ const SITE_FACTS = '<section class="sitefacts">'
   + '<div><h2>환자 Q&amp;A <span lang="en">Patient Q&amp;A</span> · 준비 중</h2><p>도수치료·체외충격파 관리급여에 관한 환자 질문에, 이 사이트의 가이드와 정부 고시·질의응답만 근거로 출처 링크를 붙여 답하는 서비스를 준비하고 있습니다.</p>'
   + '<p><a href="mailto:onpta1@ptjoin.com?subject=%ED%99%98%EC%9E%90%20Q%26A%20%EC%B6%9C%EC%8B%9C%20%EC%95%8C%EB%A6%BC%20%EC%8B%A0%EC%B2%AD">출시 알림 신청 (이메일)</a></p></div>'
   + '<div><h2>AI 사용 원칙 <span lang="en">How we use AI</span></h2><ul>'
-  + '<li>기사 주제·논조 분석에 Claude를 사용하고, 사람이 AI 판정을 보지 않은 채 표본을 다시 판정해 비교합니다.</li>'
+  + '<li>기사 주제·논조 분석과 사이트 개발에 Claude를 사용합니다.</li>'
   + '<li>환자 답변은 이 사이트의 가이드와 정부 문서만 근거로 하며 출처를 링크합니다.</li>'
   + '<li>의료기관의 등록·광고는 답변 내용에 영향을 주지 않습니다.</li></ul></div>'
   + '</section>';
