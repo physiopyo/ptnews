@@ -135,6 +135,8 @@ if (require.main === module) {
   assert.equal(org.founder.name, "김경표");
   assert.ok(!JSON.stringify(org).includes("전국임상물리치료사연대"), "organization metadata names PTJoin only");
   assert.match(output, /<title>PTJoin · PT뉴스/);
+  assert.match(output, /<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="\/">/, "board at /news/ resolves assets from the site root");
+  assert.match(output, /<link rel="canonical" href="https:\/\/ptjoin\.com\/news\/">/);
   assert.match(output, /button\(\s*["']buzzsubject["']/);
   assert.match(output, /PTBuzz\.render\(DATA\.buzz/);
   const attack = "</script><script>globalThis.untrustedExecuted=true</script>";
@@ -283,7 +285,7 @@ if (require.main === module) {
   assert.match(guidePage, /<h2>1\. 비용<\/h2><p>본문<\/p>/);
   assert.match(guidePage, /개인정보처리방침/);
   const sitemap = stat.extra["웹/board/sitemap.xml"];
-  for (const loc of ["/", "/about/", "/privacy/", "/guide/dosu-patient/"])
+  for (const loc of ["/", "/news/", "/about/", "/privacy/", "/guide/dosu-patient/"])
     assert.ok(sitemap.includes("<loc>https://ptjoin.com" + loc + "</loc>"), "sitemap lists " + loc);
   assert.ok(!sitemap.includes("eswt-patient"), "missing guides are not listed");
   console.log(

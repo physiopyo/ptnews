@@ -382,13 +382,13 @@ function guidePageHTML(g) {
     + '<meta name="description" content="' + hesc(desc) + '">'
     + '<meta property="og:type" content="article"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + url + '"><meta property="og:title" content="' + hesc(g.doc.title) + '">'
     + '<link rel="icon" href="data:,"><style>' + PAGE_CSS + '</style></head><body><main>'
-    + '<a class="back" href="/#guide">← PT뉴스 가이드 목록</a><h1>' + hesc(g.doc.title) + '</h1>'
+    + '<a class="back" href="/news/#guide">← PT뉴스 가이드 목록</a><h1>' + hesc(g.doc.title) + '</h1>'
     + '<p class="tag">PTJoin 가이드 · 정보 제공용 문서입니다. 개별 진료·청구 판단은 의료기관과 건강보험심사평가원에 확인하세요.</p>'
     + g.doc.sections.map(function (s) { return '<section><h2>' + hesc(s.h) + '</h2>' + s.html + '</section>'; }).join('')
     + '</main>' + FOOTER + '</body></html>';
 }
 const SITEMAP = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-  + [['/', 'hourly'], ['/about/', 'monthly'], ['/privacy/', 'yearly']].concat(GUIDE_PAGES.map(function (g) { return ['/guide/' + g.slug + '/', 'monthly']; }))
+  + [['/', 'weekly'], ['/news/', 'hourly'], ['/about/', 'monthly'], ['/privacy/', 'yearly']].concat(GUIDE_PAGES.map(function (g) { return ['/guide/' + g.slug + '/', 'monthly']; }))
     .map(function (u) { return '  <url><loc>' + SITE + u[0] + '</loc><changefreq>' + u[1] + '</changefreq></url>\n'; }).join('')
   + '</urlset>\n';
 
@@ -738,15 +738,15 @@ render();
 const DATA_FILE = process.env.PV === '1' ? 'preview-data.js' : 'data.js';
 // Data ships as a separate script so the HTML stays small and readable text comes first.
 const DATA_JS = 'var DATA=' + JSON.stringify(DATA).replace(/</g, '\\u003c') + ';\n';
-const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="/">'
   // The old pages.dev address and www keep working but move visitors to the one public address.
   + '<script>(function(h){if(h==="ptnews.pages.dev"||h==="www.ptjoin.com")location.replace("' + SITE + '"+location.pathname+location.search+location.hash)})(location.hostname)</script>'
-  + '<link rel="canonical" href="' + SITE + '/">'
+  + '<link rel="canonical" href="' + SITE + '/news/">'
   + '<title>PTJoin · PT뉴스 — 물리치료사를 위한 공간</title>'
   + '<meta name="description" content="PTJoin(PT뉴스)은 정책 피해 환자와 물리치료사를 잇는 플랫폼입니다. 재활 교육과 보건정책 뉴스를 함께 제공합니다. PTJoin connects Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news. Launched in June 2026. Contact: onpta@ptjoin.com">'
   + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'onpta@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, areaServed: 'KR', description: 'Platform connecting Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
-  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/">'
+  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/news/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta property="og:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
   + '<meta property="og:image" content="' + SITE + '/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
   + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta name="twitter:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·가이드를 한눈에."><meta name="twitter:image" content="' + SITE + '/img/hero-1.jpg">'

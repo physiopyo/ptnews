@@ -55,12 +55,14 @@ def remove_keys():
 
 def sync_output():
     board = os.path.join(PIPE, '웹', 'board')
-    for name in ('index.html', 'data.js', 'sitemap.xml'):
+    # The board is served at /news/; the site root is the static company landing page.
+    for name, dst in (('index.html', os.path.join('news', 'index.html')), ('data.js', 'data.js'), ('sitemap.xml', 'sitemap.xml')):
         src = os.path.join(board, name)
         if not os.path.isfile(src):
             log('%s 미생성 -> 동기화 중단' % name)
             sys.exit(1)
-        shutil.copy(src, os.path.join(REPO, name))
+        os.makedirs(os.path.dirname(os.path.join(REPO, dst)) or REPO, exist_ok=True)
+        shutil.copy(src, os.path.join(REPO, dst))
     guide_src = os.path.join(board, 'guide')
     for slug in sorted(os.listdir(guide_src)) if os.path.isdir(guide_src) else []:
         page = os.path.join(guide_src, slug, 'index.html')
@@ -88,7 +90,7 @@ def sync_output():
             if rel not in refs:
                 os.remove(os.path.join(root, fn))
                 removed += 1
-    log('sync | index.html + data.js + sitemap + guide + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
+    log('sync | news/index.html + data.js + sitemap + guide + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
 
 
 MAX_BACKFILL_DAYS = 31

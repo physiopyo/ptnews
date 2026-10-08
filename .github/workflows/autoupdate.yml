@@ -125,7 +125,7 @@ jobs:
           if [ -f d3.layout.cloud.min.js ]; then cp d3.layout.cloud.min.js cfdist/; fi
           cp -r img cfdist/
           cp -r guide cfdist/
-          cp -r about privacy cfdist/
+          cp -r about privacy news cfdist/
           cp robots.txt sitemap.xml cfdist/
           if [ -d pipeline/웹/board/buzzwords ]; then cp -r pipeline/웹/board/buzzwords cfdist/; fi
           npx --yes wrangler@4 pages deploy cfdist --project-name=ptnews --branch=main --commit-dirty=true
