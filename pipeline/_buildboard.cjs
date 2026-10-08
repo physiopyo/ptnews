@@ -340,7 +340,7 @@ const BUILT_AT = new Date(NOW).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul',
 const GUIDE_PAGES = ['dosu-patient', 'eswt-patient', 'dosu-clinician', 'eswt-clinician', 'dosu-faq']
   .map(function (slug) { return { slug: slug, doc: J2(__dirname + '/../guide/' + slug + '.sections.json', null) }; })
   .filter(function (g) { return g.doc && g.doc.title && Array.isArray(g.doc.sections); });
-const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 운영 전국임상물리치료사연대 · 문의 <a href="mailto:pyo@ptjoin.com">pyo@ptjoin.com</a> · <a href="/about/">소개 · About</a> · <a href="/privacy/">개인정보처리방침</a><br>by. 전물연 학생부대표 김경표</footer>';
+const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 대표 김경표 · 문의 <a href="mailto:pyo@ptjoin.com">pyo@ptjoin.com</a> · <a href="/about/">소개 · About</a> · <a href="/privacy/">개인정보처리방침</a></footer>';
 const STATIC_NEWS = articles.filter(function (a) { return a.channels.some(function (c) { return c === 'press' || c === 'ins' || c === 'ko'; }); }).slice(0, 20);
 function staticNewsItem(a) {
   const title = /^https?:\/\//i.test(a.url) ? '<a href="' + hesc(a.url) + '" rel="nofollow noopener" target="_blank">' + hesc(a.title) + '</a>' : hesc(a.title);
@@ -743,8 +743,8 @@ const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta n
   + '<script>(function(h){if(h==="ptnews.pages.dev"||h==="www.ptjoin.com")location.replace("' + SITE + '"+location.pathname+location.search+location.hash)})(location.hostname)</script>'
   + '<link rel="canonical" href="' + SITE + '/">'
   + '<title>PTJoin · PT뉴스 — 물리치료사를 위한 공간</title>'
-  + '<meta name="description" content="PTJoin(PT뉴스)은 전국임상물리치료사연대가 운영하는 물리치료사를 위한 뉴스·보건정책 사이트입니다. PTJoin is a news and health-policy site for physical therapists in South Korea, run by 전국임상물리치료사연대. Contact: pyo@ptjoin.com">'
-  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스', '전국임상물리치료사연대'], url: SITE + '/', email: 'pyo@ptjoin.com', foundingDate: '2026-06', description: 'News and health-policy site for physical therapists in South Korea, run by 전국임상물리치료사연대.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
+  + '<meta name="description" content="PTJoin(PT뉴스)은 물리치료사와 환자를 위한 보건정책 뉴스·치료 안내 서비스입니다. PTJoin is a Korean health-policy news and patient-guide service for physical therapy, launched in June 2026. Contact: pyo@ptjoin.com">'
+  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'pyo@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, areaServed: 'KR', description: 'Korean health-policy news and patient-guide service for physical therapy.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
   + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta property="og:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
