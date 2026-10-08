@@ -404,7 +404,7 @@ const LLMS_TXT = [
   '',
   '> PTJoin is a Korean health-policy information service for patients and physical therapists. We explain Korea\'s July 2026 manual and shockwave therapy rules in plain language, citing the government notice behind each point, and help patients find a physical therapist.',
   '',
-  'PTJoin (PT뉴스) · South Korea · Founder 김경표 · Live since June 2026 · Contact onpta@ptjoin.com',
+  'PTJoin (PT뉴스) · South Korea · Founder 김경표 · Live since June 2026 (first at ptnews.vercel.app, on ptjoin.com since October 2026) · Contact onpta@ptjoin.com',
   '',
   '## What runs today',
   '',
