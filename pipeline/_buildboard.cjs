@@ -340,7 +340,7 @@ const BUILT_AT = new Date(NOW).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul',
 const GUIDE_PAGES = ['dosu-patient', 'eswt-patient', 'dosu-clinician', 'eswt-clinician', 'dosu-faq']
   .map(function (slug) { return { slug: slug, doc: J2(__dirname + '/../guide/' + slug + '.sections.json', null) }; })
   .filter(function (g) { return g.doc && g.doc.title && Array.isArray(g.doc.sections); });
-const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 대표 김경표 · 문의 <a href="mailto:pyo@ptjoin.com">pyo@ptjoin.com</a> · <a href="/about/">소개 · About</a> · <a href="/privacy/">개인정보처리방침</a></footer>';
+const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 대표 김경표 · 문의 <a href="mailto:onpta1@ptjoin.com">onpta1@ptjoin.com</a> · <a href="/about/">소개 · About</a> · <a href="/privacy/">개인정보처리방침</a></footer>';
 const STATIC_NEWS = articles.filter(function (a) { return a.channels.some(function (c) { return c === 'press' || c === 'ins' || c === 'ko'; }); }).slice(0, 20);
 function staticNewsItem(a) {
   const title = /^https?:\/\//i.test(a.url) ? '<a href="' + hesc(a.url) + '" rel="nofollow noopener" target="_blank">' + hesc(a.title) + '</a>' : hesc(a.title);
@@ -354,7 +354,7 @@ const INTRO = '<div class="intro"><h1>PTJoin (PT뉴스) · 물리치료사와 �
 const SITE_FACTS = '<section class="sitefacts">'
   + '<div><h2>가이드 <span lang="en">Guides</span></h2><ul>' + GUIDE_PAGES.map(function (g) { return '<li><a href="/guide/' + g.slug + '/">' + hesc(g.doc.title) + '</a></li>'; }).join('') + '</ul></div>'
   + '<div><h2>환자 Q&amp;A <span lang="en">Patient Q&amp;A</span> · 준비 중</h2><p>도수치료·체외충격파 관리급여에 관한 환자 질문에, 이 사이트의 가이드와 정부 고시·질의응답만 근거로 출처 링크를 붙여 답하는 서비스를 준비하고 있습니다.</p>'
-  + '<p><a href="mailto:pyo@ptjoin.com?subject=%ED%99%98%EC%9E%90%20Q%26A%20%EC%B6%9C%EC%8B%9C%20%EC%95%8C%EB%A6%BC%20%EC%8B%A0%EC%B2%AD">출시 알림 신청 (이메일)</a></p></div>'
+  + '<p><a href="mailto:onpta1@ptjoin.com?subject=%ED%99%98%EC%9E%90%20Q%26A%20%EC%B6%9C%EC%8B%9C%20%EC%95%8C%EB%A6%BC%20%EC%8B%A0%EC%B2%AD">출시 알림 신청 (이메일)</a></p></div>'
   + '<div><h2>AI 사용 원칙 <span lang="en">How we use AI</span></h2><ul>'
   + '<li>기사 주제·논조 분석에 Claude를 사용하고, 사람이 AI 판정을 보지 않은 채 표본을 다시 판정해 비교합니다.</li>'
   + '<li>환자 답변은 이 사이트의 가이드와 정부 문서만 근거로 하며 출처를 링크합니다.</li>'
@@ -743,8 +743,8 @@ const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta n
   + '<script>(function(h){if(h==="ptnews.pages.dev"||h==="www.ptjoin.com")location.replace("' + SITE + '"+location.pathname+location.search+location.hash)})(location.hostname)</script>'
   + '<link rel="canonical" href="' + SITE + '/">'
   + '<title>PTJoin · PT뉴스 — 물리치료사를 위한 공간</title>'
-  + '<meta name="description" content="PTJoin(PT뉴스)은 물리치료사와 환자를 위한 보건정책 뉴스·치료 안내 서비스입니다. PTJoin is a Korean health-policy news and patient-guide service for physical therapy, launched in June 2026. Contact: pyo@ptjoin.com">'
-  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'pyo@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, areaServed: 'KR', description: 'Korean health-policy news and patient-guide service for physical therapy.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
+  + '<meta name="description" content="PTJoin(PT뉴스)은 물리치료사와 환자를 위한 보건정책 뉴스·치료 안내 서비스입니다. PTJoin is a Korean health-policy news and patient-guide service for physical therapy, launched in June 2026. Contact: onpta1@ptjoin.com">'
+  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'onpta1@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, areaServed: 'KR', description: 'Korean health-policy news and patient-guide service for physical therapy.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
   + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta property="og:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
