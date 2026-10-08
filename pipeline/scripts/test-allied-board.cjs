@@ -71,7 +71,7 @@ function buildBoard(fixtures = {}) {
   }
   assert.deepEqual(
     writes.filter((p) => !p.startsWith("웹/board/buzzwords/") && !p.startsWith("웹/board/guide/")),
-    ["웹/board/data.js", "웹/board/index.html", "웹/board/sitemap.xml"],
+    ["웹/board/data.js", "웹/board/index.html", "웹/board/sitemap.xml", "웹/board/llms.txt", "웹/board/404.html"],
     "builder writes only generated site files",
   );
   return {
@@ -288,6 +288,19 @@ if (require.main === module) {
   for (const loc of ["/", "/news/", "/about/", "/privacy/", "/guide/dosu-patient/"])
     assert.ok(sitemap.includes("<loc>https://ptjoin.com" + loc + "</loc>"), "sitemap lists " + loc);
   assert.ok(!sitemap.includes("eswt-patient"), "missing guides are not listed");
+  const llms = stat.extra["웹/board/llms.txt"];
+  assert.match(llms, /^# PTJoin \(PT뉴스\)\n\n> /, "llms.txt opens with the site name and a summary");
+  assert.match(llms, /How we use Claude/, "llms.txt states how Claude is used");
+  assert.match(llms, /: 3 articles as of \d{4}-\d{2}-\d{2} \d{2}:\d{2} KST\./, "llms.txt counts every article");
+  assert.match(llms, /^- \[환자 <안내>\]\(https:\/\/ptjoin\.com\/guide\/dosu-patient\/\)$/m, "llms.txt links each guide");
+  assert.ok(!llms.includes("eswt-patient"), "llms.txt skips missing guides");
+  assert.match(llms, /^- \[두번째 기사\]\(https:\/\/x\.kr\/2\): 매체/m, "llms.txt links publisher articles");
+  assert.ok(!llms.includes("javascript:") && !llms.includes("정적 <기사>"), "llms.txt drops non-web links");
+  assert.ok(!llms.includes("심리 전용 기사"), "llms.txt lists physical-therapy channels only");
+  const notFound = stat.extra["웹/board/404.html"];
+  assert.match(notFound, /<meta name="robots" content="noindex">/, "404 page is not indexed");
+  assert.match(notFound, /<a href="\/guide\/dosu-patient\/">환자 &lt;안내&gt;<\/a>/, "404 page links guides");
+  assert.ok(!/<script/i.test(notFound), "404 page needs no JavaScript");
   console.log(
     "allied board: URL identity, source preservation, membership, UI and generated JS passed",
   );

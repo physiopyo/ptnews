@@ -56,7 +56,7 @@ def remove_keys():
 def sync_output():
     board = os.path.join(PIPE, '웹', 'board')
     # The board is served at /news/; the site root is the static company landing page.
-    for name, dst in (('index.html', os.path.join('news', 'index.html')), ('data.js', 'data.js'), ('sitemap.xml', 'sitemap.xml')):
+    for name, dst in (('index.html', os.path.join('news', 'index.html')), ('data.js', 'data.js'), ('sitemap.xml', 'sitemap.xml'), ('llms.txt', 'llms.txt'), ('404.html', '404.html')):
         src = os.path.join(board, name)
         if not os.path.isfile(src):
             log('%s 미생성 -> 동기화 중단' % name)
@@ -90,7 +90,7 @@ def sync_output():
             if rel not in refs:
                 os.remove(os.path.join(root, fn))
                 removed += 1
-    log('sync | news/index.html + data.js + sitemap + guide + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
+    log('sync | news/index.html + data.js + sitemap + llms.txt + 404 + guide + img (신규 %d, 정리 %d, 참조 %d)' % (copied, removed, len(refs)))
 
 
 MAX_BACKFILL_DAYS = 31

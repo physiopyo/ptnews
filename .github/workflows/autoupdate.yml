@@ -126,6 +126,6 @@ jobs:
           cp -r img cfdist/
           cp -r guide cfdist/
           cp -r about privacy news cfdist/
-          cp robots.txt sitemap.xml cfdist/
+          cp robots.txt sitemap.xml llms.txt 404.html cfdist/
           if [ -d pipeline/웹/board/buzzwords ]; then cp -r pipeline/웹/board/buzzwords cfdist/; fi
           npx --yes wrangler@4 pages deploy cfdist --project-name=ptnews --branch=main --commit-dirty=true

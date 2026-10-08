@@ -391,6 +391,59 @@ const SITEMAP = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://w
   + [['/', 'weekly'], ['/news/', 'hourly'], ['/about/', 'monthly'], ['/privacy/', 'yearly']].concat(GUIDE_PAGES.map(function (g) { return ['/guide/' + g.slug + '/', 'monthly']; }))
     .map(function (u) { return '  <url><loc>' + SITE + u[0] + '</loc><changefreq>' + u[1] + '</changefreq></url>\n'; }).join('')
   + '</urlset>\n';
+// Plain-text site summary for language-model readers (https://llmstxt.org), served at /llms.txt.
+function mdText(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().replace(/[\\[\]]/g, '\\$&'); }
+function mdUrl(u) { return String(u).replace(/[\s()<>]/g, function (c) { return '%' + c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0'); }); }
+const BUILT_KST = new Date(NOW + 9 * 3600000).toISOString().slice(0, 16).replace('T', ' ') + ' KST';
+const LLMS_NEWS = STATIC_NEWS.filter(function (a) { return /^https?:\/\//i.test(a.url); }).slice(0, 10).map(function (a) {
+  const meta = mdText([a.outlet, a.date].filter(Boolean).join(', '));
+  return '- [' + mdText(a.title) + '](' + mdUrl(a.url) + ')' + (meta ? ': ' + meta : '');
+});
+const LLMS_TXT = [
+  '# PTJoin (PT뉴스)',
+  '',
+  '> PTJoin is a Korean health-policy information service for patients and physical therapists. We explain Korea\'s July 2026 manual and shockwave therapy rules in plain language, citing the government notice behind each point, and help patients find a physical therapist.',
+  '',
+  'PTJoin (PT뉴스) · South Korea · Founder 김경표 · Live since June 2026 · Contact onpta@ptjoin.com',
+  '',
+  '## What runs today',
+  '',
+  '- ' + GUIDE_PAGES.length + ' plain-language guides on manual and shockwave therapy for patients and clinicians, each listing the government notices and guidelines it is based on.',
+  '- An hourly health-policy news dashboard that collects Korean articles and government announcements: ' + nf(articles.length) + ' articles as of ' + BUILT_KST + '.',
+  '- Clinics can ask to be listed by email.',
+  '',
+  '## In development',
+  '',
+  '- A patient Q&A that answers only from our guides and official notices, shows the source for each answer, and then lists nearby physical therapists. Clinics will pay one flat monthly listing fee, with no charge per patient.',
+  '',
+  '## How we use Claude',
+  '',
+  '- Claude Opus tags collected policy articles by topic and framing.',
+  '- The site and the news pipeline are built and operated with Claude Code.',
+  '- The patient Q&A will run on Claude. It gives no diagnosis or treatment advice and tells users at the start of each chat that they are talking to an AI.',
+  '',
+  '## Pages',
+  '',
+  '- [Home](' + SITE + '/): what PTJoin does',
+  '- [About](' + SITE + '/about/): company, why now, what runs today, how we use Claude',
+  '- [Health-policy news](' + SITE + '/news/): news dashboard, updated hourly (Korean)',
+  '- [Privacy policy](' + SITE + '/privacy/)',
+  '',
+  '## Guides (Korean)',
+  ''
+].concat(GUIDE_PAGES.map(function (g) { return '- [' + mdText(g.doc.title) + '](' + SITE + '/guide/' + g.slug + '/)'; }))
+  .concat(LLMS_NEWS.length ? ['', '## Latest articles (Korean, linked to the publisher)', ''].concat(LLMS_NEWS) : [])
+  .join('\n') + '\n';
+// Cloudflare Pages answers unknown paths with a real 404 only when the deploy has a top-level 404.html.
+const NOT_FOUND_HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
+  + '<title>페이지를 찾을 수 없습니다 · PTJoin</title><meta name="robots" content="noindex"><link rel="icon" href="data:,">'
+  + '<style>' + PAGE_CSS + '</style></head><body><main>'
+  + '<a class="back" href="/">← PTJoin 홈</a><h1>페이지를 찾을 수 없습니다</h1>'
+  + '<p class="tag" lang="en">Page not found</p>'
+  + '<section><p>주소가 바뀌었거나 없는 페이지입니다. 아래에서 찾아보세요.</p><ul>'
+  + '<li><a href="/">PTJoin 홈</a></li><li><a href="/news/">보건정책 뉴스</a></li><li><a href="/about/">소개 · About</a></li>'
+  + GUIDE_PAGES.map(function (g) { return '<li><a href="/guide/' + g.slug + '/">' + hesc(g.doc.title) + '</a></li>'; }).join('')
+  + '</ul></section></main>' + FOOTER + '</body></html>';
 
 const CSS = `:root{--accent:#1a1a1a;--ink:#1a1a1a;--sub:#8c8c8c;--line:#ececec;--bg:#ffffff}
 html,body{margin:0}body{background:var(--bg);font-family:'Noto Sans KR',system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
@@ -762,6 +815,8 @@ fs.mkdirSync('웹/board/img', { recursive: true });
 fs.writeFileSync('웹/board/' + DATA_FILE, DATA_JS, 'utf8');
 fs.writeFileSync(OUT, HTML, 'utf8');
 fs.writeFileSync('웹/board/sitemap.xml', SITEMAP, 'utf8');
+fs.writeFileSync('웹/board/llms.txt', LLMS_TXT, 'utf8');
+fs.writeFileSync('웹/board/404.html', NOT_FOUND_HTML, 'utf8');
 GUIDE_PAGES.forEach(function (g) {
   fs.mkdirSync('웹/board/guide/' + g.slug, { recursive: true });
   fs.writeFileSync('웹/board/guide/' + g.slug + '/index.html', guidePageHTML(g), 'utf8');
