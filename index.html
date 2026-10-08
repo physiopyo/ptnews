@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>(function(l){if(l.hostname==="ptnews.pages.dev"||l.hostname==="www.ptjoin.com"){l.replace("https://ptjoin.com"+l.pathname+l.search+l.hash);return}if(/^#(home|news|notice|pet|docs|stmt|opin|labor|guide)$/.test(l.hash))l.replace("/news/"+l.hash)})(location)</script>
-<title>PTJoin — 정책 피해 환자와 물리치료사를 잇는 플랫폼</title>
+<title>PTJoin — 도수치료 관리급여 환자 안내와 물리치료사 연결</title>
 <link rel="canonical" href="https://ptjoin.com/">
-<meta name="description" content="PTJoin connects Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news. PTJoin은 정책 피해 환자와 물리치료사를 잇는 플랫폼입니다. Contact: onpta@ptjoin.com">
+<meta name="description" content="PTJoin is a Korean health-policy information service for patients and physical therapists. Plain-language guides to Korea's 2026 manual therapy rules with government sources, hourly health-policy news tagged by Claude, and help finding a physical therapist. Contact: onpta@ptjoin.com">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PTJoin">
 <meta property="og:url" content="https://ptjoin.com/">
-<meta property="og:title" content="PTJoin — 정책 피해 환자와 물리치료사를 잇는 플랫폼">
-<meta property="og:description" content="환자와 물리치료사를 연결하고, 재활 교육과 보건정책 뉴스를 제공합니다.">
+<meta property="og:title" content="PTJoin — 도수치료 관리급여 환자 안내와 물리치료사 연결">
+<meta property="og:description" content="바뀐 도수치료·체외충격파 제도를 정부 고시 근거와 함께 설명하고, 환자와 물리치료사를 연결합니다.">
 <meta property="og:image" content="https://ptjoin.com/img/hero-1.jpg">
 <link rel="icon" href="data:,">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PTJoin","alternateName":["PT뉴스"],"url":"https://ptjoin.com/","email":"onpta@ptjoin.com","foundingDate":"2026-06","founder":{"@type":"Person","name":"김경표"},"areaServed":"KR","description":"Platform connecting Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news."}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PTJoin","alternateName":["PT뉴스"],"url":"https://ptjoin.com/","email":"onpta@ptjoin.com","foundingDate":"2026-06","founder":{"@type":"Person","name":"김경표"},"areaServed":"KR","description":"Korean health-policy information service for patients and physical therapists: sourced guides to the 2026 manual therapy rules, hourly health-policy news tagged by Claude, and help finding a physical therapist."}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-GP4BW3V4TS');</script>
 <style>
 :root{--ink:#16181d;--sub:#5f6470;--line:#e7e8ec;--accent:#1f5f8b;--soft:#f4f7fa}
@@ -40,6 +40,9 @@ main{max-width:1040px;margin:0 auto;padding:0 24px}
 .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;padding:44px 0;border-bottom:1px solid var(--line)}
 h2{font-size:18px;margin:0 0 8px}
 .cols p{margin:0;font-size:15px;color:#3a3e47;word-break:keep-all}
+.ai{padding:40px 0;border-bottom:1px solid var(--line)}
+.ai ul{margin:0;padding-left:20px;max-width:820px}
+.ai li{margin:0 0 8px;font-size:15px;color:#3a3e47;word-break:keep-all}
 .en{padding:36px 0;border-bottom:1px solid var(--line);color:#3a3e47;font-size:15px}
 .en p{margin:0 0 8px;max-width:820px}
 footer{max-width:1040px;margin:0 auto;padding:28px 24px 48px;font-size:13.5px;color:var(--sub)}
@@ -54,8 +57,8 @@ footer p{margin:0 0 6px}
 </header>
 
 <section class="hero"><div>
-<h1>정책 변화로 치료가 막힌 환자를,<br>물리치료사와 다시 잇습니다</h1>
-<p class="lead">PTJoin은 2026년 도수치료·체외충격파 관리급여 이후 치료받을 곳을 잃은 환자와 물리치료사를 연결하는 플랫폼입니다. 재활 교육과 보건정책 뉴스도 함께 제공합니다.</p>
+<h1>바뀐 도수치료 제도,<br>출처와 함께 설명하고 물리치료사와 잇습니다</h1>
+<p class="lead">PTJoin은 2026년 7월 바뀐 도수치료·체외충격파 제도를 정부 고시 근거와 함께 환자에게 설명하고, 가까운 물리치료사를 찾을 수 있게 돕습니다. 보건정책 뉴스도 매시간 모아 보여줍니다.</p>
 <div class="cta">
 <a class="btn primary" href="/news/">보건정책 뉴스 보기</a>
 <a class="btn" href="/guide/dosu-patient/">환자 가이드 읽기</a>
@@ -77,9 +80,19 @@ footer p{margin:0 0 6px}
 <div><h2>보건정책 뉴스</h2><p>보건정책 기사와 정부 공지를 매시간 모아 보여줍니다. Claude가 기사 주제와 보도 관점을 분석하고, 사이트 전체를 Claude Code로 만듭니다.</p></div>
 </div>
 
+<section class="ai">
+<h2>Claude 사용 원칙</h2>
+<ul>
+<li>뉴스 분류: Claude Opus가 수집한 기사의 주제와 보도 관점을 태그합니다. 지금까지 2,228건을 분류했고, 기사 원문은 언론사 링크로 연결합니다.</li>
+<li>환자 Q&amp;A(개발 중): 우리 안내서와 정부 고시만 근거로 답하고, 답마다 출처를 보여 줍니다. 진단이나 치료 권고는 하지 않고, 대화를 시작할 때 AI가 답한다는 사실을 알립니다.</li>
+<li>개발: 사이트와 뉴스 수집 파이프라인을 Claude Code로 만들고 운영합니다.</li>
+</ul>
+</section>
+
 <div class="en" lang="en">
-<p><strong>PTJoin</strong> connects patients hit by Korea's 2026 health-policy changes with the physical therapists who can treat them. We also provide rehabilitation education and live health-policy news.</p>
-<p>Live since June 2026 · 2,700+ policy articles collected · 2,228 analyzed with Claude Opus · Built with Claude Code · Clinics pay a flat monthly listing fee, never per patient.</p>
+<p><strong>PTJoin</strong> is a Korean health-policy information service for patients and physical therapists. We explain Korea's July 2026 manual and shockwave therapy rules in plain language, citing the government notice behind each point, and help patients find a physical therapist.</p>
+<p><strong>How we use Claude.</strong> Claude Opus tags collected policy articles by topic and framing (2,228 so far). Our patient Q&amp;A, now in development, answers only from our guides and official notices, cites its source, gives no diagnosis or treatment advice, and tells users at the start that they are talking to an AI. The site and pipeline are built with Claude Code.</p>
+<p>Live since June 2026 · 2,700+ policy articles collected · 5 sourced guides · Clinics pay a flat monthly listing fee, never per patient.</p>
 </div>
 </main>
 
