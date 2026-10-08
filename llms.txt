@@ -1,0 +1,49 @@
+# PTJoin (PT뉴스)
+
+> PTJoin is a Korean health-policy information service for patients and physical therapists. We explain Korea's July 2026 manual and shockwave therapy rules in plain language, citing the government notice behind each point, and help patients find a physical therapist.
+
+PTJoin (PT뉴스) · South Korea · Founder 김경표 · Live since June 2026 · Contact onpta@ptjoin.com
+
+## What runs today
+
+- 5 plain-language guides on manual and shockwave therapy for patients and clinicians, each listing the government notices and guidelines it is based on.
+- An hourly health-policy news dashboard that collects Korean articles and government announcements: 2,746 articles as of 2026-10-09 05:20 KST.
+- Clinics can ask to be listed by email.
+
+## In development
+
+- A patient Q&A that answers only from our guides and official notices, shows the source for each answer, and then lists nearby physical therapists. Clinics will pay one flat monthly listing fee, with no charge per patient.
+
+## How we use Claude
+
+- Claude Opus tags collected policy articles by topic and framing.
+- The site and the news pipeline are built and operated with Claude Code.
+- The patient Q&A will run on Claude. It gives no diagnosis or treatment advice and tells users at the start of each chat that they are talking to an AI.
+
+## Pages
+
+- [Home](https://ptjoin.com/): what PTJoin does
+- [About](https://ptjoin.com/about/): company, why now, what runs today, how we use Claude
+- [Health-policy news](https://ptjoin.com/news/): news dashboard, updated hourly (Korean)
+- [Privacy policy](https://ptjoin.com/privacy/)
+
+## Guides (Korean)
+
+- [도수치료, 2026년 7월 1일부터 이렇게 바뀝니다 (환자 안내)](https://ptjoin.com/guide/dosu-patient/)
+- [체외충격파 치료, 이렇게 됩니다 (환자 안내)](https://ptjoin.com/guide/eswt-patient/)
+- [도수치료 관리급여 현장 정리본 (치료사·의료기관용)](https://ptjoin.com/guide/dosu-clinician/)
+- [체외충격파(ESWT) 치료 가이드 (치료사·의료기관용)](https://ptjoin.com/guide/eswt-clinician/)
+- [도수치료·체외충격파 현장 FAQ: 정부 질의응답에 없는 질문과 찾은 답 (도수 32문·체외충격파 28문)](https://ptjoin.com/guide/dosu-faq/)
+
+## Latest articles (Korean, linked to the publisher)
+
+- [치료실 닫히고 월급 깎이고…물리치료사 114명 중 94명이 "임금 삭감"](https://www.seoulilbo.co.kr/news/articleView.html?idxno=21989): 서울일보, 10.8
+- [보험사, 가족친화 제도 확대…일·가정 양립 지원 강화 - 컨슈머타임스(Consumertimes)](https://www.cstimes.com/news/articleView.html?idxno=723230): 컨슈머타임스, 26.10.08
+- [\[소비자분쟁 The50 ㊴\] "500만원 내고 60만원 받았다" 의사 말 믿고 입원했다 날벼락...입원 인정 놓고 분쟁 속출](http://www.consumernews.co.kr/news/articleView.html?idxno=765209): 소비자가만드는신문, 26.10.08
+- [도수치료 이어 비급여 손질... '근거 부족'이면 직권 삭제](https://www.lawtv.kr/news/articleView.html?idxno=61097): 법률방송뉴스, 26.10.07
+- [도수치료 줄자 다른 비급여 늘어…국회, 가격관리·퇴출 요구](https://www.hitnews.co.kr/news/articleView.html?idxno=79721): 히트뉴스, 26.10.07
+- [사경 아기는 2주에 한 번으로 줄였다…"내 돈 내겠다는데도 안 된다"](https://www.seoulilbo.co.kr/news/articleView.html?idxno=21984): 서울일보, 10.7
+- [\[단독\] 법은 민간위탁 사무를 매년 감사하라는데…복지부 "지도·검사 문서 없다"](https://www.seoulilbo.co.kr/news/articleView.html?idxno=21959): 서울일보, 10.7
+- [임상물리치료사연대 “도수치료 관리급여 감사청구 추진”](https://www.bosa.co.kr/news/articleView.html?idxno=3013409): 의학신문, 26.10.07
+- [\[라온신문\] 생보사 암보험금 부지급률 4.78%…주요 상품군 가운데 가장 높아](https://www.raonnews.com/news/article.html?no=61678): raonnews.com, 26.10.07
+- [\[2026 국감\] 5대 손보사, 의료자문 부지급 감소…삼성 나홀로 증가](https://www.fetv.co.kr/news/articleView.html?idxno=311245): FETV, 26.10.07
