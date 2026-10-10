@@ -135,8 +135,7 @@ if (require.main === module) {
   assert.equal(org.founder.name, "김경표");
   assert.ok(!JSON.stringify(org).includes("전국임상물리치료사연대"), "organization metadata names PTJoin only");
   assert.match(output, /<title>PTJoin · PT뉴스/);
-  assert.match(output, /<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="\/">/, "board at /news/ resolves assets from the site root");
-  assert.match(output, /<link rel="canonical" href="https:\/\/ptjoin\.com\/news\/">/);
+  assert.match(output, /<link rel="canonical" href="https:\/\/ptjoin\.com\/">/);
   assert.match(output, /button\(\s*["']buzzsubject["']/);
   assert.match(output, /PTBuzz\.render\(DATA\.buzz/);
   const attack = "</script><script>globalThis.untrustedExecuted=true</script>";
@@ -270,14 +269,9 @@ if (require.main === module) {
       },
     },
   });
-  const staticBody = stat.output.slice(stat.output.indexOf("<body>"), stat.output.indexOf('<div id="lb">'));
-  assert.match(staticBody, /<h1>PTJoin \(PT뉴스\)/, "page has a static heading");
-  assert.match(staticBody, /수집 기사 3건/, "static facts count every article");
-  assert.match(staticBody, /정적 &lt;기사&gt;/, "titles are escaped in static list");
-  assert.ok(!staticBody.includes("javascript:"), "non-web links are not rendered");
-  assert.match(staticBody, /<a href="https:\/\/x\.kr\/2" rel="nofollow noopener"/);
-  assert.ok(!staticBody.includes("심리 전용 기사"), "static list shows physical-therapy channels only");
-  assert.match(staticBody, /<a href="\/guide\/dosu-patient\/">환자 &lt;안내&gt;<\/a>/);
+  const body = stat.output.slice(stat.output.indexOf("<body>"), stat.output.indexOf('<div id="lb">'));
+  assert.match(body, /<div id="center" style="min-width:0"><\/div>/, "the client app renders the article list; no static copy");
+  assert.ok(!/class="(intro|static-news|sitefacts)"/.test(stat.output), "no static intro, article list or site facts");
   const guidePage = stat.extra["웹/board/guide/dosu-patient/index.html"];
   assert.match(guidePage, /<title>환자 &lt;안내&gt; · PTJoin<\/title>/);
   assert.match(guidePage, /<link rel="canonical" href="https:\/\/ptjoin\.com\/guide\/dosu-patient\/">/);
@@ -285,9 +279,10 @@ if (require.main === module) {
   assert.match(guidePage, /<h2>1\. 비용<\/h2><p>본문<\/p>/);
   assert.match(guidePage, /개인정보처리방침/);
   const sitemap = stat.extra["웹/board/sitemap.xml"];
-  for (const loc of ["/", "/news/", "/about/", "/privacy/", "/guide/dosu-patient/"])
+  for (const loc of ["/", "/about/", "/privacy/", "/guide/dosu-patient/"])
     assert.ok(sitemap.includes("<loc>https://ptjoin.com" + loc + "</loc>"), "sitemap lists " + loc);
   assert.ok(!sitemap.includes("eswt-patient"), "missing guides are not listed");
+  assert.ok(!sitemap.includes("/news/"), "the board lives at the site root");
   const llms = stat.extra["웹/board/llms.txt"];
   assert.match(llms, /^# PTJoin \(PT뉴스\)\n\n> /, "llms.txt opens with the site name and a summary");
   assert.match(llms, /How we use Claude/, "llms.txt states how Claude is used");

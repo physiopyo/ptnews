@@ -332,8 +332,6 @@ const LABOR_WITH_WEBSITES = Object.assign({}, LABOR, { providers: (LABOR.provide
 const youtube = { id: '4k17IjvFGEc', title: '관리급여 관련 유튜브', url: 'https://youtu.be/4k17IjvFGEc', thumb: 'https://img.youtube.com/vi/4k17IjvFGEc/hqdefault.jpg' };
 const DATA = { articles, petitions, stmts, docs, notices, guide, opinion, buzz: BUZZ, labor: LABOR_WITH_WEBSITES, koreaMap: KOREA_MAP, youtube, updated: (CO.updated || '') };
 
-// Server-rendered HTML for readers and crawlers that do not run JavaScript.
-// The client app replaces #center on load; the intro, site facts and footer stay.
 const SITE = 'https://ptjoin.com';
 function hesc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 const BUILT_AT = new Date(NOW).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
@@ -341,30 +339,8 @@ const GUIDE_PAGES = ['dosu-patient', 'eswt-patient', 'dosu-clinician', 'eswt-cli
   .map(function (slug) { return { slug: slug, doc: J2(__dirname + '/../guide/' + slug + '.sections.json', null) }; })
   .filter(function (g) { return g.doc && g.doc.title && Array.isArray(g.doc.sections); });
 const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 대표 김경표 · 문의 <a href="mailto:onpta@ptjoin.com">onpta@ptjoin.com</a> · <a href="/about/">소개 · About</a> · <a href="/privacy/">개인정보처리방침</a></footer>';
+// Publisher articles listed in llms.txt.
 const STATIC_NEWS = articles.filter(function (a) { return a.channels.some(function (c) { return c === 'press' || c === 'ins' || c === 'ko'; }); }).slice(0, 20);
-function staticNewsItem(a) {
-  const title = /^https?:\/\//i.test(a.url) ? '<a href="' + hesc(a.url) + '" rel="nofollow noopener" target="_blank">' + hesc(a.title) + '</a>' : hesc(a.title);
-  return '<li>' + title + ' <span>' + hesc([a.outlet, a.date].filter(Boolean).join(' · ')) + '</span></li>';
-}
-const STATIC_CENTER = '<section class="static-news"><h2>최신 물리치료·보건정책 기사 <span lang="en">Latest health-policy news</span></h2><ol>'
-  + STATIC_NEWS.map(staticNewsItem).join('') + '</ol></section>';
-const INTRO = '<div class="intro"><h1>PTJoin (PT뉴스) · 물리치료사와 환자를 위한 보건정책 뉴스</h1>'
-  + '<p lang="en">Health-policy news for physical therapists and patients in Korea</p>'
-  + '<p class="facts">매시간 갱신 · 수집 기사 ' + nf(articles.length) + '건 · 마지막 갱신 ' + hesc(BUILT_AT) + '</p></div>';
-const SITE_FACTS = '<section class="sitefacts">'
-  + '<div><h2>가이드 <span lang="en">Guides</span></h2><ul>' + GUIDE_PAGES.map(function (g) { return '<li><a href="/guide/' + g.slug + '/">' + hesc(g.doc.title) + '</a></li>'; }).join('') + '</ul></div>'
-  + '<div><h2>환자 Q&amp;A <span lang="en">Patient Q&amp;A</span> · 준비 중</h2><p>도수치료·체외충격파 관리급여에 관한 환자 질문에, 이 사이트의 가이드와 정부 고시·질의응답만 근거로 출처 링크를 붙여 답하는 서비스를 준비하고 있습니다.</p>'
-  + '<p><a href="mailto:onpta@ptjoin.com?subject=%ED%99%98%EC%9E%90%20Q%26A%20%EC%B6%9C%EC%8B%9C%20%EC%95%8C%EB%A6%BC%20%EC%8B%A0%EC%B2%AD">출시 알림 신청 (이메일)</a></p></div>'
-  + '<div><h2>AI 사용 원칙 <span lang="en">How we use AI</span></h2><ul>'
-  + '<li>기사 주제·논조 분석과 사이트 개발에 Claude를 사용합니다.</li>'
-  + '<li>환자 답변은 이 사이트의 가이드와 정부 문서만 근거로 하며 출처를 링크합니다.</li>'
-  + '<li>의료기관의 등록·광고는 답변 내용에 영향을 주지 않습니다.</li></ul></div>'
-  + '</section>';
-const STATIC_CSS = '.intro{margin:18px 40px 0}.intro h1{margin:0;font:700 19px/1.4 \'Noto Sans KR\',sans-serif;word-break:keep-all}.intro p{margin:2px 0 0;color:#6b6b6b;font-size:13px}.intro .facts{color:#8c8c8c;font-size:12px}'
-  + '.static-news h2{font-size:18px;margin:0 0 10px}.static-news ol{margin:0;padding-left:22px;line-height:1.7}.static-news li span{color:#8c8c8c;font-size:12px}'
-  + '.sitefacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;margin:0 40px;padding:26px 0;border-top:1px solid var(--line);font-size:13.5px;line-height:1.65;color:#39362f}'
-  + '.sitefacts h2{font-size:15px;margin:0 0 8px;color:var(--ink)}.sitefacts h2 span{color:#8c8c8c;font-weight:500;font-size:12px}.sitefacts ul{margin:0;padding-left:18px}.sitefacts p{margin:0 0 8px}'
-  + '@media(max-width:900px){.intro{margin:12px 18px 0}.sitefacts{grid-template-columns:1fr;gap:18px;margin:0 18px}}';
 
 const PAGE_CSS = ':root{--ink:#1a1a1a;--sub:#6b6b6b;--line:#ececec}html,body{margin:0}'
   + 'body{font-family:\'Noto Sans KR\',system-ui,-apple-system,\'Segoe UI\',sans-serif;color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased}'
@@ -382,13 +358,13 @@ function guidePageHTML(g) {
     + '<meta name="description" content="' + hesc(desc) + '">'
     + '<meta property="og:type" content="article"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + url + '"><meta property="og:title" content="' + hesc(g.doc.title) + '">'
     + '<link rel="icon" href="data:,"><style>' + PAGE_CSS + '</style></head><body><main>'
-    + '<a class="back" href="/news/#guide">← PT뉴스 가이드 목록</a><h1>' + hesc(g.doc.title) + '</h1>'
+    + '<a class="back" href="/#guide">← PT뉴스 가이드 목록</a><h1>' + hesc(g.doc.title) + '</h1>'
     + '<p class="tag">PTJoin 가이드 · 정보 제공용 문서입니다. 개별 진료·청구 판단은 의료기관과 건강보험심사평가원에 확인하세요.</p>'
     + g.doc.sections.map(function (s) { return '<section><h2>' + hesc(s.h) + '</h2>' + s.html + '</section>'; }).join('')
     + '</main>' + FOOTER + '</body></html>';
 }
 const SITEMAP = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-  + [['/', 'weekly'], ['/news/', 'hourly'], ['/about/', 'monthly'], ['/privacy/', 'yearly']].concat(GUIDE_PAGES.map(function (g) { return ['/guide/' + g.slug + '/', 'monthly']; }))
+  + [['/', 'hourly'], ['/about/', 'monthly'], ['/privacy/', 'yearly']].concat(GUIDE_PAGES.map(function (g) { return ['/guide/' + g.slug + '/', 'monthly']; }))
     .map(function (u) { return '  <url><loc>' + SITE + u[0] + '</loc><changefreq>' + u[1] + '</changefreq></url>\n'; }).join('')
   + '</urlset>\n';
 // Plain-text site summary for language-model readers (https://llmstxt.org), served at /llms.txt.
@@ -424,9 +400,8 @@ const LLMS_TXT = [
   '',
   '## Pages',
   '',
-  '- [Home](' + SITE + '/): what PTJoin does',
   '- [About](' + SITE + '/about/): company, why now, what runs today, how we use Claude',
-  '- [Health-policy news](' + SITE + '/news/): news dashboard, updated hourly (Korean)',
+  '- [Health-policy news](' + SITE + '/): news dashboard, updated hourly (Korean)',
   '- [Privacy policy](' + SITE + '/privacy/)',
   '',
   '## Guides (Korean)',
@@ -441,7 +416,7 @@ const NOT_FOUND_HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-
   + '<a class="back" href="/">← PTJoin 홈</a><h1>페이지를 찾을 수 없습니다</h1>'
   + '<p class="tag" lang="en">Page not found</p>'
   + '<section><p>주소가 바뀌었거나 없는 페이지입니다. 아래에서 찾아보세요.</p><ul>'
-  + '<li><a href="/">PTJoin 홈</a></li><li><a href="/news/">보건정책 뉴스</a></li><li><a href="/about/">소개 · About</a></li>'
+  + '<li><a href="/">PTJoin 홈 · 보건정책 뉴스</a></li><li><a href="/about/">소개 · About</a></li>'
   + GUIDE_PAGES.map(function (g) { return '<li><a href="/guide/' + g.slug + '/">' + hesc(g.doc.title) + '</a></li>'; }).join('')
   + '</ul></section></main>' + FOOTER + '</body></html>';
 
@@ -510,15 +485,13 @@ const BODY = `<div style="min-height:100vh"><div style="max-width:1300px;margin:
       </div>
     </div>
   </div>
-  ${INTRO}
   <nav class="topnav" id="topnav" style="display:flex;padding:18px 0 0;margin:0 40px;border-bottom:1px solid #ececec;overflow-x:auto;overflow-y:hidden"></nav>
   <div class="wrap" style="max-width:none;margin:0;padding:0 40px">
     <div class="grid" id="grid" style="display:grid;grid-template-columns:minmax(0,1fr) 316px;gap:34px;padding:26px 0 70px;align-items:start">
-      <div id="center" style="min-width:0">${STATIC_CENTER}</div>
+      <div id="center" style="min-width:0"></div>
       <aside class="rail" id="rail" style="position:sticky;top:20px;display:flex;flex-direction:column;gap:16px"></aside>
     </div>
   </div>
-  ${SITE_FACTS}
   ${FOOTER}
 </div></div><div id="lb"></div>`;
 
@@ -791,15 +764,15 @@ render();
 const DATA_FILE = process.env.PV === '1' ? 'preview-data.js' : 'data.js';
 // Data ships as a separate script so the HTML stays small and readable text comes first.
 const DATA_JS = 'var DATA=' + JSON.stringify(DATA).replace(/</g, '\\u003c') + ';\n';
-const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="/">'
+const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
   // The old pages.dev address and www keep working but move visitors to the one public address.
   + '<script>(function(h){if(h==="ptnews.pages.dev"||h==="www.ptjoin.com")location.replace("' + SITE + '"+location.pathname+location.search+location.hash)})(location.hostname)</script>'
-  + '<link rel="canonical" href="' + SITE + '/news/">'
+  + '<link rel="canonical" href="' + SITE + '/">'
   + '<title>PTJoin · PT뉴스 — 물리치료사를 위한 공간</title>'
   + '<meta name="description" content="PTJoin(PT뉴스)은 정책 피해 환자와 물리치료사를 잇는 플랫폼입니다. 재활 교육과 보건정책 뉴스를 함께 제공합니다. PTJoin connects Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news. Launched in June 2026. Contact: onpta@ptjoin.com">'
   + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'onpta@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, areaServed: 'KR', description: 'Platform connecting Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
-  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/news/">'
+  + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta property="og:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
   + '<meta property="og:image" content="' + SITE + '/img/hero-1.jpg"><meta property="og:image:width" content="1600"><meta property="og:image:height" content="900">'
   + '<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta name="twitter:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·가이드를 한눈에."><meta name="twitter:image" content="' + SITE + '/img/hero-1.jpg">'
@@ -807,7 +780,7 @@ const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta n
   + '<link rel="icon" href="data:,">'
   + '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">'
   + '<script src="d3.layout.cloud.min.js"></script>'
-  + '<style>' + CSS + STATIC_CSS + '</style></head><body>' + BODY
+  + '<style>' + CSS + '</style></head><body>' + BODY
   + '<script src="' + DATA_FILE + '?v=' + shortHash(DATA_JS) + '"></script><script>' + CLIENT + '</script></body></html>';
 
 const OUT = process.env.PV === '1' ? '웹/board/preview.html' : '웹/board/index.html';
