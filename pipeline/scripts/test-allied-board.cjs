@@ -124,14 +124,14 @@ if (require.main === module) {
   assert.match(output, /최초 발견일 기준/);
   assert.match(
     output,
-    /<footer class="credit"><strong>© 2026 PTJoin \(PT뉴스\)<\/strong> · 대표 김경표 · 문의 <a href="mailto:onpta@ptjoin\.com">onpta@ptjoin\.com<\/a> · <a href="\/about\/">소개 · About<\/a> · <a href="\/privacy\/">개인정보처리방침<\/a><\/footer>/,
+    /<footer class="credit"><strong>© 2026 PTJoin \(PT뉴스\)<\/strong> · 대표 김경표 · 문의 <a href="mailto:pyo@ptjoin\.com">pyo@ptjoin\.com<\/a><\/footer>/,
   );
   assert.doesNotMatch(output, /학생부대표|전국임상물리치료사연대가 운영|run by 전국임상물리치료사연대/);
   const org = JSON.parse(
     output.match(/<script type="application\/ld\+json">(.*?)<\/script>/)[1],
   );
   assert.equal(org.name, "PTJoin");
-  assert.equal(org.email, "onpta@ptjoin.com");
+  assert.equal(org.email, "pyo@ptjoin.com");
   assert.equal(org.founder.name, "김경표");
   assert.ok(!JSON.stringify(org).includes("전국임상물리치료사연대"), "organization metadata names PTJoin only");
   assert.match(output, /<title>PTJoin · PT뉴스/);
@@ -277,7 +277,8 @@ if (require.main === module) {
   assert.match(guidePage, /<link rel="canonical" href="https:\/\/ptjoin\.com\/guide\/dosu-patient\/">/);
   assert.match(guidePage, /<meta name="description" content="요약 문장">/);
   assert.match(guidePage, /<h2>1\. 비용<\/h2><p>본문<\/p>/);
-  assert.match(guidePage, /개인정보처리방침/);
+  assert.match(guidePage, /<a href="mailto:pyo@ptjoin\.com">/, "guide footer has the contact email");
+  assert.ok(!/href="\/(about|privacy)\/"/.test(guidePage), "guide footer has no About or privacy links");
   const sitemap = stat.extra["웹/board/sitemap.xml"];
   for (const loc of ["/", "/about/", "/privacy/", "/guide/dosu-patient/"])
     assert.ok(sitemap.includes("<loc>https://ptjoin.com" + loc + "</loc>"), "sitemap lists " + loc);
@@ -296,6 +297,7 @@ if (require.main === module) {
   assert.match(notFound, /<meta name="robots" content="noindex">/, "404 page is not indexed");
   assert.match(notFound, /<a href="\/guide\/dosu-patient\/">환자 &lt;안내&gt;<\/a>/, "404 page links guides");
   assert.ok(!/<script/i.test(notFound), "404 page needs no JavaScript");
+  assert.ok(!/href="\/(about|privacy)\/"/.test(notFound), "404 page has no About or privacy links");
   console.log(
     "allied board: URL identity, source preservation, membership, UI and generated JS passed",
   );
