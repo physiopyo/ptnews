@@ -102,7 +102,7 @@ def imgname(key):
 
 def main():
     import requests
-    insure = json.load(open(INSURE, encoding='utf-8')) if os.path.exists(INSURE) else []
+    insure = fp.dedupe_articles(json.load(open(INSURE, encoding='utf-8'))) if os.path.exists(INSURE) else []
     have = set(fp.urlkey(it['url']) for it in insure)
     have_tk = set(fp.titlekey(it.get('title', '')) for it in insure)
     os.makedirs(IMGDIR, exist_ok=True)
@@ -193,6 +193,8 @@ def main():
             continue
         if any(pw in ftitle for pw in fp.POL_BLOCK) and not any(cc in ftitle for cc in CARRIER):
             continue
+        if any(fp.same_title(ftitle, it.get('title')) for it in insure):
+            continue
         img_rel = ''
         if meta.get('img'):
             fn = imgname(k)
@@ -208,6 +210,7 @@ def main():
         added += 1
 
     insure.sort(key=lambda x: x.get('dt') or x.get('date', ''), reverse=True)
+    insure = fp.dedupe_articles(insure)
     # 과거 기사를 찾을 수 있도록 누적 데이터를 자르지 않는다.
     json.dump(insure, open(INSURE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('insure total=%d, added=%d' % (len(insure), added))

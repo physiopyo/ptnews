@@ -188,19 +188,98 @@ def resolve_chip(host, site, desc='', title=''):
 
 
 def urlkey(u):
+    """Article identity: one key for every URL form (section path, /article/, AMP, mobile) of one article."""
     p = urlparse(html.unescape(u or ''))
-    host = p.netloc.replace('www.', '')
-    if host == 'm.news.nate.com':
-        host = 'news.nate.com'
-    qs = parse_qs(p.query)
-    for idk in ('idxno', 'wr_id', 'aid', 'articleId', 'no', 'artid', 'art_id', 'contid', 'idx'):
-        if idk in qs:
+    host = re.sub(r'^(?:www|nwww|m)\.', '', p.netloc.lower())
+    qs = {k.lower(): v for k, v in parse_qs(p.query).items()}
+    for idk in ('idxno', 'wr_id', 'aid', 'articleid', 'no', 'artid', 'art_id', 'contid', 'idx', 'id', 'p'):
+        if idk in qs and qs[idk][0].isdigit():
             return host + '#' + qs[idk][0]
-    return host + p.path.rstrip('/')
+    path = p.path.rstrip('/')
+    # A long numeric last segment is the outlet's article id; section and AMP prefixes vary around it.
+    # Naver numbers articles per press office, so its path stays whole.
+    last = re.sub(r'\.html?$', '', path.rsplit('/', 1)[-1])
+    if len(last) >= 5 and last.isdigit() and not host.endswith('naver.com'):
+        return host + '#' + last
+    return host + path
 
 
 def titlekey(t):
     return re.sub(r'[^0-9가-힣a-zA-Z]', '', t or '')
+
+
+def is_cut_title(t):
+    t = (t or '').rstrip()
+    return t.endswith('...') or t.endswith('…')
+
+
+def same_title(a, b):
+    """Same headline: equal keys, or one is a cut ('...') copy of the other."""
+    ka, kb = titlekey(a), titlekey(b)
+    if not ka or not kb:
+        return False
+    if ka == kb:
+        return True
+    if len(ka) > len(kb):
+        a, b, ka, kb = b, a, kb, ka
+    return is_cut_title(a) and len(ka) >= 15 and kb.startswith(ka)
+
+
+def dedupe_articles(items):
+    """Drop repeat copies of one article: same urlkey, same title, or a cut copy of a title.
+
+    Each group keeps one entry at the position of its first copy. Its URL is the outlet's own
+    regular page (over a portal, AMP or mobile copy); its title comes from the best such copy
+    whose title is not cut off with '...'.
+    """
+    parent = list(range(len(items)))
+
+    def root(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    first = {}
+    for i, it in enumerate(items):
+        tk = titlekey(it.get('title'))
+        for key in ('u' + urlkey(it.get('url')), 't' + tk if tk else ''):
+            if not key:
+                continue
+            if key in first:
+                parent[root(i)] = root(first[key])
+            else:
+                first[key] = i
+    for i, it in enumerate(items):
+        if is_cut_title(it.get('title')):
+            for j, other in enumerate(items):
+                if i != j and same_title(it.get('title'), other.get('title')):
+                    parent[root(i)] = root(j)
+
+    def url_rank(i):
+        u = urlparse(items[i].get('url') or '')
+        path = u.path.lower()
+        return (is_portal(u.netloc), '/amp' in path or 'amp.' in path or '/mobile/' in path
+                or u.netloc.lower().startswith('m.') or 'ampmode' in u.query.lower(), i)
+
+    def title_rank(i):
+        # Portal and mobile copies tend to carry site names in the title, so trust the same order.
+        return (is_cut_title(items[i].get('title')), url_rank(i))
+
+    groups = {}
+    for i in range(len(items)):
+        groups.setdefault(root(i), []).append(i)
+    out = []
+    for members in sorted(groups.values()):
+        if len(members) == 1:
+            out.append(items[members[0]])
+            continue
+        merged = dict(items[min(members, key=url_rank)])
+        merged['title'] = items[min(members, key=title_rank)]['title']
+        if not merged.get('img'):
+            merged['img'] = next((items[m]['img'] for m in members if items[m].get('img')), '')
+        out.append(merged)
+    return out
 
 def is_relevant_article(title, desc='', url=''):
     """치료 소개·병원 홍보가 아니라 PT뉴스의 정책 의제를 직접 다루는 기사만 허용한다."""
@@ -511,7 +590,7 @@ def dl_img(sess, img_url, dest, referer):
 
 
 def main():
-    press = json.load(open(PRESS, encoding='utf-8'))
+    press = dedupe_articles(json.load(open(PRESS, encoding='utf-8')))
     have = set(urlkey(it['url']) for it in press)
     have_tk = set(titlekey(it.get('title', '')) for it in press)
     # 고영준(ko.json) 채널과 크로스 중복 방지: 같은 제목이면 press에 안 담음(포털 재전송 포함)
@@ -615,6 +694,8 @@ def main():
             continue
         if any(pw in ftitle for pw in POL_BLOCK) and not any(tw in ftitle for tw in DIRECT_TITLE):
             continue
+        if any(same_title(ftitle, it.get('title')) for it in press):
+            continue  # 검색 제목이 잘려 사전 중복 검사를 통과한 같은 기사(다른 URL 형식)
         img_rel = ''
         if meta.get('img'):
             fn = imgname(k)
@@ -635,6 +716,7 @@ def main():
         added += 1
 
     press.sort(key=lambda x: x.get('dt') or x.get('date', ''), reverse=True)
+    press = dedupe_articles(press)
     # 과거 기사를 찾을 수 있도록 누적 데이터를 자르지 않는다.
     json.dump(press, open(PRESS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     print('press total=%d, added=%d (구글RSS+네이버)' % (len(press), added))
