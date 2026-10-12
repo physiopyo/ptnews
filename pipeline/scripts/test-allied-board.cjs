@@ -124,7 +124,7 @@ if (require.main === module) {
   assert.match(output, /최초 발견일 기준/);
   assert.match(
     output,
-    /<footer class="credit"><strong>© 2026 PTJoin \(PT뉴스\)<\/strong> · 대표 김경표 · 문의 <a href="mailto:pyo@ptjoin\.com">pyo@ptjoin\.com<\/a><\/footer>/,
+    /<footer class="credit"><strong>© 2026 PTJoin \(PT뉴스\)<\/strong> · 문의 <a href="mailto:pyo@ptjoin\.com">pyo@ptjoin\.com<\/a><br>상호 같이움직 · 대표 김경표 · 사업자등록번호 510-21-94714 · 주소 경기도 성남시 중원구 광명로323번길 5-11<\/footer>/,
   );
   assert.doesNotMatch(output, /학생부대표|전국임상물리치료사연대가 운영|run by 전국임상물리치료사연대/);
   const org = JSON.parse(
@@ -133,6 +133,9 @@ if (require.main === module) {
   assert.equal(org.name, "PTJoin");
   assert.equal(org.email, "pyo@ptjoin.com");
   assert.equal(org.founder.name, "김경표");
+  assert.equal(org.legalName, "같이움직");
+  assert.equal(org.taxID, "510-21-94714");
+  assert.equal(org.foundingDate, "2026-06", "founding date stays the June 2026 launch, not the 2026-10-10 registration");
   assert.ok(!JSON.stringify(org).includes("전국임상물리치료사연대"), "organization metadata names PTJoin only");
   assert.match(output, /<title>PTJoin · PT뉴스/);
   assert.match(output, /<link rel="canonical" href="https:\/\/ptjoin\.com\/">/);

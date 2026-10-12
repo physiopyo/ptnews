@@ -338,7 +338,7 @@ const BUILT_AT = new Date(NOW).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul',
 const GUIDE_PAGES = ['dosu-patient', 'eswt-patient', 'dosu-clinician', 'eswt-clinician', 'dosu-faq']
   .map(function (slug) { return { slug: slug, doc: J2(__dirname + '/../guide/' + slug + '.sections.json', null) }; })
   .filter(function (g) { return g.doc && g.doc.title && Array.isArray(g.doc.sections); });
-const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 대표 김경표 · 문의 <a href="mailto:pyo@ptjoin.com">pyo@ptjoin.com</a></footer>';
+const FOOTER = '<footer class="credit"><strong>© 2026 PTJoin (PT뉴스)</strong> · 문의 <a href="mailto:pyo@ptjoin.com">pyo@ptjoin.com</a><br>상호 같이움직 · 대표 김경표 · 사업자등록번호 510-21-94714 · 주소 경기도 성남시 중원구 광명로323번길 5-11</footer>';
 // Publisher articles listed in llms.txt.
 const STATIC_NEWS = articles.filter(function (a) { return a.channels.some(function (c) { return c === 'press' || c === 'ins' || c === 'ko'; }); }).slice(0, 20);
 
@@ -380,7 +380,7 @@ const LLMS_TXT = [
   '',
   '> PTJoin is a Korean health-policy information service for patients and physical therapists. We explain Korea\'s July 2026 manual and shockwave therapy rules in plain language, citing the government notice behind each point, and help patients find a physical therapist.',
   '',
-  'PTJoin (PT뉴스) · South Korea · Founder 김경표 · Live since June 2026 (first at ptnews.vercel.app, on ptjoin.com since October 2026) · Contact pyo@ptjoin.com',
+  'PTJoin (PT뉴스) · Registered business 같이움직 (사업자등록번호 510-21-94714) · South Korea · Founder 김경표 · Live since June 2026 (first at ptnews.vercel.app, on ptjoin.com since October 2026) · Contact pyo@ptjoin.com',
   '',
   '## What runs today',
   '',
@@ -770,7 +770,7 @@ const HTML = '<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta n
   + '<link rel="canonical" href="' + SITE + '/">'
   + '<title>PTJoin · PT뉴스 — 물리치료사를 위한 공간</title>'
   + '<meta name="description" content="PTJoin(PT뉴스)은 정책 피해 환자와 물리치료사를 잇는 플랫폼입니다. 재활 교육과 보건정책 뉴스를 함께 제공합니다. PTJoin connects Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news. Launched in June 2026. Contact: pyo@ptjoin.com">'
-  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'pyo@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, areaServed: 'KR', description: 'Platform connecting Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
+  + '<script type="application/ld+json">' + JSON.stringify({ '@context': 'https://schema.org', '@type': 'Organization', name: 'PTJoin', alternateName: ['PT뉴스'], url: SITE + '/', email: 'pyo@ptjoin.com', foundingDate: '2026-06', founder: { '@type': 'Person', name: '김경표' }, legalName: '같이움직', taxID: '510-21-94714', address: { '@type': 'PostalAddress', addressCountry: 'KR', addressRegion: '경기도', addressLocality: '성남시 중원구', streetAddress: '광명로323번길 5-11' }, areaServed: 'KR', description: 'Platform connecting Korean patients affected by health-policy changes with physical therapists, with rehabilitation education and health-policy news.', sameAs: [SITE + '/about/'] }).replace(/</g, '\\u003c') + '</script>'
   + '<script async src="https://www.googletagmanager.com/gtag/js?id=G-GP4BW3V4TS"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag(\'js\',new Date());gtag(\'config\',\'G-GP4BW3V4TS\');</script>'
   + '<meta property="og:type" content="website"><meta property="og:site_name" content="PTJoin"><meta property="og:url" content="' + SITE + '/">'
   + '<meta property="og:title" content="PT뉴스 · 물리치료사를 위한 공간"><meta property="og:description" content="물리치료사를 위한 공간. 뉴스·공지·청원·성명문·여론·가이드를 한눈에.">'
