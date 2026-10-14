@@ -1,6 +1,6 @@
 {
-  "attempted_at": "2026-10-14T14:08:02.797189+00:00",
-  "requests": 99,
+  "attempted_at": "2026-10-14T16:07:09.385373+00:00",
+  "requests": 107,
   "max_requests": 160,
   "sources": {
     "naver": {
@@ -9,14 +9,14 @@
       "http_status": 200
     },
     "google": {
-      "requests": 42,
+      "requests": 48,
       "status": "ok",
       "http_status": 200
     },
     "metadata": {
-      "requests": 22,
-      "status": "ok",
-      "http_status": 200,
+      "requests": 24,
+      "status": "error",
+      "http_status": 500,
       "errors": 17
     }
   },
@@ -25,7 +25,7 @@
       "source": "google",
       "query": "심리상담",
       "status": "ok",
-      "count": 49
+      "count": 47
     },
     {
       "source": "naver",
@@ -105,7 +105,7 @@
       "source": "google",
       "query": "정신건강전문요원",
       "status": "ok",
-      "count": 13
+      "count": 12
     },
     {
       "source": "naver",
@@ -125,7 +125,7 @@
       "source": "google",
       "query": "대한약사회",
       "status": "ok",
-      "count": 65
+      "count": 66
     },
     {
       "source": "naver",
@@ -185,7 +185,7 @@
       "source": "google",
       "query": "정신건강간호사",
       "status": "ok",
-      "count": 18
+      "count": 21
     },
     {
       "source": "naver",
@@ -205,7 +205,7 @@
       "source": "google",
       "query": "비대면진료 약국",
       "status": "ok",
-      "count": 37
+      "count": 35
     },
     {
       "source": "naver",
@@ -245,7 +245,7 @@
       "source": "google",
       "query": "비대면진료 플랫폼 약 배송",
       "status": "ok",
-      "count": 13
+      "count": 11
     },
     {
       "source": "naver",
@@ -265,7 +265,7 @@
       "source": "google",
       "query": "정신건강작업치료사",
       "status": "ok",
-      "count": 6
+      "count": 7
     },
     {
       "source": "naver",
@@ -285,7 +285,7 @@
       "source": "google",
       "query": "약국 플랫폼",
       "status": "ok",
-      "count": 56
+      "count": 55
     },
     {
       "source": "naver",
@@ -365,7 +365,7 @@
       "source": "google",
       "query": "대체조제",
       "status": "ok",
-      "count": 5
+      "count": 6
     },
     {
       "source": "naver",
@@ -425,6 +425,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "괴산군, 돌봄노동자 심리회복 지원… 무료 상담 운영",
+      "desc": "괴산군, 돌봄노동자 심리회복 지원… 무료 상담 운영 더퍼블릭",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1seHdNd2RCUDBCeTJXd2Z5ek9VWFVXOV9ZeWtxUlNPR3MxZmJ1RVJDLVBTTmVvOHctR29FQ1pMUkQ0dkxfcW45Y0dYUmJUSjlfRFMwSk11WTdCMlZZelVmVXFNdjA4YklTamY1WFRsTdIBb0FVX3lxTE1seHdNd2RCUDBCeTJXd2Z5ek9VWFVXOV9ZeWtxUlNPR3MxZmJ1RVJDLVBTTmVvOHctR29FQ1pMUkQ0dkxfcW45Y0dYUmJUSjlfRFMwSk11WTdCMlZZelVmVXFNdjA4YklTamY1WFRsTQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "한국자격증협회, 아동·노인·미술 등 심리상담사 39개 과정 무료 수강 지원",
       "desc": "한국자격증협회, 아동·노인·미술 등 심리상담사 39개 과정 무료 수강 지원 시선뉴스",
       "url": "https://news.google.com/rss/articles/CBMickFVX3lxTE1vVVpOaDc4UVY3aW5lV1kxMW9UWFpyYXp6dTlGX3l3OXZZOWkzbEV2SklFSzdhcTFmU3luQWZsdzFRbHU2aldDTWJSckMwZDlJenhoWTg2QXNUdDc2THRrSG1oa2NSc2xKNEdta2dlcnV1Z9IBckFVX3lxTE1vVVpOaDc4UVY3aW5lV1kxMW9UWFpyYXp6dTlGX3l3OXZZOWkzbEV2SklFSzdhcTFmU3luQWZsdzFRbHU2aldDTWJSckMwZDlJenhoWTg2QXNUdDc2THRrSG1oa2NSc2xKNEdta2dlcnV1Zw?oc=5",
@@ -436,6 +444,14 @@
       "title": "정신건강복지법 개정 갈등 심화…부산지역 심리학과 등 시국선언",
       "desc": "정신건강복지법 개정 갈등 심화…부산지역 심리학과 등 시국선언 국제신문",
       "url": "https://news.google.com/rss/articles/CBMijgFBVV95cUxQQXFReC1tNXY2aHVVUEh4RGUzUk1OWDdwUzRrV012Skw0a2ZyZC1aUWRDRjJxaFBkaWwtMGpza2F0cFFrTURRM051WnNSOGlaU0tDQ3FOTldDNkdXSDRhSW1xMDQ4MTRvVjJKSWNPTzdrQmtJZmRBSTQtOVdhUzJQcElGaUFsd0dZcXg2dUlB?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "\"논산가정·성통합 상담센터, \"폭력피해가정 지원 위한, \"유관기관 통합 사례회의, \"개최\"",
+      "desc": "\"논산가정·성통합 상담센터, \"폭력피해가정 지원 위한, \"유관기관 통합 사례회의, \"개최\" 도민연합뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5mZVVUOWJMWk1aM3dpajhjTVF2RkM4SEloYXVyemlPeE9TeFFmbS12RE9zSTYyenBXbEp5dXZFSFdyZEFUMDJWejNBd3EzUGstYl9pTk1WSFh5NmtyLUdmTFYxZm1VMXNwLUE?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -521,14 +537,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "부천시청소년상담복지센터, ‘마음연결 가족상담’ 8개 과정 운영 성료",
-      "desc": "부천시청소년상담복지센터, ‘마음연결 가족상담’ 8개 과정 운영 성료 경인신문",
-      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE56NHJwYWxHRU9XYklqZTBUOHpvTGYycWFDb0taVGZFUmNpUGNGbVFVaFNBYXJHaFdiRy1wV0twU0JXSlJldjlzQW01Ulc3dWVXZlBKNXMtV242R0F4T0lmMjBxdFYtVjA?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "상담은 있어도 도움 요청은 어렵다…직장인 정신건강 지원의 빈틈",
       "desc": "상담은 있어도 도움 요청은 어렵다…직장인 정신건강 지원의 빈틈 ESG비즈니스리뷰",
       "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE5qSnBnSkJpNlBOYlZZUFlDaHlXc0hEaVpwUDltbnptSzdFMWQxTVhFR0IzQ2pYNW9WVFY4WmtPTnZXY1VVcjRHcWxNdllEUkIyQ2dMS2ZlQzlVbzRwVC1RSnNoQVJpOGo0aURUY3VTTWpUalU?oc=5",
@@ -556,6 +564,14 @@
       "title": "비마인드 심리상담센터, 외로움의 심리적 원인에 주목…개인·부부관계 상담 확대",
       "desc": "비마인드 심리상담센터, 외로움의 심리적 원인에 주목…개인·부부관계 상담 확대 이코노미사이언스",
       "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTFBfMDI3MEJEemdhSUpMdm5kemtobWpjWmxlRXZhZ2I4RnRDTU9ocWFMUmJJWFpQVC1UUEE1R0hibDVua0lUcEtySW1salpWbmVpVi1WYjZEd3VvV1ByeXZWX1ZsYkw1c2p4NFZlWTBZUQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "부천시청소년상담복지센터, ‘마음연결 가족상담’ 8개 과정 운영 성료",
+      "desc": "부천시청소년상담복지센터, ‘마음연결 가족상담’ 8개 과정 운영 성료 경인신문",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE56NHJwYWxHRU9XYklqZTBUOHpvTGYycWFDb0taVGZFUmNpUGNGbVFVaFNBYXJHaFdiRy1wV0twU0JXSlJldjlzQW01Ulc3dWVXZlBKNXMtV242R0F4T0lmMjBxdFYtVjA?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -641,14 +657,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "동신대 상담심리학과 졸업생 10명, 후배들에 상담 분야 취업노하우 전수",
-      "desc": "동신대 상담심리학과 졸업생 10명, 후배들에 상담 분야 취업노하우 전수 전자신문",
-      "url": "https://news.google.com/rss/articles/CBMiTkFVX3lxTFBoUXg5d0RscGphb1F2a0hLdUpqYXdsc1Bzcmk4ejVkWW41VjEzdFk1dHNQTHBWVzh5YURQWEd3QWowVUpVVjZTYUhDdXlPQQ?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "강남구, 청소년 상담·중독관리 확대로 장관 표창",
       "desc": "강남구, 청소년 상담·중독관리 확대로 장관 표창 전국매일신문",
       "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE1wNVlIc25fNDVtd1lsODY3NmE2cVh2NFk2RUJNT0lKMS1sSnZTRmdiRjN6Rlp0dzZEemVKNFhscm5oeFBVS0Y1dXZ1Vk11eE9qQWxKYTd4THh5U2J1ZU85cTVZS0ZtTlF6LXluRkh3?oc=5",
@@ -657,25 +665,65 @@
       "reason": "title_rules"
     },
     {
-      "title": "한국상담사회적협동조합, 용인시 경로당 순회 '찾아가는 웰다잉(Well-dying)특강' 성황리 진행중",
-      "desc": "한국상담사회적협동조합, 용인시 경로당 순회 '찾아가는 웰다잉(Well-dying)특강' 성황리 진행중 경인신문",
-      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBLalJXQXdLYlFEdjlmVElaUDk2R2hFRjlQaHNtWl94SnN3ZGttX1AyZmRsWENKWnFWSnl4cHBHWDJiZU1NSWRaRjVnYnJzdmxQRXA4aXVmamlGN2RnaENFaVdxeHFoWWc?oc=5",
+      "title": "도박중독 상담소 찾은 도민1000명… 청소년도 154명 달해",
+      "desc": "박창우 가톨릭관동대 사회복지학과 교수는 \"온라인 도박의 접근성과 개인의 심리적·사회적 취약성이 결합하면서 중독 위험이 높아진다\"며 \"강원지역의 서비스 접근성 차이를 고려해 찾아가는 상담과 비대면 상담을...",
+      "url": "https://www.kado.net/news/articleView.html?idxno=2078198",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "포항역서 맞춤형 심리 검사… “마음 건강 챙기세요”",
-      "desc": "포항역서 맞춤형 심리 검사… “마음 건강 챙기세요” 경상매일신문",
-      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9Qa00tRGEyOTVucHlRQmZZNTR2dVBwZmE0ZjJYWDdSSkxGX2VUNEV2c2FYWk5jNy1DYUFQSWgzY3lVZFJvUG5aeGlXbHRxc0U1UGdVZ3pHMUFWZkw4YXlz?oc=5",
+      "title": "[사설]소년보호시설 안전관리 실태 전면 점검해야",
+      "desc": "소년법상 6호 처분 시설은 소년원과 같은 통제형 수용시설과 달리, 상대적으로 개방된 환경에서 상담·교육... 이후의 심리 치료나 피해 보상 역시 개인에게 전가되기 일쑤다. 이는 결국 사명감으로 버티던 인재들의 연쇄...",
+      "url": "https://www.kwnews.co.kr/article/20261014501276",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "논산가정·성통합상담센터, 폭력피해가정 지원 위한 ‘유관기관 통합사례회의’ 개최",
-      "desc": "논산가정·성통합상담센터, 폭력피해가정 지원 위한 ‘유관기관 통합사례회의’ 개최 도민연합뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE5mZVVUOWJMWk1aM3dpajhjTVF2RkM4SEloYXVyemlPeE9TeFFmbS12RE9zSTYyenBXbEp5dXZFSFdyZEFUMDJWejNBd3EzUGstYl9pTk1WSFh5NmtyLUdmTFYxZm1VMXNwLUE?oc=5",
+      "title": "[생활법률]대여금 반환청구의 절차와 방법",
+      "desc": "변론기일로 심리를 마친 뒤 즉시 선고할 수 있습니다. 판결서에는 이유를 기재하지 않을 수 있으며, 청구가... (3,000만 원 이하 신속재판)을 적절히 선택하는 것이 핵심입니다.\" 광주가정법률상담소 무료법률상담메일:",
+      "url": "https://www.namdonews.com/news/articleView.html?idxno=926103",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "부평구의회, 아동학대 대응체계 전면 정비…피해아동 보호 강화 추진",
+      "desc": "학대피해아동쉼터의 설치와 기능, 운영 위탁에 관한 사항을 신설해 보호가 필요한 아동에게 숙식과 심리상담, 치료, 정서 및 학습 지원을 제공할 수 있도록 했다. 김진웅 의원은 \"아동학대 예방과 피해아동 보호는 지자체가...",
+      "url": "http://www.newstown.co.kr/news/articleView.html?idxno=718588",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "현대차그룹, 인도에 155억 달러 투자…미래기술·협력사 상생 확대",
+      "desc": "상담 차량에는 회전시트와 교육용 모니터, 심리치료 물품 등을 설치해 아동보호전문기관이 피해 아동을 직접 찾아가 상담할 수 있도록 했다. 현대차그룹이 2014년부터 2026년까지 전국 86개 아동보호전문기관에...",
+      "url": "https://www.webeconomy.co.kr/news/articleView.html?idxno=2333731",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "삼성금융, 경찰청과 청소년 마음건강 위기 대응 협력…'라임' 상담과 11...",
+      "desc": "삼성금융은 라임과 연계해 경찰이 현장에서 구조한 청소년에게 일대일 상담, 심리검사, 전문기관 치료 연계 등 위기 단계별 프로그램을 제공할 예정이다. 김종철 경찰청장 직무대행은 \"마음건강 위기는 다양한 요인이...",
+      "url": "https://www.koreareport.co.kr/news/articleView.html?idxno=53655",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "자살률 33.3% 낮춘다…'사람 살리는 정부'의 시험대",
+      "desc": "이러한 접근은 자살 위험을 개인의 의지나 심리 상태만으로 설명할 수 없는 현실을 반영한다. 당장 갚아야 할 빚이 있고, 생계를 이어갈 소득이 없으며, 가족을 돌볼 사람이 자신밖에 없다면 상담만으로는 위기를...",
+      "url": "https://news.cpbc.co.kr/article/1176344?division=NAVER",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "삼성금융네트웍스, 경찰청과 생명존중사업 맞손",
+      "desc": "올해 8월 말 기준 누적 이용자는 3만여 명이며 우울·불안 등 심리적 위기상황에서 상담을 신청한 청소년은 약 5300명이다. 이 가운데 15명이 극단적 선택을 시도하기 전 구조됐다. 이번 협약에는 위기 현장에 반복적으로...",
+      "url": "http://www.bizwnews.com/news/articleView.html?idxno=148886",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -753,6 +801,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "120다산콜재단, 육아휴직 복직자 대상 첫 워크숍 개최",
+      "desc": "참여자들이 희망한 심리·정서 상담과 코칭, 자녀 양육 정보, 건강·스트레스 관리 등을 검토해 복직자가 체감할 수 있는 지원을 이어갈 예정이다. 송주범 120다산콜재단 이사장은 \"복직한 직원이 달라진 업무환경에...",
+      "url": "https://www.safetynews.co.kr/news/articleView.html?idxno=251016",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "광주보호관찰소장, 조선대학교 상담심리학과 대상 보호관찰제도 특별강...",
       "desc": "법무부 범죄예방정책국 광주보호관찰소는 10월 14일 조선대학교 상담심리학과를 방문해 예비 상담 전문가들을 대상으로 보호관찰 제도의 이해와 운영 실무에 관한 특별강연을 했다고 밝혔다. 이날 강연은...",
       "url": "https://www.lawissue.co.kr/view.php?ud=2026101420380651249a8c8bf58f_12",
@@ -764,14 +820,6 @@
       "title": "50대 인천 흉기 난동범이 범행 20분 전에 한 정말 기괴한 행동",
       "desc": "인천경찰청은 3명의 범죄심리분석관과 심리상담관을 전격 투입해 A 씨와의 신뢰관계를 형성하고 일면식이 없는 대중을 표적으로 삼은 배경과 범행 당시의 구체적 심리 상태를 규명하는 심층 조사를 진행하고 있다. 수사...",
       "url": "https://www.wikitree.co.kr/articles/1166269",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "120다산콜재단, 육아휴직 복직자 대상 첫 워크숍 개최",
-      "desc": "참여자들이 희망한 심리·정서 상담과 코칭, 자녀 양육 정보, 건강·스트레스 관리 등을 검토해 복직자가 체감할 수 있는 지원을 이어갈 예정이다. 송주범 120다산콜재단 이사장은 \"복직한 직원이 달라진 업무환경에...",
-      "url": "https://www.safetynews.co.kr/news/articleView.html?idxno=251016",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -881,6 +929,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "마음건강케이유·고려대 KU마음건강연구소·한국클라우드, 심리상담 지...",
+      "desc": "마음건강케이유·고려대학교 부설연구소 KU마음건강연구소·한국클라우드가 심리상담 네트워크 구축과 지원체계 확립을 위해 손을 잡았다. 세 기관은 고려대학교 서울캠퍼스 수당삼양 패컬티하우스에서 '심리상담...",
+      "url": "http://www.newsprime.co.kr/news/article.html?no=751000",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "괴산군, 돌봄노동자 심리회복 지원… 무료 상담 운영",
       "desc": "1대 1 심층 상담을 최대 3회까지 무료로 지원한다. 돌봄노동자의 감정 소진을 심리상담만으로 해결하는 데는 한계가 있다. 낮은 처우와 불안정한 고용환경까지 개선하는 실질적인 지원책이 뒤따라야 한다. 더퍼블릭",
       "url": "https://www.thepublic.kr/news/articleView.html?idxno=322290",
@@ -897,9 +953,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "마음건강케이유·고려대 KU마음건강연구소·한국클라우드, 심리상담 지...",
-      "desc": "마음건강케이유·고려대학교 부설연구소 KU마음건강연구소·한국클라우드가 심리상담 네트워크 구축과 지원체계 확립을 위해 손을 잡았다. 세 기관은 고려대학교 서울캠퍼스 수당삼양 패컬티하우스에서 '심리상담...",
-      "url": "http://www.newsprime.co.kr/news/article.html?no=751000",
+      "title": "광주체육회, 전국체전 역대 최대 규모 스포츠과학 지원",
+      "desc": "경쟁 불안과 긴장을 줄이기 위한 스포츠 심리 상담과 도핑 관련 컨설팅도 병행한다. 학생선수 지원과 대학 산학연 협력을 결합한 운영 방식도 눈길을 끈다. 광주광역시교육청은 2024년부터 스포츠 유전자 분석과 학생선수...",
+      "url": "https://www.namdonews.com/news/articleView.html?idxno=926175",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -908,14 +964,6 @@
       "title": "현대차그룹, 학대피해 아동 위한 '아이케어 카' 20대 기증",
       "desc": "차량 내부에는 대면 상담용 회전시트와 시청각 교육 모니터, 심리치료 물품 등을 갖춰 상담 시설이 부족한 지역에서도 아동 상담을 진행할 수 있도록 했다. 도심 가정방문용 소형 전기차도 새로 지원한다. 현대차그룹은...",
       "url": "https://www.gpkorea.com/news/articleView.html?idxno=147574",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "광주체육회, 전국체전 역대 최대 규모 스포츠과학 지원",
-      "desc": "경쟁 불안과 긴장을 줄이기 위한 스포츠 심리 상담과 도핑 관련 컨설팅도 병행한다. 학생선수 지원과 대학 산학연 협력을 결합한 운영 방식도 눈길을 끈다. 광주광역시교육청은 2024년부터 스포츠 유전자 분석과 학생선수...",
-      "url": "https://www.namdonews.com/news/articleView.html?idxno=926175",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1001,17 +1049,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "경남도, 청소년 꿈 아카데미 '찾아가는 토크 콘서트' 개최",
-      "desc": "손창균 펫브릿지 대표는 동물매개지원 거점센터 선임연구원으로 활동한 동물매개 분야 전문가로, 동물매개재활사 및 동물매개심리상담사 자격을 취득 후 반려동물과 인간의 상호작용을 기반으로 한 상담·치유 프로그램...",
-      "url": "http://www.gndomin.com/news/articleView.html?idxno=492765",
+      "title": "포니정재단, 베트남 장학생 20년간 1200명 지원",
+      "desc": "한국어 전공 장학생을 위한 교환장학생 프로그램과 심리상담, 선배와의 만남, 봉사활동, 문화교류 현장학습 등도 진행한다. 이날 기념식에는 응우옌 민 떰...",
+      "url": "http://www.breaknews.com/1243063",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "포니정재단, 베트남 장학생 20년간 1200명 지원",
-      "desc": "한국어 전공 장학생을 위한 교환장학생 프로그램과 심리상담, 선배와의 만남, 봉사활동, 문화교류 현장학습 등도 진행한다. 이날 기념식에는 응우옌 민 떰...",
-      "url": "http://www.breaknews.com/1243063",
+      "title": "경남도, 청소년 꿈 아카데미 '찾아가는 토크 콘서트' 개최",
+      "desc": "손창균 펫브릿지 대표는 동물매개지원 거점센터 선임연구원으로 활동한 동물매개 분야 전문가로, 동물매개재활사 및 동물매개심리상담사 자격을 취득 후 반려동물과 인간의 상호작용을 기반으로 한 상담·치유 프로그램...",
+      "url": "http://www.gndomin.com/news/articleView.html?idxno=492765",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1025,17 +1073,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "경남대, 취업지원도 팝업스토어로…청년 눈높이 맞춘 '청년라운지' 운영",
-      "desc": "직업심리검사와 진로상담을 제공하는 'CAREER존', 퍼스널컬러와 헤어컨설팅을 진행하는 'STYLE존', 취업타로와 타투드로잉 등을 체험할 수 있는 'PLAY존'을 운영했으며 무료 음료와 휴식공간도 함께 제공했다. 특히 경남대는...",
-      "url": "http://www.gndomin.com/news/articleView.html?idxno=492674",
+      "title": "경남대 청년 취업지원 야외 페스타 '청년 스텝업 데이' 운영",
+      "desc": "행사장에서는 ▲심리검사 ▲취업타로 ▲퍼스널컬러 ▲헤어스타일링 등 청년들의 관심사를 반영한 체험 프로그램과 함께 청년고용정책 안내 및 취업상담을 운영했다. 참여 청년들은 자신의 성향과 진로를 탐색하고 취업...",
+      "url": "http://www.gndomin.com/news/articleView.html?idxno=492669",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "경남대 청년 취업지원 야외 페스타 '청년 스텝업 데이' 운영",
-      "desc": "행사장에서는 ▲심리검사 ▲취업타로 ▲퍼스널컬러 ▲헤어스타일링 등 청년들의 관심사를 반영한 체험 프로그램과 함께 청년고용정책 안내 및 취업상담을 운영했다. 참여 청년들은 자신의 성향과 진로를 탐색하고 취업...",
-      "url": "http://www.gndomin.com/news/articleView.html?idxno=492669",
+      "title": "경남대, 취업지원도 팝업스토어로…청년 눈높이 맞춘 '청년라운지' 운영",
+      "desc": "직업심리검사와 진로상담을 제공하는 'CAREER존', 퍼스널컬러와 헤어컨설팅을 진행하는 'STYLE존', 취업타로와 타투드로잉 등을 체험할 수 있는 'PLAY존'을 운영했으며 무료 음료와 휴식공간도 함께 제공했다. 특히 경남대는...",
+      "url": "http://www.gndomin.com/news/articleView.html?idxno=492674",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1073,17 +1121,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "영덕교육지원청, 학부모회장협의회 리더교육 실시",
-      "desc": "이날 동양대학교 대학원 상담심리학과 배영태 겸임교수는 '학교와 함께하는 교육파트너, 부모!'를 주제로 강연을 진행했다. 참석자들은 학부모 리더십을 높이고 소통과 협력을 바탕으로 한 학교 참여 문화 조성에 뜻을...",
-      "url": "https://www.hidomin.com/news/articleView.html?idxno=724894",
+      "title": "[오토 뉴스브리핑]한국앤컴퍼니그룹, 미래 리더 양성 프로젝트로 구성원...",
+      "desc": "현장 의견을 반영해 ▲대면 상담용 회전시트 ▲시청각 교육 모니터 ▲심리 치료 물품 등 내부에 상담 공간을 갖춘 차량을 특별 제작함으로써, 소외지역에 있는 학대피해 아동을 직접 찾아가 상담을 제공하며 심리적...",
+      "url": "https://www.asiatime.co.kr/article/20261014500432",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[오토 뉴스브리핑]한국앤컴퍼니그룹, 미래 리더 양성 프로젝트로 구성원...",
-      "desc": "현장 의견을 반영해 ▲대면 상담용 회전시트 ▲시청각 교육 모니터 ▲심리 치료 물품 등 내부에 상담 공간을 갖춘 차량을 특별 제작함으로써, 소외지역에 있는 학대피해 아동을 직접 찾아가 상담을 제공하며 심리적...",
-      "url": "https://www.asiatime.co.kr/article/20261014500432",
+      "title": "영덕교육지원청, 학부모회장협의회 리더교육 실시",
+      "desc": "이날 동양대학교 대학원 상담심리학과 배영태 겸임교수는 '학교와 함께하는 교육파트너, 부모!'를 주제로 강연을 진행했다. 참석자들은 학부모 리더십을 높이고 소통과 협력을 바탕으로 한 학교 참여 문화 조성에 뜻을...",
+      "url": "https://www.hidomin.com/news/articleView.html?idxno=724894",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1121,17 +1169,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "삼성금융네트웍스, 경찰청과 청소년 생명보호 협력…'라임' 112 연계",
-      "desc": "구조 이후에는 삼성금융이 '라임'을 통해 일대일 상담과 심리검사, 전문기관 치료 연계 등 위기 단계별 프로그램을 제공한다. 라임은 지난 2024년 출범한 24시간 청소년 SNS 상담채널로 올해 8월 말 기준 누적 이용자는...",
-      "url": "https://www.the-today.com/news/articleView.html?idxno=91723",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "\"몸과 마음 치유합니다\"…합천군, 전국 최초 '기억채움농장' 개장",
-      "desc": "주요 시설로는 프로그램실, 요리체험실, 심리안정실, 휴카페 등 실내 공간과 야외체험동, 치유정원, 유리온실... 군은 시설 개장에 맞춰 지역 내 치매 안심센터 및 보건지소와 연계한 상시 상담 서비스를 구축하고, 계절별...",
-      "url": "https://www.cnbnews.com/news/articleView.html?idxno=1019292",
+      "title": "\"살던 집에서 의료·요양·돌봄 받으세요\"",
+      "desc": "그렇다고 가족들이 간병을 짊어지기에는 심리적·경제적 부담이 적지 않다. '시민 곁에, 민생 먼저'를 기치로... 신청은 읍·면·동 방문 접수 또는 통합돌봄 상담콜(1577-9110)을 이용하면 된다. 이상봉 시장은 \"가족들의 간병...",
+      "url": "http://www.jejunews.com/news/articleView.html?idxno=2228234",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1145,9 +1185,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "\"살던 집에서 의료·요양·돌봄 받으세요\"",
-      "desc": "그렇다고 가족들이 간병을 짊어지기에는 심리적·경제적 부담이 적지 않다. '시민 곁에, 민생 먼저'를 기치로... 신청은 읍·면·동 방문 접수 또는 통합돌봄 상담콜(1577-9110)을 이용하면 된다. 이상봉 시장은 \"가족들의 간병...",
-      "url": "http://www.jejunews.com/news/articleView.html?idxno=2228234",
+      "title": "\"몸과 마음 치유합니다\"…합천군, 전국 최초 '기억채움농장' 개장",
+      "desc": "주요 시설로는 프로그램실, 요리체험실, 심리안정실, 휴카페 등 실내 공간과 야외체험동, 치유정원, 유리온실... 군은 시설 개장에 맞춰 지역 내 치매 안심센터 및 보건지소와 연계한 상시 상담 서비스를 구축하고, 계절별...",
+      "url": "https://www.cnbnews.com/news/articleView.html?idxno=1019292",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "삼성금융네트웍스, 경찰청과 청소년 생명보호 협력…'라임' 112 연계",
+      "desc": "구조 이후에는 삼성금융이 '라임'을 통해 일대일 상담과 심리검사, 전문기관 치료 연계 등 위기 단계별 프로그램을 제공한다. 라임은 지난 2024년 출범한 24시간 청소년 SNS 상담채널로 올해 8월 말 기준 누적 이용자는...",
+      "url": "https://www.the-today.com/news/articleView.html?idxno=91723",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1185,6 +1233,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "광주시체육회, 전국체전 역대 최대 규모 스포츠과학 지원팀 파견",
+      "desc": "경기에서 발생할 수 있는 불안과 긴장을 완화하기 위한 스포츠 심리 상담, 도핑 관련 컨설팅도 제공한다. 이번 지원은 전남광주통합교육청 학생선수 지원 사업과 송원대학교와의 산학연 협력을 통한 ‘전국 최초 협력...",
+      "url": "http://www.jndn.com/article.php?aid=1791967168441165010",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "삼성금융, 경찰청·생명의전화와 위기 청소년 생명존중 안전망 강화",
       "desc": "삼성금융은 라임 연계를 통해 경찰이 현장에서 구조한 청소년을 대상으로 일대일 상담, 심리검사, 전문기관 치료 연계 등 단계별 전문 프로그램을 제공할 예정이다. 이와 함께 위기 현장에 출동하는 경찰관의 심리 회복을...",
       "url": "http://www.biztribune.co.kr/news/articleView.html?idxno=360659",
@@ -1193,9 +1249,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "광주시체육회, 전국체전 역대 최대 규모 스포츠과학 지원팀 파견",
-      "desc": "경기에서 발생할 수 있는 불안과 긴장을 완화하기 위한 스포츠 심리 상담, 도핑 관련 컨설팅도 제공한다. 이번 지원은 전남광주통합교육청 학생선수 지원 사업과 송원대학교와의 산학연 협력을 통한 ‘전국 최초 협력...",
-      "url": "http://www.jndn.com/article.php?aid=1791967168441165010",
+      "title": "김병내, 지방 현안 들고 청와대 직행하다",
+      "desc": "책상머리 행정을 벗어나 학교를 직접 찾아가는 밀착형 심리 상담 등 현장 중심 행정이 국가 정책으로 역제안된 셈이다. 김 대표회장은 \"앞으로 기초지방정부의 우수정책 사례를 공유하는 자리를 마련하고, 현장에서...",
+      "url": "https://www.dnews.co.kr/uhtml/view.jsp?idxno=202610131543433920415",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1217,14 +1273,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "김병내, 지방 현안 들고 청와대 직행하다",
-      "desc": "책상머리 행정을 벗어나 학교를 직접 찾아가는 밀착형 심리 상담 등 현장 중심 행정이 국가 정책으로 역제안된 셈이다. 김 대표회장은 \"앞으로 기초지방정부의 우수정책 사례를 공유하는 자리를 마련하고, 현장에서...",
-      "url": "https://www.dnews.co.kr/uhtml/view.jsp?idxno=202610131543433920415",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "대덕구, '2026 대덕미래아카데미' 개최",
       "desc": "대덕구, '2026 대덕미래아카데미' 포스터 대덕구(구청장 김찬술)는 11월 5일 심리상담 전문가 이호선 교수를 초청해 '2026 대덕미래아카데미'를 개최한다고 밝혔다. 대덕미래아카데미는 과학·예술·인문 등 다양한 분야의...",
       "url": "http://www.gocj.net/news/articleView.html?idxno=153302",
@@ -1233,17 +1281,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "말기 콩팥병 환자도 국외 여행…‘여행투석’ 서비스 열렸다 [건강한겨...",
-      "desc": "김씨는 한때 투석을 받아야 한다는 말에 크게 좌절하며 심리적 충격을 받았지만, 의료진과의 상담을 거쳐 ‘재택 복막투석’을 선택한 후 삶의 활력을 되찾았다. 최근 대한신장학회를 중심으로 투석 치료를 받는 말기...",
-      "url": "https://www.hani.co.kr/arti/hanihealth/healthlife/1282394.html",
+      "title": "삼성금융네트웍스, 경찰청과 위기 청소년 보호 나서…생명보호 체계 구...",
+      "desc": "이 가운데 우울·불안 등 심리적 위기로 상담을 신청한 청소년은 약 5300명이다. 삼성금융은 위기 현장에 출동하는 경찰관들의 심리 회복도 지원한다. 전국에서 활동 중인 정신응급 대응팀 약 290명을 대상으로 명상과 신체...",
+      "url": "https://www.news1.kr/finance/insurance-card/6320237",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "삼성금융네트웍스, 경찰청과 위기 청소년 보호 나서…생명보호 체계 구...",
-      "desc": "이 가운데 우울·불안 등 심리적 위기로 상담을 신청한 청소년은 약 5300명이다. 삼성금융은 위기 현장에 출동하는 경찰관들의 심리 회복도 지원한다. 전국에서 활동 중인 정신응급 대응팀 약 290명을 대상으로 명상과 신체...",
-      "url": "https://www.news1.kr/finance/insurance-card/6320237",
+      "title": "말기 콩팥병 환자도 국외 여행…‘여행투석’ 서비스 열렸다 [건강한겨...",
+      "desc": "김씨는 한때 투석을 받아야 한다는 말에 크게 좌절하며 심리적 충격을 받았지만, 의료진과의 상담을 거쳐 ‘재택 복막투석’을 선택한 후 삶의 활력을 되찾았다. 최근 대한신장학회를 중심으로 투석 치료를 받는 말기...",
+      "url": "https://www.hani.co.kr/arti/hanihealth/healthlife/1282394.html",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1281,17 +1329,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "삼성금융, 경찰청과 청소년 마음건강 안전망 구축",
-      "desc": "구조 이후에는 일대일 상담과 심리검사, 전문기관 치료 연계 등 사후 지원도 제공한다. 라임은 삼성금융이 교육부, 생명의전화와 2024년부터 운영하는 24시간 청소년 상담채널이다. 올해 8월 말 기준 누적 이용자는 약...",
-      "url": "http://www.press9.kr/news/articleView.html?idxno=84239",
+      "title": "삼성금융·경찰청, 위기 청소년 조기 발견부터 사후 상담까지 지원",
+      "desc": "[사진=삼성생명] ［뉴시안= 박성하 기자］삼성금융네트웍스(삼성생명·삼성화재·삼성카드·삼성증권)가 경찰청, 생명의전화와 손잡고 위기 청소년의 조기 발견부터 긴급 구조, 사후 심리 상담까지 이어지는 생명보호...",
+      "url": "http://www.newsian.co.kr/news/articleView.html?idxno=97063",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "삼성금융·경찰청, 위기 청소년 조기 발견부터 사후 상담까지 지원",
-      "desc": "[사진=삼성생명] ［뉴시안= 박성하 기자］삼성금융네트웍스(삼성생명·삼성화재·삼성카드·삼성증권)가 경찰청, 생명의전화와 손잡고 위기 청소년의 조기 발견부터 긴급 구조, 사후 심리 상담까지 이어지는 생명보호...",
-      "url": "http://www.newsian.co.kr/news/articleView.html?idxno=97063",
+      "title": "삼성금융, 경찰청과 청소년 마음건강 안전망 구축",
+      "desc": "구조 이후에는 일대일 상담과 심리검사, 전문기관 치료 연계 등 사후 지원도 제공한다. 라임은 삼성금융이 교육부, 생명의전화와 2024년부터 운영하는 24시간 청소년 상담채널이다. 올해 8월 말 기준 누적 이용자는 약...",
+      "url": "http://www.press9.kr/news/articleView.html?idxno=84239",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1305,6 +1353,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "삼성금융네트웍스, 경찰청·생명의전화와 청소년 마음건강 위기 대응망...",
+      "desc": "라임과 연계해 일대일 상담과 심리검사, 전문기관 치료 연계 등 위기 단계에 따른 프로그램을 제공할 예정이다. 김종철 경찰청장 직무대행은 \"마음건강 위기는 다양한 요인이 복합적으로 얽힌 사회적 과제로, 소중한...",
+      "url": "https://www.insnews.co.kr/news/articleView.html?idxno=93328",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "충북형 영유아 교육·보육 기관 모델은?",
       "desc": "발전전략을 토대로 발달검사부터 상담·치료·사후관리까지 연계하는 지원체계를 구축하고 유치원과... 정서·심리 등 추가 지원이 필요한 영유아를 위한 포용·맞춤지원형 등 2가지다. 방향성으로는 모든 기관에 질 관리와...",
       "url": "https://www.ccdailynews.com/news/articleView.html?idxno=2446334",
@@ -1313,9 +1369,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "삼성금융네트웍스, 경찰청·생명의전화와 청소년 마음건강 위기 대응망...",
-      "desc": "라임과 연계해 일대일 상담과 심리검사, 전문기관 치료 연계 등 위기 단계에 따른 프로그램을 제공할 예정이다. 김종철 경찰청장 직무대행은 \"마음건강 위기는 다양한 요인이 복합적으로 얽힌 사회적 과제로, 소중한...",
-      "url": "https://www.insnews.co.kr/news/articleView.html?idxno=93328",
+      "title": "LG헬로비전, 자립준비청년 돕는다...6년째 동행",
+      "desc": "LG헬로비전은 전주 새움센터에서 심리상담 전문기관 이음심리연구소와 연계한 역량 강화 프로그램 '헬로, 넥스트'(Next)를 진행했다. 간호사와 작가 등 현업 전문가들이 멘토로 나서 직무 경험을 공유하고 진로에 대한...",
+      "url": "https://www.livebiz.today/news/articleView.html?idxno=205593",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1340,14 +1396,6 @@
       "title": "[A 금융가 소식②] 삼성금융, 경찰청·생명의전화와 청소년 생명존중 업...",
       "desc": "현재까지 '라임' 누적 이용자는 3만명에 이르며, 지난 8월 기준 심리 위기 상담을 받은 청소년만 약 5300명이다. 이중 극단 선택 시도 전 구조된 사례도 15건에 달한다. 상담사는 필요시 상급병원 등 전문기관과 연계해...",
       "url": "https://www.asiaa.co.kr/news/articleView.html?idxno=266323",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "LG헬로비전, 자립준비청년 돕는다...6년째 동행",
-      "desc": "LG헬로비전은 전주 새움센터에서 심리상담 전문기관 이음심리연구소와 연계한 역량 강화 프로그램 '헬로, 넥스트'(Next)를 진행했다. 간호사와 작가 등 현업 전문가들이 멘토로 나서 직무 경험을 공유하고 진로에 대한...",
-      "url": "https://www.livebiz.today/news/articleView.html?idxno=205593",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1457,17 +1505,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "[인천 흉기난동] \"힘없어 보이는 사람 골랐다\"…보호관찰관 면담 70분 뒤...",
-      "desc": "이수정 경기대 범죄심리학과 교수는 \"현재 보호관찰관 인력 자체가 매우 적다\"면서 \"살인이나 성범죄 누범자... 이어 \"보호관찰관 상담을 하고도 왜 A씨가 곧바로 그러한 공격 행위를 했는지에도 주목해야 한다\"고...",
-      "url": "https://www.tjb.co.kr/news05/bodo/view/id/104802",
+      "title": "포니정재단, 베트남 호찌민국립대 장학지원 20주년 기념식 개최",
+      "desc": "포니정재단은 장학생들이 낯선 환경에서 빠르게 적응할 수 있도록 심리상담과 선배와의 만남, 봉사활동과 같은 지원프로그램을 운영하고 있다. 지난 9월에는 포니정 초청장학생과 교환장학생 8명이 (사)...",
+      "url": "http://www.ikld.kr/news/articleView.html?idxno=342209",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "포니정재단, 베트남 호찌민국립대 장학지원 20주년 기념식 개최",
-      "desc": "포니정재단은 장학생들이 낯선 환경에서 빠르게 적응할 수 있도록 심리상담과 선배와의 만남, 봉사활동과 같은 지원프로그램을 운영하고 있다. 지난 9월에는 포니정 초청장학생과 교환장학생 8명이 (사)...",
-      "url": "http://www.ikld.kr/news/articleView.html?idxno=342209",
+      "title": "[인천 흉기난동] \"힘없어 보이는 사람 골랐다\"…보호관찰관 면담 70분 뒤...",
+      "desc": "이수정 경기대 범죄심리학과 교수는 \"현재 보호관찰관 인력 자체가 매우 적다\"면서 \"살인이나 성범죄 누범자... 이어 \"보호관찰관 상담을 하고도 왜 A씨가 곧바로 그러한 공격 행위를 했는지에도 주목해야 한다\"고...",
+      "url": "https://www.tjb.co.kr/news05/bodo/view/id/104802",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1481,17 +1529,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "[영상+] 인천 ‘구월동 흉기 난동’ 남성, 출소후 계양구 기초생활수급...",
-      "desc": "A씨는 흉기 난동 범행 당일 오전 전문가 심리상담을 받은 뒤 보호관찰관과 35분간 면담하고 낮 12시 30분까지 함께 점심 식사까지 하며 복약 검사를 마쳤다. 그러나 보호관찰관과 헤어진 지 1시간 10분 만에 범행을...",
-      "url": "https://www.kyeongin.com/article/1772550",
+      "title": "울주군 보육교직원 마음건강 지원, 내년 상시 운영 추진",
+      "desc": "센터는 심리상태 점검부터 상담, 활동 프로그램, 사후 자기돌봄으로 이어지는 단계별 지원체계를 구성했다. 개인정보 수집을 최소화하고 상담과 활동을 어린이집 외부 공간에서 진행해 참여 부담을 줄이고자 했다. 센터는...",
+      "url": "https://www.viva100.com/article/20261014501218",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "울주군 보육교직원 마음건강 지원, 내년 상시 운영 추진",
-      "desc": "센터는 심리상태 점검부터 상담, 활동 프로그램, 사후 자기돌봄으로 이어지는 단계별 지원체계를 구성했다. 개인정보 수집을 최소화하고 상담과 활동을 어린이집 외부 공간에서 진행해 참여 부담을 줄이고자 했다. 센터는...",
-      "url": "https://www.viva100.com/article/20261014501218",
+      "title": "[영상+] 인천 ‘구월동 흉기 난동’ 남성, 출소후 계양구 기초생활수급...",
+      "desc": "A씨는 흉기 난동 범행 당일 오전 전문가 심리상담을 받은 뒤 보호관찰관과 35분간 면담하고 낮 12시 30분까지 함께 점심 식사까지 하며 복약 검사를 마쳤다. 그러나 보호관찰관과 헤어진 지 1시간 10분 만에 범행을...",
+      "url": "https://www.kyeongin.com/article/1772550",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1569,6 +1617,22 @@
       "reason": "title_rules"
     },
     {
+      "title": "삼성금융네트웍스·경찰청·생명의전화, 생명존중사업 강화 위한 업무협...",
+      "desc": "삼성금융은 경찰이 구조한 청소년에게 일대일 상담과 심리검사, 전문기관 치료 연계 등 단계별 마음건강 회복 프로그램을 제공해 위기 재발을 예방할 계획이다. 아울러 전국 290여명이 활동하는 경찰청 정신응급...",
+      "url": "https://www.sportschosun.com/life/2026-10-14/202610140100091420005912",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "LG헬로비전, 자립준비청년 사회 진출 지원…진로 멘토링·통신비 지원 지...",
+      "desc": "참가자들은 전주 새움센터에서 심리상담 전문기관 이음심리연구소와 연계한 역량 강화 프로그램 '헬로, 넥스트'를 진행했다. 간호사와 작가 등 현업 전문가들이 멘토로 참여해 직무 경험과 진로 관련 조언을 전했다. 팀...",
+      "url": "http://www.thefirstmedia.net/news/articleView.html?idxno=210788",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "\"나보다 약한 사람 골랐다\"…휴학계 낸 뒤 20분 만에 흉기난동",
       "desc": "경찰은 정확한 범행 동기를 규명하기 위해 프로파일러 3명과 심리상담관을 투입했다. 이들은 A 씨와 신뢰관계(라포르)를 형성하며 일면식도 없는 상가 이용객들을 공격한 배경과 범행 당시 심리 상태 등을 조사하고...",
       "url": "https://www.news1.kr/local/incheon/6320103",
@@ -1585,17 +1649,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "LG헬로비전, 자립준비청년 사회 진출 지원…진로 멘토링·통신비 지원 지...",
-      "desc": "참가자들은 전주 새움센터에서 심리상담 전문기관 이음심리연구소와 연계한 역량 강화 프로그램 '헬로, 넥스트'를 진행했다. 간호사와 작가 등 현업 전문가들이 멘토로 참여해 직무 경험과 진로 관련 조언을 전했다. 팀...",
-      "url": "http://www.thefirstmedia.net/news/articleView.html?idxno=210788",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "삼성금융네트웍스·경찰청·생명의전화, 생명존중사업 강화 위한 업무협...",
-      "desc": "삼성금융은 경찰이 구조한 청소년에게 일대일 상담과 심리검사, 전문기관 치료 연계 등 단계별 마음건강 회복 프로그램을 제공해 위기 재발을 예방할 계획이다. 아울러 전국 290여명이 활동하는 경찰청 정신응급...",
-      "url": "https://www.sportschosun.com/life/2026-10-14/202610140100091420005912",
+      "title": "4층 갔으면 대참사 날 뻔…인천 흉기난동범, 20대 남성이 던진 '이것' 맞...",
+      "desc": "흉기난동 범행 당시에도 위치추적 전자장치, 이른바 전자발찌를 착용하고 있었다.A씨는 범행 약 4시간 전 외부 전문가로부터 한 시간가량 정신질환 증상 완화를 위한 알코올 중독 및 심리 상담을 받은 것으로 드러났다. 또...",
+      "url": "https://www.wikitree.co.kr/articles/1166132",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1609,9 +1665,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "4층 갔으면 대참사 날 뻔…인천 흉기난동범, 20대 남성이 던진 '이것' 맞...",
-      "desc": "흉기난동 범행 당시에도 위치추적 전자장치, 이른바 전자발찌를 착용하고 있었다.A씨는 범행 약 4시간 전 외부 전문가로부터 한 시간가량 정신질환 증상 완화를 위한 알코올 중독 및 심리 상담을 받은 것으로 드러났다. 또...",
-      "url": "https://www.wikitree.co.kr/articles/1166132",
+      "title": "전자발찌 차고도 흉기 난동…재범방지 대책 실효성 도마 위",
+      "desc": "법무부는 A씨의 정신질환 증상을 완화하기 위해 알코올 중독 상담과 심리상담 등을 진행해 왔다고 설명했다. 범행 당일 오전에도 외부 전문가의 중독 상담과 보호관찰관 면담이 이뤄졌으며 정신질환 치료제 복용 여부도...",
+      "url": "https://www.ntoday.co.kr/news/articleView.html?idxno=130064",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1620,14 +1676,6 @@
       "title": "영광군, 치매어르신 가족 위한 산림치유 프로그램 운영해",
       "desc": "참가자들은 향기요법 체험과 편백나무 팔찌 제작 활동에 참여하며 자연 속에서 심리적 안정을 찾는 시간을... 영광군 치매안심센터는 치매 예방교육과 상담, 가족 지원 프로그램 등을 지속적으로 운영하며 환자와 보호자의...",
       "url": "http://www.queen.co.kr/news/articleView.html?idxno=464721",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "전자발찌 차고도 흉기 난동…재범방지 대책 실효성 도마 위",
-      "desc": "법무부는 A씨의 정신질환 증상을 완화하기 위해 알코올 중독 상담과 심리상담 등을 진행해 왔다고 설명했다. 범행 당일 오전에도 외부 전문가의 중독 상담과 보호관찰관 면담이 이뤄졌으며 정신질환 치료제 복용 여부도...",
-      "url": "https://www.ntoday.co.kr/news/articleView.html?idxno=130064",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1657,9 +1705,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "경남도, 함안에서 청소년 꿈 아카데미 '찾아가는 토크 콘서트' 개최",
-      "desc": "손창균 펫브릿지 대표는 동물매개지원 거점센터 선임연구원으로 활동한 동물매개 분야 전문가로, 동물매개재활사 및 동물매개심리상담사 자격을 취득 후 반려동물과 인간의 상호작용을 기반으로 한 상담·치유 프로그램...",
-      "url": "https://www.newsgn.com/news/articleView.html?idxno=579160",
+      "title": "삼성금융-경찰청, '라임'·112 연계해 위기 청소년 지킨다",
+      "desc": "긴급 구조 이후에는 삼성금융과 연계해 청소년을 대상으로 일대일 상담, 심리검사, 전문 치료기관 연계 등 사후 관리를 진행한다. 위기 현장을 지키는 일선 경찰관을 위한 지원책도 포함됐다. 전국에서 활동 중인...",
+      "url": "http://www.newsdream.kr/news/articleView.html?idxno=119995",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1673,17 +1721,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "현대차그룹, 학대피해 아동 위한 '아이케어 카' 20대 기증",
-      "desc": "현장 의견을 반영해 대면 상담용 회전시트, 시청각 교육 모니터, 심리 치료 물품 등 내부에 상담 공간을 갖춘 차량을 특별 제작했다. 현대차그룹은 올해 전국 12개 아동보호전문기관에 이동식 상담이 가능한 스타리아...",
-      "url": "https://www.hg-times.com/news/articleView.html?idxno=306055",
+      "title": "경남도, 함안에서 청소년 꿈 아카데미 '찾아가는 토크 콘서트' 개최",
+      "desc": "손창균 펫브릿지 대표는 동물매개지원 거점센터 선임연구원으로 활동한 동물매개 분야 전문가로, 동물매개재활사 및 동물매개심리상담사 자격을 취득 후 반려동물과 인간의 상호작용을 기반으로 한 상담·치유 프로그램...",
+      "url": "https://www.newsgn.com/news/articleView.html?idxno=579160",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "삼성금융-경찰청, '라임'·112 연계해 위기 청소년 지킨다",
-      "desc": "긴급 구조 이후에는 삼성금융과 연계해 청소년을 대상으로 일대일 상담, 심리검사, 전문 치료기관 연계 등 사후 관리를 진행한다. 위기 현장을 지키는 일선 경찰관을 위한 지원책도 포함됐다. 전국에서 활동 중인...",
-      "url": "http://www.newsdream.kr/news/articleView.html?idxno=119995",
+      "title": "현대차그룹, 학대피해 아동 위한 '아이케어 카' 20대 기증",
+      "desc": "현장 의견을 반영해 대면 상담용 회전시트, 시청각 교육 모니터, 심리 치료 물품 등 내부에 상담 공간을 갖춘 차량을 특별 제작했다. 현대차그룹은 올해 전국 12개 아동보호전문기관에 이동식 상담이 가능한 스타리아...",
+      "url": "https://www.hg-times.com/news/articleView.html?idxno=306055",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1705,22 +1753,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "포니정재단, 호찌민국립대 장학 지원 20주년… 올해 학부생 35명 장학증...",
-      "desc": "장학생 지원 프로그램에는 심리 상담과 선배와의 만남, 봉사활동 등이 포함된다. 지난 9월에는 포니정 초청장학생과 교환장학생 8명이 다문화청소년협회가 지원하는 다문화가정 한글학교 학생 30여명과 함께하는...",
-      "url": "https://www.financialpost.co.kr/news/articleView.html?idxno=280443",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "서대문구, 2027년 11명 정규직 채용",
-      "desc": "대상은 일자리플러스세터 직업상담, 해담는도서관 사서, 행복한밥상 영양사, 유아숲체험지도사, 모자건강증진센터 심리상담가, 위생취약지역 방역소독, 진료 및 건강검진 인력입니다. 구내식당 운영 인력 4명까지...",
-      "url": "https://news.skbroadband.com/news/articleView.html?idxno=240227",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "인천 흉기난동 못 막은 전자발찌…재범 막는 ‘만능열쇠’ 과신 끝내야",
       "desc": "이에 법무부는 ㄱ씨에게 경고를 하며 보호관찰소의 별도 심리치료 프로그램 등 상담을 받도록 한 것으로 알려졌다. 심지어 사건 당일에도 ㄱ씨는 보호관찰관과 면담·식사를 하고, 정신질환 치료약 복약 점검을 받았다....",
       "url": "https://www.hani.co.kr/arti/society/society_general/1282364.html",
@@ -1737,25 +1769,25 @@
       "reason": "title_rules"
     },
     {
+      "title": "서대문구, 2027년 11명 정규직 채용",
+      "desc": "대상은 일자리플러스세터 직업상담, 해담는도서관 사서, 행복한밥상 영양사, 유아숲체험지도사, 모자건강증진센터 심리상담가, 위생취약지역 방역소독, 진료 및 건강검진 인력입니다. 구내식당 운영 인력 4명까지...",
+      "url": "https://news.skbroadband.com/news/articleView.html?idxno=240227",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "포니정재단, 호찌민국립대 장학 지원 20주년… 올해 학부생 35명 장학증...",
+      "desc": "장학생 지원 프로그램에는 심리 상담과 선배와의 만남, 봉사활동 등이 포함된다. 지난 9월에는 포니정 초청장학생과 교환장학생 8명이 다문화청소년협회가 지원하는 다문화가정 한글학교 학생 30여명과 함께하는...",
+      "url": "https://www.financialpost.co.kr/news/articleView.html?idxno=280443",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "현대차그룹, 학대피해 아동에 차량 20대 지원… 12년간 192대 기증",
       "desc": "아동보호 현장의 의견을 반영해 차량 내부에서도 상담과 심리적 안정 지원이 가능하도록 제작했다. 도심 지역 신속한 가정 방문을 위해 캐스퍼 EV와 레이 EV 등 소형 전기차 8대도 새롭게 지원한다. 해당 차량은 전국 8개...",
       "url": "http://www.biztribune.co.kr/news/articleView.html?idxno=360630",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "24시간 상담 '라임'과 112 연계…삼성금융, 청소년 마음건강 지킨다",
-      "desc": "아울러 구조 이후에도 일대일 상담, 심리검사, 전문기관 치료 연계 등 단계별 맞춤형 회복 프로그램을 제공하여 재발 방지에 나선다. 현장 경찰관 심리 회복까지 아우르는 촘촘한 안전망 삼성금융은 위기 청소년 지원뿐만...",
-      "url": "https://www.pointe.co.kr/news/articleView.html?idxno=86071",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "삼성금융·경찰청, 청소년 생명보호·위기 대응 맞손",
-      "desc": "경찰은 신고 접수 단계부터 관련 정보를 출동 인력과 공유하고, 삼성금융은 구조된 청소년에게 일대일 상담과 심리검사, 전문기관 치료 연계 등을 지원한다. 현장 경찰관을 위한 심리 회복 프로그램도 운영한다....",
-      "url": "https://www.financialpost.co.kr/news/articleView.html?idxno=280444",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1769,9 +1801,33 @@
       "reason": "title_rules"
     },
     {
+      "title": "삼성금융·경찰청, 청소년 생명보호·위기 대응 맞손",
+      "desc": "경찰은 신고 접수 단계부터 관련 정보를 출동 인력과 공유하고, 삼성금융은 구조된 청소년에게 일대일 상담과 심리검사, 전문기관 치료 연계 등을 지원한다. 현장 경찰관을 위한 심리 회복 프로그램도 운영한다....",
+      "url": "https://www.financialpost.co.kr/news/articleView.html?idxno=280444",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "24시간 상담 '라임'과 112 연계…삼성금융, 청소년 마음건강 지킨다",
+      "desc": "아울러 구조 이후에도 일대일 상담, 심리검사, 전문기관 치료 연계 등 단계별 맞춤형 회복 프로그램을 제공하여 재발 방지에 나선다. 현장 경찰관 심리 회복까지 아우르는 촘촘한 안전망 삼성금융은 위기 청소년 지원뿐만...",
+      "url": "https://www.pointe.co.kr/news/articleView.html?idxno=86071",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "삼성금융, 경찰청과 생명존중사업 업무협약 체결",
       "desc": "삼성금융은 '라임' 연계를 통해 경찰이 현장에서 구조한 청소년을 대상으로 일대일 상담, 심리검사, 전문기관 치료 연계 등 마음건강 위기 단계별 전문 프로그램을 제공할 예정이다. 이번 협약에는 위기 현장에 반복적으로...",
       "url": "https://www.mediapen.com/news/view/1129949",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "[병원계 소식] 10월 14일",
+      "desc": "분당제생병원 간호부는 지난 13일 황송노인종합복지관에서 어르신들을 대상으로 혈압 측정과 건강 상담을... 호스피스 이용을 적극 권하고 싶다고 답한 교직원들은 통증 완화와 심리적 안정, 가족과 함께하는 시간...",
+      "url": "http://www.doctorstimes.com/news/articleView.html?idxno=240467",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1788,14 +1844,6 @@
       "title": "삼성금융네트웍스, 경찰청과 청소년 위기 대응 업무협약",
       "desc": "청소년 상담채널 '라임'과 112 신고 연계…위기 상황 신속 대응 구조 이후 심리상담·전문기관 치료 연계 등 사후 지원 정신응급 대응 경찰관 290여명 대상 마음건강 프로그램 지원 ▲ 삼성금융네트웍스는 14일 서울...",
       "url": "https://sateconomy.co.kr/news/view/1065595674349274",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "[병원계 소식] 10월 14일",
-      "desc": "분당제생병원 간호부는 지난 13일 황송노인종합복지관에서 어르신들을 대상으로 혈압 측정과 건강 상담을... 호스피스 이용을 적극 권하고 싶다고 답한 교직원들은 통증 완화와 심리적 안정, 가족과 함께하는 시간...",
-      "url": "http://www.doctorstimes.com/news/articleView.html?idxno=240467",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1897,6 +1945,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "담양군, 청년 교류 강화 소통 축제 개최",
+      "desc": "스트레스·우울 검사와 심리상담 등 청년들이 필요로 하는 서비스도 마련해 정책 정보부터 마음 건강까지 한자리에서 살펴볼 수 있도록 했다. 청년과 군정이 직접 의견을 나누는 프로그램도 진행된다. '군수와 청년 토크쇼...",
+      "url": "https://www.joongdo.co.kr/web/view.php?key=20261015010003507",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "포니정재단, '호찌민국립대 장학지원' 20년…610명에 장학금 지원",
       "desc": "장학생들이 낯선 환경에 빠르게 적응할 수 있도록 심리상담과 선배와의 만남, 봉사활동 등 지원 프로그램도 갖췄다. 지난 9월에는 초청·교환장학생 8명이 (사)다문화청소년협회가 지원하는 다문화가정 한글학교 학생...",
       "url": "https://www.newsworks.co.kr/news/articleView.html?idxno=856481",
@@ -1913,9 +1969,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "담양군, 청년 교류 강화 소통 축제 개최",
-      "desc": "스트레스·우울 검사와 심리상담 등 청년들이 필요로 하는 서비스도 마련해 정책 정보부터 마음 건강까지 한자리에서 살펴볼 수 있도록 했다. 청년과 군정이 직접 의견을 나누는 프로그램도 진행된다. '군수와 청년 토크쇼...",
-      "url": "https://www.joongdo.co.kr/web/view.php?key=20261015010003507",
+      "title": "\"위기 청소년·경찰관 함께 지킨다\"…삼성금융, 경찰청과 MOU",
+      "desc": "삼성금융은 '라임' 연계를 통해 경찰이 현장에서 구조한 청소년을 대상으로 일대일 상담, 심리검사, 전문기관 치료 연계 등 마음건강 위기 단계별 전문 프로그램을 제공할 예정이다. 김종철 경찰청장 직무대행은...",
+      "url": "https://www.joongangenews.com/news/articleView.html?idxno=555043",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1924,14 +1980,6 @@
       "title": "한국 베트남 잇는 인재 양성 포니정재단 20년 결실",
       "desc": "또한 고려대 대학원 석사과정을 지원하는 초청장학생 프로그램과 한국 유학 기회를 주는 교환장학생 제도를 함께 운영하며 현지 적응을 위한 심리상담과 문화교류 프로그램도 제공하고 있습니다. 포니정재단...",
       "url": "https://www.newsclaim.co.kr/news/articleView.html?idxno=3078470",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "\"위기 청소년·경찰관 함께 지킨다\"…삼성금융, 경찰청과 MOU",
-      "desc": "삼성금융은 '라임' 연계를 통해 경찰이 현장에서 구조한 청소년을 대상으로 일대일 상담, 심리검사, 전문기관 치료 연계 등 마음건강 위기 단계별 전문 프로그램을 제공할 예정이다. 김종철 경찰청장 직무대행은...",
-      "url": "https://www.joongangenews.com/news/articleView.html?idxno=555043",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1969,14 +2017,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "엄교섭 경기도의원, 경기도교육청 교권전담상담사 처우 개선 및 교원 심...",
-      "desc": "현장 심리지원 실태를 점검하고 상담사들의 처우를 개선하기 위한 방안을 깊이 있게 논의했다. 이번 자리는 최근 경기도교육청이 새롭게 ‘교권보호전담관’ 제도를 도입하고 지원 창구 전반을 개편하는 국면에서...",
-      "url": "https://www.seoul.co.kr/news/publicnews/local_govern/kyungki_do/2026/10/14/20261014500173?wlog_tag3=naver",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "“보호관찰관과 밥 먹고 1시간 뒤 흉기난동”…전문가가 짚은 전자발찌...",
       "desc": "임상심리사의 상담을 병행하는 체계적인 관리가 필요하다”고 제안했다. 경찰과 보호관찰소 사이의 정보 공유도 강조했다. 김 변호사는 “강력범죄 전력자가 흉기를 소지했거나 폭행·협박·스토킹 등으로 신규...",
       "url": "https://www.edaily.co.kr/News/Read?newsId=04218086645612920&mediaCodeNo=257&utm_source=naver&utm_medium=referral&utm_campaign=news_syndication&utm_content=original_article",
@@ -1985,9 +2025,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "보호관찰 시스템에 구멍… 흉기난동범 재범 위험 '높음'이라 '예견된 참...",
-      "desc": "이수정 경기대 범죄심리학과 교수는 \"현재 보호관찰관 인력 자체가 매우 적다\"면서 \"살인이나 성범죄... 구조\"라며 \"보호관찰관 상담을 하고도 왜 A씨가 곧바로 그러한 공격 행위를 했는지에도 주목해야 한다\"고...",
-      "url": "https://www.jasm.co.kr/news/view/321500/?sc=Naver",
+      "title": "엄교섭 경기도의원, 경기도교육청 교권전담상담사 처우 개선 및 교원 심...",
+      "desc": "현장 심리지원 실태를 점검하고 상담사들의 처우를 개선하기 위한 방안을 깊이 있게 논의했다. 이번 자리는 최근 경기도교육청이 새롭게 ‘교권보호전담관’ 제도를 도입하고 지원 창구 전반을 개편하는 국면에서...",
+      "url": "https://www.seoul.co.kr/news/publicnews/local_govern/kyungki_do/2026/10/14/20261014500173?wlog_tag3=naver",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -1996,6 +2036,14 @@
       "title": "성주 위센터, 전문상담교사 역량강화 슈퍼비전",
       "desc": "성주교육지원청 위(Wee)센터는 지난 7일 전문상담교사와 관내 전문상담인력을 대상으로 학생 심리 지원 역량 강화를 위한 슈퍼비전을 실시했다. 이번 슈퍼비전은 최근 증가하는 학생들의 다양한 심리적 어려움에...",
       "url": "https://www.idaegu.co.kr/news/articleView.html?idxno=562269",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "보호관찰 시스템에 구멍… 흉기난동범 재범 위험 '높음'이라 '예견된 참...",
+      "desc": "이수정 경기대 범죄심리학과 교수는 \"현재 보호관찰관 인력 자체가 매우 적다\"면서 \"살인이나 성범죄... 구조\"라며 \"보호관찰관 상담을 하고도 왜 A씨가 곧바로 그러한 공격 행위를 했는지에도 주목해야 한다\"고...",
+      "url": "https://www.jasm.co.kr/news/view/321500/?sc=Naver",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2017,9 +2065,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "자살 위기, 현장서 상담까지 잇는다…경찰·삼성금융·생명의전화 맞손",
-      "desc": "협약에 따라 각 기관은 △자살 위기 발생 시 신속한 경찰 대응 연계 △청소년 등 자살 위기 대상자 상담·예방 서비스 협력 △생명 존중 문화 확산을 위한 공동 홍보·교육 △자살 위기 현장에 대응하는 경찰관의 심리 회복...",
-      "url": "https://www.news1.kr/society/incident-accident/6319778",
+      "title": "이주여성 불법사금융 피해 막는다…경기복지재단, 지원망 확대",
+      "desc": "지난 12일 경기도이주여성상담센터와 업무협약. 사진=경기복지재단 불법사금융 피해를 입은 이주여성이... 재단은 금융 피해 지원을 금전적 손실과 법률 대응에만 한정하지 않고 피해자의 생명과 안전, 심리적 회복까지...",
+      "url": "https://weekly.hankooki.com/news/articleView.html?idxno=7188688",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2041,17 +2089,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "이주여성 불법사금융 피해 막는다…경기복지재단, 지원망 확대",
-      "desc": "지난 12일 경기도이주여성상담센터와 업무협약. 사진=경기복지재단 불법사금융 피해를 입은 이주여성이... 재단은 금융 피해 지원을 금전적 손실과 법률 대응에만 한정하지 않고 피해자의 생명과 안전, 심리적 회복까지...",
-      "url": "https://weekly.hankooki.com/news/articleView.html?idxno=7188688",
+      "title": "경찰청, 삼성금융·생명의전화와 자살위기 대응체계 강화 업무협약",
+      "desc": "경찰청 [사진=뉴스핌DB] 세 기관은 ▲자살위기 발생 시 신속한 경찰 대응 연계 ▲청소년 등 자살위기 대상자 상담·예방 서비스 협력 ▲생명존중 문화 확산을 위한 공동 홍보·교육 ▲자살위기 현장 대응 경찰관의 심리회...",
+      "url": "https://www.newspim.com/news/view/20261014001026",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "경찰청, 삼성금융·생명의전화와 자살위기 대응체계 강화 업무협약",
-      "desc": "경찰청 [사진=뉴스핌DB] 세 기관은 ▲자살위기 발생 시 신속한 경찰 대응 연계 ▲청소년 등 자살위기 대상자 상담·예방 서비스 협력 ▲생명존중 문화 확산을 위한 공동 홍보·교육 ▲자살위기 현장 대응 경찰관의 심리회...",
-      "url": "https://www.newspim.com/news/view/20261014001026",
+      "title": "자살 위기, 현장서 상담까지 잇는다…경찰·삼성금융·생명의전화 맞손",
+      "desc": "협약에 따라 각 기관은 △자살 위기 발생 시 신속한 경찰 대응 연계 △청소년 등 자살 위기 대상자 상담·예방 서비스 협력 △생명 존중 문화 확산을 위한 공동 홍보·교육 △자살 위기 현장에 대응하는 경찰관의 심리 회복...",
+      "url": "https://www.news1.kr/society/incident-accident/6319778",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2081,9 +2129,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "영덕교육지원청, 2026 학부모회장 리더교육 실시",
-      "desc": "이날 연수에서는 동양대학교 대학원 상담심리학과 배영태 겸임교수가 '학교와 함께하는 교육파트너, 부모!'를 주제로 강연했다. 참석한 학부모들은 교육의 주체로서 리더십을 강화하고, 소통과 협력을 바탕으로 올바른...",
-      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3721403",
+      "title": "포니정재단, 베트남 인재 육성 20년…장학생 1200명 배출",
+      "desc": "또 심리상담과 선배 교류, 봉사활동 등 한국 적응을 돕는 프로그램도 마련했다. 지난달에는 초청·교환장학생 8명이 다문화가정 청소년 30여 명을 대상으로 한 문화교류 현장학습에 멘토로 참여하기도 했다....",
+      "url": "https://www.bizwork.co.kr/news/articleView.html?idxno=419880",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2097,9 +2145,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "포니정재단, 베트남 인재 육성 20년…장학생 1200명 배출",
-      "desc": "또 심리상담과 선배 교류, 봉사활동 등 한국 적응을 돕는 프로그램도 마련했다. 지난달에는 초청·교환장학생 8명이 다문화가정 청소년 30여 명을 대상으로 한 문화교류 현장학습에 멘토로 참여하기도 했다....",
-      "url": "https://www.bizwork.co.kr/news/articleView.html?idxno=419880",
+      "title": "영덕교육지원청, 2026 학부모회장 리더교육 실시",
+      "desc": "이날 연수에서는 동양대학교 대학원 상담심리학과 배영태 겸임교수가 '학교와 함께하는 교육파트너, 부모!'를 주제로 강연했다. 참석한 학부모들은 교육의 주체로서 리더십을 강화하고, 소통과 협력을 바탕으로 올바른...",
+      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3721403",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2153,17 +2201,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "현대차그룹, 학대피해 아동 위한 '아이케어 카' 20대 지원...누적 192대",
-      "desc": "아이케어 카는 학대피해 아동을 직접 찾아가 상담과 심리 지원을 제공할 수 있도록 아동보호전문기관에 차량을 기증하는 사회공헌 사업이다. 현대차그룹은 올해 전국 12개 아동보호전문기관에 스타리아와 카니발 등...",
-      "url": "https://www.joongangenews.com/news/articleView.html?idxno=554935",
+      "title": "두루에너아이, SW 품질·안전 관리 위한 현장 소통 강화",
+      "desc": "조 상담사는 변화하는 업무 환경에 대응하기 위한 심리적 자본(Psychological Capital)의 개념을 소개했다. 희망, 자기효능감, 회복탄력성, 낙관성 등 네 가지 요소를 중심으로 업무 과정에서 발생하는 어려움에 대응하고...",
+      "url": "https://kidd.co.kr/news/247719",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "두루에너아이, SW 품질·안전 관리 위한 현장 소통 강화",
-      "desc": "조 상담사는 변화하는 업무 환경에 대응하기 위한 심리적 자본(Psychological Capital)의 개념을 소개했다. 희망, 자기효능감, 회복탄력성, 낙관성 등 네 가지 요소를 중심으로 업무 과정에서 발생하는 어려움에 대응하고...",
-      "url": "https://kidd.co.kr/news/247719",
+      "title": "현대차그룹, 학대피해 아동 위한 '아이케어 카' 20대 지원...누적 192대",
+      "desc": "아이케어 카는 학대피해 아동을 직접 찾아가 상담과 심리 지원을 제공할 수 있도록 아동보호전문기관에 차량을 기증하는 사회공헌 사업이다. 현대차그룹은 올해 전국 12개 아동보호전문기관에 스타리아와 카니발 등...",
+      "url": "https://www.joongangenews.com/news/articleView.html?idxno=554935",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2209,70 +2257,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "배상훈 “양손에 흉기 묶은 공격은 처음…살인미수·상해 집유로 다 풀...",
-      "desc": "배상훈 우석대 경찰범죄심리학과 교수는 14일 YTN 라디오와의 인터뷰에서 전날 인천 구월동 대형마트에서... 복약 상담한다고 정신과 상담을 받았고, 보호관찰관과 같이 상담 겸 점심을 먹고 그 다음 1시간 뒤에 범행을...",
-      "url": "https://biz.heraldcorp.com/article/10902465?ref=naver",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "[민주시민교육⑨] 대전태평초, '읽고-느끼고-실천하는' 민주주의 선도",
-      "desc": "일반 지도 수준을 넘어서는 학생에 대해서는 2단계로 전담 상담 및 외부 심리치료 연계 조치가 이어진다. 여기에 감정 언어 사전 만들기, 관계 회복 서클, 감정 방탈출 등 체계적인 정서 훈련이 상시적으로 뒷받침됐다....",
-      "url": "http://www.ccnnews.co.kr/news/articleView.html?idxno=416181",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "사랑의열매, 학대피해아동 찾아가는 상담 공간...'아이케어 카' 20대 전...",
-      "desc": "이항수 현대자동차그룹 부사장은 \"아이케어 카는 현장 상담원의 의견을 반영해 심리상담 전용차량 제작과 방문 상담을 위한 전기차량 지원을 시작했다\"고 말했다. 김웅철 굿네이버스 사무총장은 학대피해아동이...",
-      "url": "https://www.hinews.co.kr/view.php?ud=2026101414541114849284fa285d_48",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "[단독] 국립생태원장, 성희롱·신고인 불이익에 정직…기후부 산하기관...",
-      "desc": "국립생태원은 피해자 보호를 위해 복무 결재 승인권자를 변경하는 등 분리조치를 실시하고, 전문 심리상담과 요양휴가 제도 등을 안내했다고 밝혔다. 정직 처분 이후에도 2차 피해 예방과 안정적인 근무환경 조성을...",
-      "url": "https://www.newsis.com/view/NISX20261014_0003825387",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "[속초 24시] 속초시 '신규가 폐업 앞질렀다' 청년 창업 활기",
-      "desc": "지하 1층·지상 3층, 연면적 976.32㎡ 규모로 강당과 기능향상 운동실, 상담실, 프로그램실 등을 갖췄다.... 6~9월 요가 교실 123명, AI 미술심리치료 84명, 여름방학 특화프로그램 71명 등 연인원 278명이 참여했다. 4월부터...",
-      "url": "https://www.sisajournal.com/news/articleView.html?idxno=390108",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "합천군, 정신건강의 날 유공기관 선정",
-      "desc": "▲정신건강 상담 및 사례관리 ▲정신건강증진 프로그램 ▲주간재활프로그램 ▲정신질환자 의료비 지원... 주민의 심리적 회복까지 지원해 온 지역사회 정신건강사업 전반의 성과를 인정받았다는 점에서 더욱 뜻 깊다....",
-      "url": "https://www.newsgn.com/news/articleView.html?idxno=579096",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "[단독] 울음소리 거슬린다고…장애아동 뺨 때린 사회복무요원",
-      "desc": "서울정애학교 심리안정실에서 휴식을 취하던 중 발달장애학생의 울음소리가 크다는 이유로 학생의 왼쪽... 병무청은 학생 대상 가해 사례에 경고와 연장복무 등의 조치를 했지만, 피해 학생에 대한 보호자 통지나 상담...",
-      "url": "https://www.munhwa.com/article/11623462?ref=naver",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "자소서 폐지·내신 5등급제, \"대학은 '직접 해 본 탐구'를 본다\"…하버드...",
-      "desc": "에모리(심리학) 등 미국 8개 대학에서 연구 중인 한국인 연구자(박사과정·박사후연구원)와 국내 상위대학... 종로엠스쿨은 전국 지점을 통해 프로그램 안내와 접수 상담 등 학생·학부모의 참여를 돕는다. 1기를 전액...",
-      "url": "https://www.lecturernews.com/news/articleView.html?idxno=211982",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "[약사, 문학을 말하다] 폭염",
       "desc": "[약사, 문학을 말하다] 폭염 약사공론",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5FU1Fjb0prQ3RqOXYtMWptajRCdThBbl9FS0Y1clZQVy01QXRoSGNMek4zMXhZbnRYODRTQ0R3cGNYaGNBQkdQS3Q5VFhnbVVJQzVzQzZ1X09WSWZZaUlKRWMtbE9KdjR6OGlZUQ?oc=5",
@@ -2307,7 +2291,7 @@
     {
       "title": "병원약사회, 관리자 역량강화교육 '미래 병원약사' 역할 모색",
       "desc": "병원약사회, 관리자 역량강화교육 '미래 병원약사' 역할 모색 의약뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE9BTmJCNFctSUhYVGtwcXFIVjlxZU8takVJaTlNaF9wR1Z1LVF4NWIzaG41d1VJWWI4R2xNdkpGc2V5UTRVTWZDVzRlcDRham14M1lFdDRRd2FxODNkZVgzTzhaeVVfU00?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBLUHdRLXp1TVBTS2NvZ2swR2o4aktwWHFmdjZiZTBSTmNvRV9FNl9Oc2p2Wm1QZXJnWmVpU210bTVOWk9Jd1oyT3Y5dFBzYUFRaW1UZlJkbG5mX0hlMnNvdWRyaGJfLU5B?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2316,6 +2300,14 @@
       "title": "일동제약, 약사 상담 특화 맞춤형 비타민 브랜드 ‘슈퍼라민’ 출시",
       "desc": "일동제약, 약사 상담 특화 맞춤형 비타민 브랜드 ‘슈퍼라민’ 출시 약업신문",
       "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE85YkllTlE4WklqMm10c2VsYVU0ZXFiVE9aYkxIbk9HakI4MC03UExhSHRFekJyNTVQelZPOFlxY2RoZzNNZkZ2N1FGN2tOWjBOYW9YVHJ4UjNqVXhTRWNiYTFMR1Z2cmJmQ1NKRDBnUGZpYTZKUG93?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "AI와 약사 전문성 결합한 ‘스마트 방문약료 서비스’로 구민 건강 챙겨",
+      "desc": "AI와 약사 전문성 결합한 ‘스마트 방문약료 서비스’로 구민 건강 챙겨 관악신문",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE52WWh5YTZOUGV3dkcwanpuSFJXdFl6bFVsLUY0Rm1EVFJzZGR1R0tXSGdpejhpUkowTTZmYmRxanVkSGJRY3B2MHdjZ3hGekpsWVd4SldtMDEtbHVBd19DNElpYWF6V293?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2401,14 +2393,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "[국감] \"위고비·마운자로-마약류 비만약, DUR 사각지대\"",
-      "desc": "[국감] \"위고비·마운자로-마약류 비만약, DUR 사각지대\" 데일리팜",
-      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE82MzVSMURvWlBrZDM2elBiYlloQmNKOVA5YWNDbUFWMFM3WG5vaFFNMTIxNXhCSkZFdDh3YjEyUG1ucUhFQ1AzQURaeWhnRXJGeEM4RU5R?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "유사 포장 \"환경은 두고 약사에게만 조심하라고 하면 되느냐\"",
       "desc": "유사 포장 \"환경은 두고 약사에게만 조심하라고 하면 되느냐\" 약사공론",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9oNnNKYWplNjFsU3lIUjZJUmNEZGRIUDUwWVpTbTRndHJTb0ZsWkhDRUk2TkI5dzBpUmNCek9wLXV1TWJYRUhyNldtWjVTY250cHZDVUpXRDNLeTgzdlg0SzU5ckdNNVZSejZGOA?oc=5",
@@ -2420,6 +2404,22 @@
       "title": "[별일이약] 약국서 발견된 대변 든 봉지…약사는 '황당'",
       "desc": "[별일이약] 약국서 발견된 대변 든 봉지…약사는 '황당' 약사공론",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBvaU1KLURFVWpRQW9EMzJpckxoc0ZRYmRPU2pqaEVyeWpENkFfNk5qbVFPMXRCbmxsZ3hZNFM5ZS1sV1N4ckNzTzhKcWgyUUpPWUlvOExjNVFmSEhPS1plOUFVZUJST0J2Qk5vTg?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "[국감] \"위고비·마운자로-마약류 비만약, DUR 사각지대\"",
+      "desc": "[국감] \"위고비·마운자로-마약류 비만약, DUR 사각지대\" 데일리팜",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE82MzVSMURvWlBrZDM2elBiYlloQmNKOVA5YWNDbUFWMFM3WG5vaFFNMTIxNXhCSkZFdDh3YjEyUG1ucUhFQ1AzQURaeWhnRXJGeEM4RU5R?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "강원도약사회, 강원대 약대생 4명에 장학금 전달",
+      "desc": "강원도약사회, 강원대 약대생 4명에 장학금 전달 약업신문",
+      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE94YUlCaTBRMEFBQ3ZTVzhueWpnRzhDY2loRWZnc1ExTFlFckFuMk5BMUF6bzk0LXlaUTJlTXZnZk13VjQ0eTZLRXlkT1pfd1ZQUDAySmcyS3VHMm12V3dwUFZmcThOeFgxVUVQalBDMnlLS0E?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2449,17 +2449,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "강원도약사회, 강원대 약대생 4명에 장학금 전달",
-      "desc": "강원도약사회, 강원대 약대생 4명에 장학금 전달 약업신문",
-      "url": "https://news.google.com/rss/articles/CBMid0FVX3lxTE5pU0dhM3lsNnRLbkVpWUhRdnNCSnVvWkRpdFYxYzF6QVFNbG45dXlVQnBFV3ZScXlLVGRmS0xNVGZHYXpJU3VoNzdiYW10dEh2VDhPSUQ3QWItYUJmZ0V6ZTFLM1FaUlpFZThieXJ0MXFJT2tlSXpJ?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "\"마약류 수거 참여 100곳뿐\" 지적에 식약처 \"내년 10억원 이상 확보\"",
-      "desc": "\"마약류 수거 참여 100곳뿐\" 지적에 식약처 \"내년 10억원 이상 확보\" 약사공론",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9JYWh3TzBBSWM4WFY4SE5SWWowYW1lc3A0b194ZHRKNEhHVjRsYXZOU0V4S2phSXdTVFQzZVZNMXJrTFhuQnNGNHpXWHZqZVVxamEwcWlqMi0zQkVmbHBuZE1xUE1XemxSWUNUSw?oc=5",
+      "title": "한림제약, 성균관대 약대와 산학협력…인재 육성·공동연구 추진",
+      "desc": "한림제약, 성균관대 약대와 산학협력…인재 육성·공동연구 추진 데일리팜",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5RTE8yQWV3VFdVYlp1YVVKY2V6RjE3X3hweDZ3dkdMRTBCMmVCZ3lMdllwV0loTnAyVTRDTlVRN0tzWjNYSEpwQmtFVjhhOWtSeTBRVUR3?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2473,9 +2465,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "[스타트UP] “AI가 추천하고 약사가 최종 결정”…웰니스박스, 맞춤형 영양제 시장 공략 - 조선비즈",
-      "desc": "[스타트UP] “AI가 추천하고 약사가 최종 결정”…웰니스박스, 맞춤형 영양제 시장 공략 - 조선비즈 Chosunbiz",
-      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNcnVSZVNYeEwxNmdCWUw4VmlwdVVWTDZKalB3S29pT0Mxb0JyVHlhSEVTTjI3SWNUb1NFMUVDcjk3RV8yNlFUUGtteVJoZUdKRVdNYTA5T3RucDlOcktwRWl3N1JkWUlfY0RIYm5JX0o2eTZuUjFsMF85cGdDODFhRFg3ZkY4NUsyRzFYVVgxWnl0RVVYTnRYTkJCV01uY29NOGpnNtIBpAFBVV95cUxNcnVSZVNYeEwxNmdCWUw4VmlwdVVWTDZKalB3S29pT0Mxb0JyVHlhSEVTTjI3SWNUb1NFMUVDcjk3RV8yNlFUUGtteVJoZUdKRVdNYTA5T3RucDlOcktwRWl3N1JkWUlfY0RIYm5JX0o2eTZuUjFsMF85cGdDODFhRFg3ZkY4NUsyRzFYVVgxWnl0RVVYTnRYTkJCV01uY29NOGpnNg?oc=5",
+      "title": "\"마약류 수거 참여 100곳뿐\" 지적에 식약처 \"내년 10억원 이상 확보\"",
+      "desc": "\"마약류 수거 참여 100곳뿐\" 지적에 식약처 \"내년 10억원 이상 확보\" 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9JYWh3TzBBSWM4WFY4SE5SWWowYW1lc3A0b194ZHRKNEhHVjRsYXZOU0V4S2phSXdTVFQzZVZNMXJrTFhuQnNGNHpXWHZqZVVxamEwcWlqMi0zQkVmbHBuZE1xUE1XemxSWUNUSw?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2505,6 +2497,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "[스타트UP] “AI가 추천하고 약사가 최종 결정”…웰니스박스, 맞춤형 영양제 시장 공략 - 조선비즈",
+      "desc": "[스타트UP] “AI가 추천하고 약사가 최종 결정”…웰니스박스, 맞춤형 영양제 시장 공략 - 조선비즈 Chosunbiz",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNcnVSZVNYeEwxNmdCWUw4VmlwdVVWTDZKalB3S29pT0Mxb0JyVHlhSEVTTjI3SWNUb1NFMUVDcjk3RV8yNlFUUGtteVJoZUdKRVdNYTA5T3RucDlOcktwRWl3N1JkWUlfY0RIYm5JX0o2eTZuUjFsMF85cGdDODFhRFg3ZkY4NUsyRzFYVVgxWnl0RVVYTnRYTkJCV01uY29NOGpnNtIBpAFBVV95cUxNcnVSZVNYeEwxNmdCWUw4VmlwdVVWTDZKalB3S29pT0Mxb0JyVHlhSEVTTjI3SWNUb1NFMUVDcjk3RV8yNlFUUGtteVJoZUdKRVdNYTA5T3RucDlOcktwRWl3N1JkWUlfY0RIYm5JX0o2eTZuUjFsMF85cGdDODFhRFg3ZkY4NUsyRzFYVVgxWnl0RVVYTnRYTkJCV01uY29NOGpnNg?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "큐리언트-론자, 이중 페이로드 ADC 플랫폼 첫 공개",
       "desc": "큐리언트-론자, 이중 페이로드 ADC 플랫폼 첫 공개 데일리팜",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTFBjZU5FUXlBQnBXbndDb3RqZkRXSVR2NkJ5ZlpCWTg5d0dSMUx3RTJadUs5VUJMNnU4YXdUcWkzUE9VWjFGdlhaN0V5MWZZOVhlMk1yTGt3?oc=5",
@@ -2521,14 +2521,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "심평원, 상임이사 3명 직무청렴계약...공정·투명성 강화",
-      "desc": "심평원, 상임이사 3명 직무청렴계약...공정·투명성 강화 데일리팜",
-      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5GYzlESjhCRm9LVTJXMktYS2ZDV0xWTVlYLVE0YVlqVC1UUzFRZGdCNHJlMTRnU0tJMXBKcFNxR2lyd3I1RmxNNnhGT29TWUhnNXZVRU53?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "초고령사회를 위한 다양한 담론의 실행에 지역약사가 포함되어야 한다",
       "desc": "초고령사회를 위한 다양한 담론의 실행에 지역약사가 포함되어야 한다 약업신문",
       "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPS1hiYW5YUmZFbEliYlY2T2N3NnI3Qi1FcVUyQ2pham9hVDItVWh5aEdlb2pwVkc3Mkh0NVhTLWJnTkhndjVwUllSWUQ2cngxYWh5NFBRVldlRjZobXIwLUxzZ0hGZkE3UTl3LWF6VmoxNUsxYTRtSHV0OWxZQW5DRXBLTzdRVnlUSEdCV1BZaDZpVkZpZnUtY1duTVY?oc=5",
@@ -2537,9 +2529,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "바로팜-CHD제약 약국 코스메슈티컬 '레비클' 일본 진출",
-      "desc": "바로팜-CHD제약 약국 코스메슈티컬 '레비클' 일본 진출 데일리팜",
-      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE56YUUwVWtkX0JabG51alhKVktIc3otcHRTcFFZVV96RGpwN3Y2a1pZa1JGemtqMnhpT2ptNU40Y0dCWFpKbENNOWJsOExnU2hoUFp4YUd3?oc=5",
+      "title": "심평원, 상임이사 3명 직무청렴계약...공정·투명성 강화",
+      "desc": "심평원, 상임이사 3명 직무청렴계약...공정·투명성 강화 데일리팜",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5GYzlESjhCRm9LVTJXMktYS2ZDV0xWTVlYLVE0YVlqVC1UUzFRZGdCNHJlMTRnU0tJMXBKcFNxR2lyd3I1RmxNNnhGT29TWUhnNXZVRU53?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2553,14 +2545,12 @@
       "reason": "title_rules"
     },
     {
-      "title": "실천약 \"시범사업 평가도 없이 비대면진료 제도화 안 돼\"",
-      "desc": "실천약 \"시범사업 평가도 없이 비대면진료 제도화 안 돼\" 약업신문",
-      "url": "http://m.yakup.com/news/index.html?mode=view&pmode=&cat=all&cat2=&cat3=&nid=333753&num_start=0",
-      "topics": [
-        "pharm"
-      ],
-      "status": "candidate",
-      "reason": "metadata_unavailable"
+      "title": "바로팜-CHD제약 약국 코스메슈티컬 '레비클' 일본 진출",
+      "desc": "바로팜-CHD제약 약국 코스메슈티컬 '레비클' 일본 진출 데일리팜",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE56YUUwVWtkX0JabG51alhKVktIc3otcHRTcFFZVV96RGpwN3Y2a1pZa1JGemtqMnhpT2ptNU40Y0dCWFpKbENNOWJsOExnU2hoUFp4YUd3?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
     },
     {
       "title": "대형약국들, 스타 마케팅 시동…브랜드 혁신 vs 호객 논란",
@@ -2582,22 +2572,6 @@
       "title": "서울시약, 11월 6일부터 ‘동물약국 활성화 전략’ 교육",
       "desc": "서울시약, 11월 6일부터 ‘동물약국 활성화 전략’ 교육 약사공론",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5DU2lUQU1Yb3A5Rkd2SzNIek9VbGt2VUo4ckRLcW9IZHU1UmppbzRKMVhxeC1UdGtDeTdhZGphVkpQZE9uQ0hvU1ZGQzRfMG1iWm5CX0N4TW9XazlxcEJYTFZkTXFJWUduRG43Rg?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "서울시약, '11월 6일부터 동물약국 활성화 전략' 교육…'동물약국 실전 Q&A부터 피부질환·영양제 상담까지 현장 중심' 교육",
-      "desc": "서울시약, '11월 6일부터 동물약국 활성화 전략' 교육…'동물약국 실전 Q&A부터 피부질환·영양제 상담까지 현장 중심' 교육 메디컬헤럴드",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE4xNTJyTlUzRXNIT0hUWmxtM252ZWVEZWtFNFVUT05BcnN5R0JDQnFPdFd5QlRueE9jdDE3cng1bmg4Rml5eUtmek1FQ3VDbVAzQWlEaEZJeGliS3ltdlV5dWVBd1VoRmY5bGpj0gFvQVVfeXFMUEpqMFE0M1p3Y1J0RDE3eWtxYlBNRkVlYlBKUUJNaXVic3hpVHpwZ0xqZnh5eU1KOUtWa2FFWkhEWklhVUVwYUF2eFNHYloxaXl5eFNYLW8zTU5vVHc1X21wcGo1ODZCQ0wtRFJWQzNN?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "내손안의약국, 약국 체험·온라인 구매 잇는다…'단골약국스토어' 확대",
-      "desc": "내손안의약국, 약국 체험·온라인 구매 잇는다…'단골약국스토어' 확대 약업신문",
-      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1uQ2hTNzFwTnhNVWhiWEJXQlI1QlpwaUxvV2lKdkFmZHRVMFVCZ2wwckVnaXFkUGRpblA1dEFzTjdzR05oODVvQjRuNEw1OHpGUWhWdG8wMEwxR3RDOVlZQ1RqM1lhNzJlNkxvZk5tdXlNUDA?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2627,14 +2601,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "일동제약, 성분 조합 달리한 비타민제 2종 출시...약사 상담 연계 강화",
-      "desc": "일동제약, 성분 조합 달리한 비타민제 2종 출시...약사 상담 연계 강화 이코노미사이언스",
-      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5PdGhXYXJaYjEtc3o0aUhDbXl2d3Y1bS1oTjlreUdiU1hpakw4UzE3OFlNVTJnYTd0cGx4NmVMZWhfWFh1QnVYR1N3SmJFU2ZPXzJ4YWxZcEdMdllsWFpOVHY4TTZxNkRzd1RXWFh0Yw?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "현대약품, 27일 종합국감 증인 출석…미프진 집중질의 예고",
       "desc": "현대약품, 27일 종합국감 증인 출석…미프진 집중질의 예고 데일리팜",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE95Y0c2aHgzanlqa3VObFNUNEF4aDhQMlZrbGJVb1Y2eU1uNmZjdFUzYXc1NDN6ckk3Y1dvR2xyWjRGTmY4cGxya2dMa0JPbTN5VlZfY0dn?oc=5",
@@ -2643,9 +2609,33 @@
       "reason": "title_rules"
     },
     {
+      "title": "서울시약, '11월 6일부터 동물약국 활성화 전략' 교육…'동물약국 실전 Q&A부터 피부질환·영양제 상담까지 현장 중심' 교육",
+      "desc": "서울시약, '11월 6일부터 동물약국 활성화 전략' 교육…'동물약국 실전 Q&A부터 피부질환·영양제 상담까지 현장 중심' 교육 메디컬헤럴드",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE4xNTJyTlUzRXNIT0hUWmxtM252ZWVEZWtFNFVUT05BcnN5R0JDQnFPdFd5QlRueE9jdDE3cng1bmg4Rml5eUtmek1FQ3VDbVAzQWlEaEZJeGliS3ltdlV5dWVBd1VoRmY5bGpj0gFvQVVfeXFMUEpqMFE0M1p3Y1J0RDE3eWtxYlBNRkVlYlBKUUJNaXVic3hpVHpwZ0xqZnh5eU1KOUtWa2FFWkhEWklhVUVwYUF2eFNHYloxaXl5eFNYLW8zTU5vVHc1X21wcGo1ODZCQ0wtRFJWQzNN?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "내손안의약국, 약국 체험·온라인 구매 잇는다…'단골약국스토어' 확대",
+      "desc": "내손안의약국, 약국 체험·온라인 구매 잇는다…'단골약국스토어' 확대 약업신문",
+      "url": "https://news.google.com/rss/articles/CBMic0FVX3lxTE1uQ2hTNzFwTnhNVWhiWEJXQlI1QlpwaUxvV2lKdkFmZHRVMFVCZ2wwckVnaXFkUGRpblA1dEFzTjdzR05oODVvQjRuNEw1OHpGUWhWdG8wMEwxR3RDOVlZQ1RqM1lhNzJlNkxvZk5tdXlNUDA?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "권영희 \"소통 부족 반성…현 비대위에 힘 실어달라\"",
       "desc": "권영희 \"소통 부족 반성…현 비대위에 힘 실어달라\" 데일리팜",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5fTmo5NEVQSGVIMFRDcGUxa1JXN0dBZjFldHVwODEwUEp0R2k3SHJvSVNBYkl6enRVSzc0blppNkptcjdqRk9oRFFaSDlUUGtIN28xU21B?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "일동제약, 성분 조합 달리한 비타민제 2종 출시...약사 상담 연계 강화",
+      "desc": "일동제약, 성분 조합 달리한 비타민제 2종 출시...약사 상담 연계 강화 이코노미사이언스",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5PdGhXYXJaYjEtc3o0aUhDbXl2d3Y1bS1oTjlreUdiU1hpakw4UzE3OFlNVTJnYTd0cGx4NmVMZWhfWFh1QnVYR1N3SmJFU2ZPXzJ4YWxZcEdMdllsWFpOVHY4TTZxNkRzd1RXWFh0Yw?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2701,22 +2691,6 @@
       "reason": "metadata_unavailable"
     },
     {
-      "title": "비만주사 '원외처방 원칙'…복지부, 위반 사례 수사의뢰",
-      "desc": "비만주사 '원외처방 원칙'…복지부, 위반 사례 수사의뢰 약사공론",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9vbEpVWVRacF94OUVNcVRTVmZZbmVLd0VDNU9EakJldG4zZDdoYnoteW83aDhMaVphY1FpRnFUdXlmQ3NUdWJHZ2dSSVh5R3RzVW9sREppU1RrSFdGRHo1dnRUX2N0QnRzWjQ0WQ?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "\"창고형 약국 불법개설 조사 강화\"…복지부, 특사경 도입도 추진",
-      "desc": "\"창고형 약국 불법개설 조사 강화\"…복지부, 특사경 도입도 추진 약사공론",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBfOWlHbHYzWWZ1bVBiM191NjRUS1kyN3ZBMnhTclBYSy1obmM1V1I1VTk3S0V0dEhzLVVIVk9JbEJhZ3ZGbmIyYXZKazd2eWNEd1NOR19zTndsNC1IQUY4b2lGcEU3UnFzMjNzYw?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "임총 고비 넘긴 권영희 집행부…대관·소통 과제는 남았다",
       "desc": "임총 고비 넘긴 권영희 집행부…대관·소통 과제는 남았다 데일리팜",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9DLU9xbnpzNXpZeEdQcklWSVRPUkJVZWNEaU1LemR1RDdGM2hWa2hVM01pNFB0ZE5NLTdWbmlRdGVmRHZqTXBpWDZNOUU3Wms2UENWTFRB?oc=5",
@@ -2725,9 +2699,25 @@
       "reason": "title_rules"
     },
     {
+      "title": "비만주사 '원외처방 원칙'…복지부, 위반 사례 수사의뢰",
+      "desc": "비만주사 '원외처방 원칙'…복지부, 위반 사례 수사의뢰 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9vbEpVWVRacF94OUVNcVRTVmZZbmVLd0VDNU9EakJldG4zZDdoYnoteW83aDhMaVphY1FpRnFUdXlmQ3NUdWJHZ2dSSVh5R3RzVW9sREppU1RrSFdGRHo1dnRUX2N0QnRzWjQ0WQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "비보존, 영업인력 83% 어나프라주 투입…제네릭 CSO 전환",
       "desc": "비보존, 영업인력 83% 어나프라주 투입…제네릭 CSO 전환 데일리팜",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9PalhZUU9tdDZhanIxa2tobEFIelI0Ql9FLUxlSmhuTkx0TzlydjlwbzZIQjY2d004dG93bTJjT1A0RkRvQThJR2pOT3NFTHhyQ0dzUXpR?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "\"창고형 약국 불법개설 조사 강화\"…복지부, 특사경 도입도 추진",
+      "desc": "\"창고형 약국 불법개설 조사 강화\"…복지부, 특사경 도입도 추진 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBfOWlHbHYzWWZ1bVBiM191NjRUS1kyN3ZBMnhTclBYSy1obmM1V1I1VTk3S0V0dEhzLVVIVk9JbEJhZ3ZGbmIyYXZKazd2eWNEd1NOR19zTndsNC1IQUY4b2lGcEU3UnFzMjNzYw?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2781,17 +2771,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "진주 약사정사·사단법인 원명, ‘만오밥상’ 가을맞이 자비의 건강 급식",
-      "desc": "진주 약사정사·사단법인 원명, ‘만오밥상’ 가을맞이 자비의 건강 급식 법보신문",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9jMW1NQTlGZmdYUTFfcmtybmF4LUZZMl9sMTVGLV85ME5maUstcGVCTUNDdkctUWoyZ19pQ2Rab0NlSldPTktjZTNibmZhd0FJaXZ0MnNreURUMHRmTS15U2kwX1RLVXJk?oc=5",
+      "title": "권영희 회장 \"소통 부족 반성…더 낮은 자세로 일하겠다\"",
+      "desc": "권영희 회장 \"소통 부족 반성…더 낮은 자세로 일하겠다\" 메디파나뉴스",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5GT1FrTjNWeU83TG15cVdtc3NGalp2T3phQm5rV203aWN2OE4yS1FRZ0I2M214anhiNzdaXzQwQm10WW83ZTdDUTV3R3BuLUhNUXdnTV84STZZaUl6X1A3R0E3UU1nbmNYcEZN?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "권영희 회장 \"소통 부족 반성…더 낮은 자세로 일하겠다\"",
-      "desc": "권영희 회장 \"소통 부족 반성…더 낮은 자세로 일하겠다\" 메디파나뉴스",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5GT1FrTjNWeU83TG15cVdtc3NGalp2T3phQm5rV203aWN2OE4yS1FRZ0I2M214anhiNzdaXzQwQm10WW83ZTdDUTV3R3BuLUhNUXdnTV84STZZaUl6X1A3R0E3UU1nbmNYcEZN?oc=5",
+      "title": "진주 약사정사·사단법인 원명, ‘만오밥상’ 가을맞이 자비의 건강 급식",
+      "desc": "진주 약사정사·사단법인 원명, ‘만오밥상’ 가을맞이 자비의 건강 급식 법보신문",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE9jMW1NQTlGZmdYUTFfcmtybmF4LUZZMl9sMTVGLV85ME5maUstcGVCTUNDdkctUWoyZ19pQ2Rab0NlSldPTktjZTNibmZhd0FJaXZ0MnNreURUMHRmTS15U2kwX1RLVXJk?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2805,14 +2795,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "동국제약, 45년 만에 '제약' 뗄까…새 이름은 'DK센텔리안'",
-      "desc": "동국제약, 45년 만에 '제약' 뗄까…새 이름은 'DK센텔리안' 데일리팜",
-      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBTMVYzaFNVUmd3Tko1SVJ3cDlrSFd4a2NYZUZwMEt1UnFObFo4NVFHV09lMEVjWnh5LTAySng4R1JvaEhFNDNVRTVkdXZaQUFkVjhrbkFFQnFJSWlUcUNleTdiM2w?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "고혈압·심부전약도 도핑 금지?…약국서 ‘선수세요?’ 물어야 하는 이유",
       "desc": "고혈압·심부전약도 도핑 금지?…약국서 ‘선수세요?’ 물어야 하는 이유 약사공론",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1xampoWHo2M2RlU0w0MWlRaFZrbnJQeVZBbmQwVUdWaE1CZDA1UDJUd2R5aGdCSXBJMlJfaHhjUmU3dHNkOGt5VVJ5TzB4QkRwVHEzenJ5ZDNUbFJTaFh2Q3prNExVVTJ2NEVnTg?oc=5",
@@ -2821,9 +2803,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "서울시약사회, '2026 핑크런'서 소녀돌봄약국 홍보 활동 펼쳐",
-      "desc": "서울시약사회, '2026 핑크런'서 소녀돌봄약국 홍보 활동 펼쳐 한국의약통신",
-      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5kUDFaamlzdmFzdmk0dFZUanZrdmFFSU1qczk2UDJnUjhvV2tlYVZPejItTlpfQlZHWjFZY3RjanNOLWQ4aWhJV3F1QlR3MVZoTEczYnRZRFFQcm9NNWhOa1lDUUtpbi1YN2hN?oc=5",
+      "title": "동국제약, 45년 만에 '제약' 뗄까…새 이름은 'DK센텔리안'",
+      "desc": "동국제약, 45년 만에 '제약' 뗄까…새 이름은 'DK센텔리안' 데일리팜",
+      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTFBTMVYzaFNVUmd3Tko1SVJ3cDlrSFd4a2NYZUZwMEt1UnFObFo4NVFHV09lMEVjWnh5LTAySng4R1JvaEhFNDNVRTVkdXZaQUFkVjhrbkFFQnFJSWlUcUNleTdiM2w?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2837,17 +2819,25 @@
       "reason": "title_rules"
     },
     {
-      "title": "[입찰공고] 비교하면 보이는 약대약 1,2 개정증보판 인쇄 업체 선정",
-      "desc": "[입찰공고] 비교하면 보이는 약대약 1,2 개정증보판 인쇄 업체 선정 약사공론",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBCbDNlbkxRVUZ2RUdLbWY1bFd0d0oxRmpHb3RfZThMUGJabHNyNWlCNWJpTGpCNV92THN3WTNNMG5EeXJlZ0ZRZ1VoV1M4dDRNaTRQdDFmQ1pZYVdMRXFjTHZaeG9QbGtDTVc1Sg?oc=5",
+      "title": "임총 시작…최광훈 의장 \"회원 절규 응할 것\"",
+      "desc": "임총 시작…최광훈 의장 \"회원 절규 응할 것\" 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ZbjBGYzhSSE9VVkIzV3dtMEFwTE9XVmdiLU0yeDRjd3UtdU1xTHYzMDF5dkwyaHZweVQwWkd2Vm1HeXd2c1FWMWw0cGlqNlYzVDFDUWNfU1VvcjFlRmJVVzZMWVd4OVRDMll1SQ?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "임총 시작…최광훈 의장 \"회원 절규 응할 것\"",
-      "desc": "임총 시작…최광훈 의장 \"회원 절규 응할 것\" 약사공론",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5ZbjBGYzhSSE9VVkIzV3dtMEFwTE9XVmdiLU0yeDRjd3UtdU1xTHYzMDF5dkwyaHZweVQwWkd2Vm1HeXd2c1FWMWw0cGlqNlYzVDFDUWNfU1VvcjFlRmJVVzZMWVd4OVRDMll1SQ?oc=5",
+      "title": "서울시약사회, '2026 핑크런'서 소녀돌봄약국 홍보 활동 펼쳐",
+      "desc": "서울시약사회, '2026 핑크런'서 소녀돌봄약국 홍보 활동 펼쳐 한국의약통신",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5kUDFaamlzdmFzdmk0dFZUanZrdmFFSU1qczk2UDJnUjhvV2tlYVZPejItTlpfQlZHWjFZY3RjanNOLWQ4aWhJV3F1QlR3MVZoTEczYnRZRFFQcm9NNWhOa1lDUUtpbi1YN2hN?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "[입찰공고] 비교하면 보이는 약대약 1,2 개정증보판 인쇄 업체 선정",
+      "desc": "[입찰공고] 비교하면 보이는 약대약 1,2 개정증보판 인쇄 업체 선정 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTFBCbDNlbkxRVUZ2RUdLbWY1bFd0d0oxRmpHb3RfZThMUGJabHNyNWlCNWJpTGpCNV92THN3WTNNMG5EeXJlZ0ZRZ1VoV1M4dDRNaTRQdDFmQ1pZYVdMRXFjTHZaeG9QbGtDTVc1Sg?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -2885,25 +2875,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "삼진제약, A-CLOSE 성과 공유…장기 항혈소판 치료 논의",
-      "desc": "삼진제약, A-CLOSE 성과 공유…장기 항혈소판 치료 논의 데일리팜",
-      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE9tSUNOSklsdTRiMjRSMVM0NzBKRkhhUnZKX0UwZkRHbHZKbmlzM2J1cFNfWFlFM2VpcVM4bGN5T3pqaXRveUtVQWkzazdhZDBIVHlYb25R?oc=5",
+      "title": "일동제약, 비타민제 브랜드 '슈퍼라민' 론칭...17가지 성분으로 챙기는...",
+      "desc": "솔루션' 콘셉트의 피로회복 영양제로 개발됐다고 밝혔습니다. 일동제약 관계자는 \"시장 트렌드를 반영해 성분 구성 등 제품 속성을 달리하고 약사 복약 상담 등 전문성이 더해진 브랜드를 선보이고자 했다\"고 말했습니다.",
+      "url": "http://www.paxetv.com/news/articleView.html?idxno=284186",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "HLB그룹, 15일 IR데이…10개 상장사 성장 전략 공유",
-      "desc": "HLB그룹, 15일 IR데이…10개 상장사 성장 전략 공유 데일리팜",
-      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE5DelA1WFFqSUZPSjE2akNNTWt1X2g3c3N6a0k2Tm5aUzg0TXg4bGFMQmF2MW5pLVVkX1VWbjdVdXFUVXpjazd1VTlDby1nX2c4R1oxdlNB?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "구호 외치는 약사들",
-      "desc": "구호 외치는 약사들 뉴스1",
-      "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iZlZBRzJUbXphQW9keVZNTjRNMWlsQXIwQlp3c21NY1MtVG5wYUFLLVNkcGY5OElWbHJpN3MzR0JDRy11VTM1dGpOSQ?oc=5",
+      "title": "일동제약, 복합 비타민제 '슈퍼라민 우르스·콰트로' 신제품 2종 선봬",
+      "desc": "약사의 복약 상담을 바탕으로 소비자가 복용 목적과 건강 상태에 맞춰 제품을 선택할 수 있도록... 넓히고 약사 상담을 연계한 브랜드를 선보이게 됐다고 말했다. 일동제약은 비타민 B군의 구성과 기타 성분을 달리한...",
+      "url": "http://www.thefirstmedia.net/news/articleView.html?idxno=210891",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -3109,17 +3091,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "글리프, 'GLP-1 애프터케어' 제품군 온라인 판매 개시...오프라인 21곳으...",
-      "desc": "한아원코리아에 따르면 글리프는 의사와 약사 5인으로 구성된 자문위원단의 의견을 반영해 제품 배합과 섭취 방식을 설계했다. 이창석 한아원코리아 브랜드 총괄이사는 \"온라인 판매 채널을 확대하면서...",
-      "url": "http://www.medical-tribune.co.kr/news/articleView.html?idxno=215479",
+      "title": "덱시아, 이너뷰티 신제품 '리프티놀 CRN 더 프리미엄' 출시",
+      "desc": "이 과정에서 의사·약사·한의사 등 전문가 3인과 덱시아 연구팀이 협업해 피부 노화와 이너뷰티에 관한 연구를 진행했으며, 이러한 연구 방향을 신제품에 반영했다는 설명이다. 제품의 핵심 성분인 리프티놀에는...",
+      "url": "https://www.enetnews.co.kr/news/articleView.html?idxno=55293",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "덱시아, 이너뷰티 신제품 '리프티놀 CRN 더 프리미엄' 출시",
-      "desc": "이 과정에서 의사·약사·한의사 등 전문가 3인과 덱시아 연구팀이 협업해 피부 노화와 이너뷰티에 관한 연구를 진행했으며, 이러한 연구 방향을 신제품에 반영했다는 설명이다. 제품의 핵심 성분인 리프티놀에는...",
-      "url": "https://www.enetnews.co.kr/news/articleView.html?idxno=55293",
+      "title": "글리프, 'GLP-1 애프터케어' 제품군 온라인 판매 개시...오프라인 21곳으...",
+      "desc": "한아원코리아에 따르면 글리프는 의사와 약사 5인으로 구성된 자문위원단의 의견을 반영해 제품 배합과 섭취 방식을 설계했다. 이창석 한아원코리아 브랜드 총괄이사는 \"온라인 판매 채널을 확대하면서...",
+      "url": "http://www.medical-tribune.co.kr/news/articleView.html?idxno=215479",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -3813,17 +3795,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "[부산은 오늘] 부산시교육청·부산교통공사·국립부경대",
-      "desc": "강의는 이호빈 약사와 이낙준 강사가 맡으며, 참가 신청은 14일 오전 10시부터 학부모지원포털을 통해 선착순으로 진행한다. 부산교통공사는 '제2회 대한민국 공기업 경영대상'에서 고객만족 대상과 종합대상을...",
-      "url": "http://www.iminju.net/news/articleView.html?idxno=170801",
+      "title": "아로나민 이어 엑세라민 그 다음은? 일동제약 '슈퍼라민'",
+      "desc": "슈퍼라민은 단순히 고함량의 비타민을 넣는 것보다 약사의 복약 상담을 기반으로 복용 목적과 건강 상태에... 성분 구성 등 제품 속성을 달리하고 약사 복약 상담 등 전문성이 더해진 브랜드를 선보이고자 했다고 밝혔다.",
+      "url": "https://www.hitnews.co.kr/news/articleView.html?idxno=79881",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "아로나민 이어 엑세라민 그 다음은? 일동제약 '슈퍼라민'",
-      "desc": "슈퍼라민은 단순히 고함량의 비타민을 넣는 것보다 약사의 복약 상담을 기반으로 복용 목적과 건강 상태에... 성분 구성 등 제품 속성을 달리하고 약사 복약 상담 등 전문성이 더해진 브랜드를 선보이고자 했다고 밝혔다.",
-      "url": "https://www.hitnews.co.kr/news/articleView.html?idxno=79881",
+      "title": "[부산은 오늘] 부산시교육청·부산교통공사·국립부경대",
+      "desc": "강의는 이호빈 약사와 이낙준 강사가 맡으며, 참가 신청은 14일 오전 10시부터 학부모지원포털을 통해 선착순으로 진행한다. 부산교통공사는 '제2회 대한민국 공기업 경영대상'에서 고객만족 대상과 종합대상을...",
+      "url": "http://www.iminju.net/news/articleView.html?idxno=170801",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -3853,17 +3835,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "'지역 내 강남' 몸값 뛴다…청약 경쟁률·집값도 차별화",
-      "desc": "단지가 들어서는 남춘천 일대는 온의동과 약사동 등을 중심으로 주거지역이 형성돼 있다. 춘천로와 경춘선·ITX-청춘이 정차하는 남춘천역, 춘천고속·시외버스터미널도 가깝다. IPARK현대산업개발은 이달 충북...",
-      "url": "https://www.newsis.com/view/NISX20261014_0003824974",
+      "title": "김천시, 약사회와 손잡고 ‘약 꾸러미’ 점검한다",
+      "desc": "김천시는 13일 김천시약사회와 ‘통합돌봄 다제약물관리사업’ 추진을 위한 업무협약을 맺었다. 의료·요양... 시는 약사회와 함께 약물 관리가 필요한 대상자를 찾아내고, 개인별 복용약 점검과 전문 복약 상담을 제공할...",
+      "url": "https://www.kbmaeil.com/article/20261014500196",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "김천시, 약사회와 손잡고 ‘약 꾸러미’ 점검한다",
-      "desc": "김천시는 13일 김천시약사회와 ‘통합돌봄 다제약물관리사업’ 추진을 위한 업무협약을 맺었다. 의료·요양... 시는 약사회와 함께 약물 관리가 필요한 대상자를 찾아내고, 개인별 복용약 점검과 전문 복약 상담을 제공할...",
-      "url": "https://www.kbmaeil.com/article/20261014500196",
+      "title": "'지역 내 강남' 몸값 뛴다…청약 경쟁률·집값도 차별화",
+      "desc": "단지가 들어서는 남춘천 일대는 온의동과 약사동 등을 중심으로 주거지역이 형성돼 있다. 춘천로와 경춘선·ITX-청춘이 정차하는 남춘천역, 춘천고속·시외버스터미널도 가깝다. IPARK현대산업개발은 이달 충북...",
+      "url": "https://www.newsis.com/view/NISX20261014_0003824974",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -3877,17 +3859,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "강원도약, 강원대 약학대학 재학생에 장학금 전달",
-      "desc": "강원도약사회(회장 이효선)는 지난 13일 오후 강원대 혁신제약임상연구동에서 강원대약학대학 재학생에게... 이날 전달식에는 이효선 회장을 비롯해 조귀녀 여약사이사, 조현종 강원대약학대학 학장, 김대희...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546308",
+      "title": "동아제약, 근육이완제 '스카풀라' 대용량 선봬… 상비용 선택지 확대",
+      "desc": "어깨 결림 등의 증상 완화에 도움을 주며, 장시간 책상 앞에 앉아 근무하는 직장인이나 운전자, 마라톤 등의 운동을 즐기는 이들이 약사와 상담을 거쳐 활용할 수 있다. 스카풀라 대용량 20정은 일반의약품으로 가까운...",
+      "url": "https://www.onews.tv/news/articleView.html?idxno=289089",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "동아제약, 근육이완제 '스카풀라' 대용량 선봬… 상비용 선택지 확대",
-      "desc": "어깨 결림 등의 증상 완화에 도움을 주며, 장시간 책상 앞에 앉아 근무하는 직장인이나 운전자, 마라톤 등의 운동을 즐기는 이들이 약사와 상담을 거쳐 활용할 수 있다. 스카풀라 대용량 20정은 일반의약품으로 가까운...",
-      "url": "https://www.onews.tv/news/articleView.html?idxno=289089",
+      "title": "강원도약, 강원대 약학대학 재학생에 장학금 전달",
+      "desc": "강원도약사회(회장 이효선)는 지난 13일 오후 강원대 혁신제약임상연구동에서 강원대약학대학 재학생에게... 이날 전달식에는 이효선 회장을 비롯해 조귀녀 여약사이사, 조현종 강원대약학대학 학장, 김대희...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546308",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4013,17 +3995,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "동아제약, 근육이완제 '스카풀라' 대용량 20정 출시…소비자 선택 넓혀",
-      "desc": "근육이완과 소염진통 복합 작용을 통해 어깨 결림 등 근육통 완화에 도움을 주며 장시간 운전하거나 책상 앞에서 오랜 시간 근무하는 직장인, 마라톤을 즐겨 뛰는 러너 등 근육통으로 불편함을 겪는 소비자들이 약사...",
-      "url": "http://www.whitepaper.co.kr/news/articleView.html?idxno=267747",
+      "title": "동국제약, 'DK Centellian'로 사명 변경 추진…\"소비재 사업 경험·역량 ...",
+      "desc": "제약업계 관계자는 “기존 제약업계가 주로 의사와 약사를 대상으로 제품을 알리고 영업하는 반면... 제약사들이 화장품을 약국을 중심으로 유통하거나 성형외과·피부과 등 의료기관과 연계하는 방식으로 사업을...",
+      "url": "https://www.megaeconomy.co.kr/news/newsview.php?ncode=1065571528266898",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "동국제약, 'DK Centellian'로 사명 변경 추진…\"소비재 사업 경험·역량 ...",
-      "desc": "제약업계 관계자는 “기존 제약업계가 주로 의사와 약사를 대상으로 제품을 알리고 영업하는 반면... 제약사들이 화장품을 약국을 중심으로 유통하거나 성형외과·피부과 등 의료기관과 연계하는 방식으로 사업을...",
-      "url": "https://www.megaeconomy.co.kr/news/newsview.php?ncode=1065571528266898",
+      "title": "동아제약, 근육이완제 '스카풀라' 대용량 20정 출시…소비자 선택 넓혀",
+      "desc": "근육이완과 소염진통 복합 작용을 통해 어깨 결림 등 근육통 완화에 도움을 주며 장시간 운전하거나 책상 앞에서 오랜 시간 근무하는 직장인, 마라톤을 즐겨 뛰는 러너 등 근육통으로 불편함을 겪는 소비자들이 약사...",
+      "url": "http://www.whitepaper.co.kr/news/articleView.html?idxno=267747",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4101,17 +4083,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "동아제약, 근육이완제 '스카풀라' 20정 선봬…기존 대비 용량 2배",
-      "desc": "장시간 운전하거나 책상 앞에서 오랜 시간 근무하는 직장인뿐 아니라 마라톤 등 운동을 즐기는 소비자도 근육통이 발생했을 때 약사와 상담해 사용할 수 있다. 스카풀라 20정은 일반의약품으로 약국에서 구매할 수...",
-      "url": "https://www.mdtoday.co.kr/news/articleView.html?idxno=618641",
+      "title": "프랑스 개원가의 진찰료 인상 요구에 담긴 함의",
+      "desc": "반면에 다른 유럽 국가의 경우 의원급 의료기관에서 간호사, 의료 보조 인력, 약사뿐 아니라 진료... 진료간호사, 약사, 물리치료사, 응급구조사, 사회적처방연계담당인력(practice nurse, pharmacist, physiotherapist...",
+      "url": "https://www.medigatenews.com/news/1218079698",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "프랑스 개원가의 진찰료 인상 요구에 담긴 함의",
-      "desc": "반면에 다른 유럽 국가의 경우 의원급 의료기관에서 간호사, 의료 보조 인력, 약사뿐 아니라 진료... 진료간호사, 약사, 물리치료사, 응급구조사, 사회적처방연계담당인력(practice nurse, pharmacist, physiotherapist...",
-      "url": "https://www.medigatenews.com/news/1218079698",
+      "title": "동아제약, 근육이완제 '스카풀라' 20정 선봬…기존 대비 용량 2배",
+      "desc": "장시간 운전하거나 책상 앞에서 오랜 시간 근무하는 직장인뿐 아니라 마라톤 등 운동을 즐기는 소비자도 근육통이 발생했을 때 약사와 상담해 사용할 수 있다. 스카풀라 20정은 일반의약품으로 약국에서 구매할 수...",
+      "url": "https://www.mdtoday.co.kr/news/articleView.html?idxno=618641",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4213,17 +4195,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "소변 줄기가 약해졌다면, 전립선비대증 약이 일하는 방식",
-      "desc": "다른 약을 새로 처방받거나 구입하실 때는 전립선비대증 약을 복용 중이라고 의료진이나 약사에게 알리는 게 좋습니다. ●약을 바꾸거나 다음 단계를 고려하는 때 그렇다고 약을 이어가는 것만이 답은 아닙니다. 꾸준히...",
-      "url": "https://sports.donga.com/life/article/all/20261014/134836783/1",
+      "title": "'치료목적 사용승인' 제도, 승인 후 실제 투약까지 평균 약 3개월 소요",
+      "desc": "약사법 제34조의6은 생명을 위협하는 중대한 질환을 가진 환자나 대체 치료수단이 없는 환자 등에 한해... 제약사의 공급 결정, 해외 의약품 수입·통관, 병원의 투약 준비 등 승인 이후 어느 단계에서 시간이 걸리는지는...",
+      "url": "https://www.mdtoday.co.kr/news/articleView.html?idxno=618398",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "'치료목적 사용승인' 제도, 승인 후 실제 투약까지 평균 약 3개월 소요",
-      "desc": "약사법 제34조의6은 생명을 위협하는 중대한 질환을 가진 환자나 대체 치료수단이 없는 환자 등에 한해... 제약사의 공급 결정, 해외 의약품 수입·통관, 병원의 투약 준비 등 승인 이후 어느 단계에서 시간이 걸리는지는...",
-      "url": "https://www.mdtoday.co.kr/news/articleView.html?idxno=618398",
+      "title": "소변 줄기가 약해졌다면, 전립선비대증 약이 일하는 방식",
+      "desc": "다른 약을 새로 처방받거나 구입하실 때는 전립선비대증 약을 복용 중이라고 의료진이나 약사에게 알리는 게 좋습니다. ●약을 바꾸거나 다음 단계를 고려하는 때 그렇다고 약을 이어가는 것만이 답은 아닙니다. 꾸준히...",
+      "url": "https://sports.donga.com/life/article/all/20261014/134836783/1",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4253,14 +4235,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "현 비대위 확대·보강 택한 약사회…정책 대응력 '시험대'",
-      "desc": "대한약사회가 현 ‘국민건강권 사수 비상대책위원회’를 확대·보강해 현안 대응을 이어가기로 하면서... 앞서 지난 11일 열린 대한약사회 임시대의원총회에서는 기존 비대위를 대체하는 새로운 비상대책기구 설치안이...",
-      "url": "https://www.yakup.com/news/index.html?mode=view&cat=17&nid=333697",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "[2026 국정감사] 미프진 허가 놓고 갈라진 여야…안전성 검증·관리체계...",
       "desc": "이 의원은 약사법 제68조 제4항이 임신중지를 암시하는 의약품 광고 등의 제한에 관한 조항이라는 점을... 이 의원은 중앙약사심의위원회가 가교시험 필요성 등 임신중지의약품 허가와 관련한 사항을 논의해 왔다는 점도...",
       "url": "https://www.yakup.com/news/index.html?mode=view&cat=11&nid=333701",
@@ -4272,6 +4246,14 @@
       "title": "비대면 초진 처방 '7일 vs 30일'…복지부 시행규칙 딜레마",
       "desc": "의료계·약계 \"대면 진료·재진 중심 원칙 위해 7일 제한\" 대한의사협회와 대한약사회 등 보건의료단체는... 의·약사와 복지부 간 갈등 국면에 진입하게 될 공산이 크다. 더욱이 복지부 입법예고가 예상되는 시점은 국회...",
       "url": "https://www.dailypharm.com/user/news/343375?REFERER=NP",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "현 비대위 확대·보강 택한 약사회…정책 대응력 '시험대'",
+      "desc": "대한약사회가 현 ‘국민건강권 사수 비상대책위원회’를 확대·보강해 현안 대응을 이어가기로 하면서... 앞서 지난 11일 열린 대한약사회 임시대의원총회에서는 기존 비대위를 대체하는 새로운 비상대책기구 설치안이...",
+      "url": "https://www.yakup.com/news/index.html?mode=view&cat=17&nid=333697",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4309,17 +4291,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "안과 문전 약사가 제일 많이 받는 질문 베스트 7 ①",
-      "desc": "안녕하세요. 저는 2004년부터 남원에서 안과문전인 밝은약국을 운영중인 김동신입니다. 제가 약제병으로 군복무를 할때 여러 군의관들과 생활을 했었는데,그중 한분이 안과 전문의 였는데 그분이 안과질환과 환자에 대해서...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546246",
+      "title": "\"창고형 약국 불법개설 조사 강화\"…복지부, 특사경 도입도 추진",
+      "desc": "관련 약사법 개정안은 지난 9월 28일 국회 법제사법위원회를 거쳐 10월 1일 본회의를 통과했다. 수면유도제 대량판매도 도마…복지부 \"약사윤리기준 위반 시 제재\" 이만희 의원은 권영희 대한약사회장과 창고형 약국 관계자...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546276",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "\"창고형 약국 불법개설 조사 강화\"…복지부, 특사경 도입도 추진",
-      "desc": "관련 약사법 개정안은 지난 9월 28일 국회 법제사법위원회를 거쳐 10월 1일 본회의를 통과했다. 수면유도제 대량판매도 도마…복지부 \"약사윤리기준 위반 시 제재\" 이만희 의원은 권영희 대한약사회장과 창고형 약국 관계자...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546276",
+      "title": "\"금연약국 도입하자\"…복지부, 약국 금연지원 참여 검토",
+      "desc": "서 의원은 금연지원사업 개편안에 약국의 참여 방안과 약사의 역할을 구체적으로 담아야 한다고 주문했다. 특히 약사의 상담 프로토콜과 보상체계, 보건소·의료기관 연계 계획 등을 명확하게 마련해 약국의 금연지원...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546281",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4333,9 +4315,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "\"금연약국 도입하자\"…복지부, 약국 금연지원 참여 검토",
-      "desc": "서 의원은 금연지원사업 개편안에 약국의 참여 방안과 약사의 역할을 구체적으로 담아야 한다고 주문했다. 특히 약사의 상담 프로토콜과 보상체계, 보건소·의료기관 연계 계획 등을 명확하게 마련해 약국의 금연지원...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546281",
+      "title": "안과 문전 약사가 제일 많이 받는 질문 베스트 7 ①",
+      "desc": "안녕하세요. 저는 2004년부터 남원에서 안과문전인 밝은약국을 운영중인 김동신입니다. 제가 약제병으로 군복무를 할때 여러 군의관들과 생활을 했었는데,그중 한분이 안과 전문의 였는데 그분이 안과질환과 환자에 대해서...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546246",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4357,6 +4339,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "비만주사 '원외처방 원칙'…복지부, 위반 사례 수사의뢰",
+      "desc": "의약품은 원칙적으로 약사가 조제하고, 의사의 직접 조제는 예외적으로 허용된 경우에 한정된다는 설명이다. 주사제 역시 약사법상 '주사제를 주사하는 경우'에 의약분업 예외가 인정되며, 자가주사제는 올바른...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546266",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "다음달 나올 통합돌봄 기본계획에 약사 참여확대 기대감 커지나?",
       "desc": "지역 상황에 따른 약사의 참여에도 어떤 변화가 있을지 주목되고 있다. 보건복지부는 국정감사를 앞두고 보건복지위원회 위원들의 사전 서면 질의에 통합돌봄 대상자를 단계적으로 확대하는 계획을 공식화했다....",
       "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546261",
@@ -4368,14 +4358,6 @@
       "title": "[인슐랭가이드] 고사리 크림 수제비와 동치미 카펠리니까지, 한식의 변...",
       "desc": "인슐랭가이드는 [꼭꼭 씹는 행복, 인사돌]과 약사공론이 함께합니다. 전주 한옥마을에 놀러 갔다가 알게 된... 정희 전주한옥마을점 추천인: 박인숙 약사 위치: 전북 전주시 완산구 은행로 40 정희 전주 한옥마을점 추천메뉴...",
       "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546228",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "비만주사 '원외처방 원칙'…복지부, 위반 사례 수사의뢰",
-      "desc": "의약품은 원칙적으로 약사가 조제하고, 의사의 직접 조제는 예외적으로 허용된 경우에 한정된다는 설명이다. 주사제 역시 약사법상 '주사제를 주사하는 경우'에 의약분업 예외가 인정되며, 자가주사제는 올바른...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546266",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -4429,25 +4411,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "비만치료제 10% 할인?…지역화폐 사용처 ‘갑론을박’",
-      "desc": "일부 약사는 비만치료제의 높은 가격대를 언급하며 오히려 결제를 권하기도 했다. 위고비와 마운자로는 주 1회 투약하는 피하주사 형태의 비만 치료제로, GLP-1 등 호로몬 수용체에 작용해 식욕을 억제한다. 투약 용량과...",
-      "url": "http://www.kjdaily.com/article.php?aid=1791890230689000005",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "중구의회 복지건설위원회, 어린이집·노인복지관 찾아 현장 활동",
-      "desc": "중 약사다목적체육관과 우리함께 어린이집, 함월·종갓집노인복지관 등을 찾아 현장 활동을 벌이고 있다. 울산시 중구의회 복지건설위원회는 13일 제285회 중구의회 임시회 기간 중 약사다목적체육관과 우리함께 어린이집...",
-      "url": "http://www.ujeil.com/news/articleView.html?idxno=393412",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "충남교육청, 위(Wee) 상담인력 60명 제주 연수… 학생 상담 품질 높이기 위한 ‘상담자 회복’ 지원",
       "desc": "충남교육청, 위(Wee) 상담인력 60명 제주 연수… 학생 상담 품질 높이기 위한 ‘상담자 회복’ 지원 아산데일리",
       "url": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE0yZ29rRWZQel9TTmlqR1VqM2lxS19abnhMSC1OdC1vVmg3U2xpUWo0MkY5NXZPdDhpTEJRRmFmVnB5T3dCNExyUkRseFhhb2FpQjZv?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "생활권 숲에서 스트레스 53% 감소…정신건강 종사자 산림치유 효과 확인",
+      "desc": "이번 프로그램에는 의료기관에서 근무하는 간호사와 임상심리사 등 정신건강 분야 종사자 11명이 참여했다. 산림치유서비스가 현장에서 활용될 가능성을 살펴보고, 업무 과정에서 정서적 부담을 겪는 종사자의 휴식과...",
+      "url": "https://www.youngnong.co.kr/news/articleView.html?idxno=71076",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -5533,17 +5507,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "배재대 수시모집 1895명…최초합격자 전원에 장학금 100만원",
-      "desc": "유아교육과는 71년 전통과 3000여 명의 동문을 자랑하며, 심리상담학과는 임상심리사·청소년상담사 등 전문 자격증 취득이 가능하다. 항공서비스학과는 국내외 항공사 체험교육을 통해 객실승무원 전문인력을...",
-      "url": "https://www.news1.kr/local/daejeon-chungnam/6259482",
+      "title": "[촉법소年이 놓친 것]④ 보호소년 '어른'으로 성장시킨 '어른들'",
+      "desc": "정 시설장은 \"첫째는 인력 구축이고 두 번째는 종사자 처우 개선\"이라며 \"임상심리사나 상담 전문가가 있어야 아이들에게 제대로 된 서비스를 제공할 수 있다\"고 말했다. 오 시설장도 \"인력이 없는 상태에서 시설 숫자만...",
+      "url": "https://www.newspim.com/news/view/20260814000063",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[촉법소年이 놓친 것]④ 보호소년 '어른'으로 성장시킨 '어른들'",
-      "desc": "정 시설장은 \"첫째는 인력 구축이고 두 번째는 종사자 처우 개선\"이라며 \"임상심리사나 상담 전문가가 있어야 아이들에게 제대로 된 서비스를 제공할 수 있다\"고 말했다. 오 시설장도 \"인력이 없는 상태에서 시설 숫자만...",
-      "url": "https://www.newspim.com/news/view/20260814000063",
+      "title": "배재대 수시모집 1895명…최초합격자 전원에 장학금 100만원",
+      "desc": "유아교육과는 71년 전통과 3000여 명의 동문을 자랑하며, 심리상담학과는 임상심리사·청소년상담사 등 전문 자격증 취득이 가능하다. 항공서비스학과는 국내외 항공사 체험교육을 통해 객실승무원 전문인력을...",
+      "url": "https://www.news1.kr/local/daejeon-chungnam/6259482",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -5845,14 +5819,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "대동병원, 단도박 프로그램 '자리매김'",
-      "desc": "G그룹은 2014년 9월 정신건강의학과 전문의(DR), 간호사(NS), 정신건강사회복지사(PSW), 임상심리사(CP)로 구성된 치료팀이 스터디를 시작하면서 출발했다. 같은 해 12월 단도박그룹을 정식 발족해 첫 회기를 진행했으며...",
-      "url": "https://www.idaegu.co.kr/news/articleView.html?idxno=555271",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "김천시·약사회, 여러 약 복용하는 돌봄 대상자 안전관리 협력",
       "desc": "김천시·약사회, 여러 약 복용하는 돌봄 대상자 안전관리 협력 경북일보",
       "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5KcFBDOFZvcHJYY3pWdEc4VG5aVHp2cUMycmdYNWQyWEJ1eDFiUmpOTjlVNk5GZ2dwOGw1bGxzOXN2ZF9hYklqTTg0SWVIbFNraUhJUW1DZVVWMVpvNlUwaEk5QkljMkhmM2NKZy1uRQ?oc=5",
@@ -5861,9 +5827,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "병원약사회, 관리자 역량강화교육 '미래 병원약사' 역할 모색",
-      "desc": "병원약사회, 관리자 역량강화교육 '미래 병원약사' 역할 모색 의약뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTFBLUHdRLXp1TVBTS2NvZ2swR2o4aktwWHFmdjZiZTBSTmNvRV9FNl9Oc2p2Wm1QZXJnWmVpU210bTVOWk9Jd1oyT3Y5dFBzYUFRaW1UZlJkbG5mX0hlMnNvdWRyaGJfLU5B?oc=5",
+      "title": "“닥터나우, 건강정보 얼마나 보관하나”…약사회, 관리실태 공개 요구",
+      "desc": "“닥터나우, 건강정보 얼마나 보관하나”…약사회, 관리실태 공개 요구 뉴스더보이스헬스케어",
+      "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE1LRkVkcm55cUd1UEttZzVXWHRkcndxendJbXNYeXhRampGQjNIQzNuOEY4OXVBQjdTcGZ6Q2JlSFdjV0YtbDlKZTc4SFV4OTVLNDNhc0VVYUNkNGp0aHlObXo1anNEYTF3S2hzeFU0RQ?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -5872,6 +5838,14 @@
       "title": "김천시, 약사회와 손잡고 ‘약 꾸러미’ 점검한다",
       "desc": "김천시, 약사회와 손잡고 ‘약 꾸러미’ 점검한다 경북매일",
       "url": "https://news.google.com/rss/articles/CBMiWkFVX3lxTE5lWjhkZDBYdkprcjl3a3AtM05HaERJb09zU09OUjBGWHhzMXdRbjVmTkZITC14YVVsUkZlbFAxZEk0NmpxME02Z0tYa0NpVTBMZDk1WktHMWVvUQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "김천시, 통합돌봄 서비스 확대 위해 김천시약사회와 업무협약 체결",
+      "desc": "김천시, 통합돌봄 서비스 확대 위해 김천시약사회와 업무협약 체결 한길뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5Ja29TaGUtYWp4M0J5elkzUUx0SVRTRDY0TlJxaUxKdTJGNVZxY0NJMFF6VzVrVHpMUEE4aThUbEcyVWp1WGZYY3VMMFZKSEE?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -5888,14 +5862,6 @@
       "title": "현 비대위 확대·보강 택한 약사회…정책 대응력 '시험대'",
       "desc": "현 비대위 확대·보강 택한 약사회…정책 대응력 '시험대' 약업신문",
       "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE5aM05XSlloTGxua1dhQ1lMaEd6ZThnWUU3VWpWdzUtSDdobVc3S3RTSkdxQU9PMkZubFFfX3JYdVVfRUZaUTc5azBwQkVLTm5nQmIwUVlucTk3MHFfT3J5aUFBUWV6UQ?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "김천시, 통합돌봄 서비스 확대 위해 김천시약사회와 업무협약 체결",
-      "desc": "김천시, 통합돌봄 서비스 확대 위해 김천시약사회와 업무협약 체결 한길뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5Ja29TaGUtYWp4M0J5elkzUUx0SVRTRDY0TlJxaUxKdTJGNVZxY0NJMFF6VzVrVHpMUEE4aThUbEcyVWp1WGZYY3VMMFZKSEE?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6021,9 +5987,25 @@
       "reason": "title_rules"
     },
     {
+      "title": "피부에 직접 주입하는 ECM 스킨부스터…안전관리 사각지대 도마",
+      "desc": "피부에 직접 주입하는 ECM 스킨부스터…안전관리 사각지대 도마 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1aNHp6M2J4Vmo2Q3BZVHM3VjRkeTBJcUI3dzBPbGJLMi1kbnB6WEJ6ZXJISFFYemdZNHoyOVJvZnBwU2J6VjdRNDF1SWhtV0RUNlJuUlU0UmYtSFdXZFRYN3A5VG5oUEhYbUwwTA?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "부산교육청, 약사회와 손잡고 학생 유해약물 예방교육 강화",
       "desc": "부산교육청, 약사회와 손잡고 학생 유해약물 예방교육 강화 세계일보",
       "url": "https://news.google.com/rss/articles/CBMiVEFVX3lxTFBocHRkdGtWUXJET0RWenJVVEF1MTRoVTNId0FWOURKelo5XzZ4eWw2RHdFZEkxX1k2OVZRNTFET1cwMEEyQ01hd2VfNWpXUXRWbzJxbdIBVEFVX3lxTFBocHRkdGtWUXJET0RWenJVVEF1MTRoVTNId0FWOURKelo5XzZ4eWw2RHdFZEkxX1k2OVZRNTFET1cwMEEyQ01hd2VfNWpXUXRWbzJxbQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "신약 혁신부터 안전관리 공백까지…식약처 국정감사 '미리보기'",
+      "desc": "신약 혁신부터 안전관리 공백까지…식약처 국정감사 '미리보기' 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9Dam55WnExNnV1Yk1mZzM2WHZ2UzhYUnFLYVkxYkdmX0FFbjRZN0lDeFlfUUwtSTBxVDhOM0twLWVkTXc3aXFfeUE4a09XbGE0b0wxNEw2a0VaZWdUa09yRkNNbTlLMUUtQXdEWg?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6095,6 +6077,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "부산교육청·약사회, 약물 오·남용 예방 교육 업무협약",
+      "desc": "부산교육청·약사회, 약물 오·남용 예방 교육 업무협약 노컷뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBHRDNUSk9WTHU5VDFldU9fY1lCNl9DN2IzYTh1MUFXS2tXVjZwakFaOVdnUWU4YV81MFNRYmxNZ3lFMERSa3Badnk4cHZGNWg4TkE?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "대한약사회, 비대면진료·약 배송 확대 반대",
       "desc": "대한약사회, 비대면진료·약 배송 확대 반대 뉴스1",
       "url": "https://www.news1.kr/photos/8152653",
@@ -6118,6 +6108,14 @@
       "title": "[부산교육소식]교육청, 약사회와 학생 약물 예방교육 강화 외",
       "desc": "[부산교육소식]교육청, 약사회와 학생 약물 예방교육 강화 외 데일리한국",
       "url": "https://news.google.com/rss/articles/CBMib0FVX3lxTE5qQnlvT3NhaDNuVjVZUldWZ2JCcnkyNVdPWXpfMWFocEp3cDFqMGRUN091M3ozTTMxekN1UXBPS0NTRnduWFpoak5NRnJ2c1NvU1NmYzNVeEpIZlh3cGlaWVp5UTN1dzkzUThtNGhtVdIBc0FVX3lxTE1EUmJDUzNUNVVUN0gyVmpTT05vczVsRnoyV3NFQndLS0M4VEJWSk0tbVI2NExLXzZ1TzRGV2lLNGJ2NFBMRlNKbzhkeG1xbzVUVWFobjFxSU9zdjhXYTk2TXR2MWcza05YNDFPSG9uOE9SNk0?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "단계가 많은 게임인지 비교하는 룰렛' 진행 구조",
+      "desc": "단계가 많은 게임인지 비교하는 룰렛' 진행 구조 Calgary Roughnecks",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBoeUd4QXZ0OWxHWlRvOG5NVGNGQWxVb3ZYMERhTklwY0ZoQkRwRFZXNXNGMmd6UEdWdkE5OVEwMWE0cnZwSXlSaFdfREhrNjlidlBZTlZjUFJXbEoxUXRva05vR1hzR0U?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6163,49 +6161,17 @@
       "reason": "title_rules"
     },
     {
+      "title": "구호 외치는 약사들",
+      "desc": "구호 외치는 약사들 뉴스1",
+      "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE1iZlZBRzJUbXphQW9keVZNTjRNMWlsQXIwQlp3c21NY1MtVG5wYUFLLVNkcGY5OElWbHJpN3MzR0JDRy11VTM1dGpOSQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "질병관리청 인사발령(10/12)",
       "desc": "질병관리청 인사발령(10/12) 약사공론",
       "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE5IWGh6VUkyazQ0dmpWZkc5VlhNNVNVSFRyV3k2VkJnbDlkN0o0OVltZnYwS2psTGM4TVVfUmJxQVppb2xpVFNMM25IeTlNcVBnWkRvLU9kWDZpcmhYVjdOZ194WmJ1OElUYUJtYg?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "부산교육청, 학생 약물 오·남용 막는다…약사회와 예방교육 강화",
-      "desc": "부산교육청, 학생 약물 오·남용 막는다…약사회와 예방교육 강화 더쎈뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE5ORjM2TFBWdUVjalhzN2llTFR3aDM3cUZuaU5EY1NsbU9id281YWotUHNSZjlUUWlBSTBVaXNYWHMzVkZMdlFjbTh1ejFmQjVGWjlmc1VUdS1scFQ4cHpUTkIxY1NzZGNx?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "목포 토토즐 게임 내 언어 설정 확인",
-      "desc": "목포 토토즐 게임 내 언어 설정 확인 Calgary Roughnecks",
-      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBIWFV1T0t3dVdDV0x3TlBBeWJEZTNtNDY3TUpsckNDT2dxdUh3NkFEcW9rRmU1czdDUWliVUg1ajRhVEp6N29UQTJuaXliWnJOcVpUa3dPZDZrTzhrMERIMEJJSjczeHJ3NGR2WlRDRnhENUtm?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "임시대의원총회 앞서 인사하는 권영희 대한약사회장",
-      "desc": "임시대의원총회 앞서 인사하는 권영희 대한약사회장 뉴시스",
-      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1IQVVIdTdKcmR4cUNXaV8tb1hiQWdzOFdqVUNkdzlzVGZKS2xmYWh6RUJYYW1xTHUzb093SkRHcGN6X1VIb0dnRlBWT0Uwa3hmZUJyMmdTMXpIN2s0M3pJOQ?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "부산교육청·부산시약사회, 약물 오·남용 예방교육 활성화 맞손",
-      "desc": "부산교육청·부산시약사회, 약물 오·남용 예방교육 활성화 맞손 부산파이낸셜뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiXEFVX3lxTE9VMWZpM3VmOFVLT3hpbVdFLUhDZU01QU0wY2hqdmt2WHgwZGZITUhVWGl3YS1BYkpDZUFjcGt2UDRDUDdDbWQtd1g2NDViMHNvR19ReGJfeEVWZFE3?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "권영희 \"기형적인 창고형약국, 안전은 뒷전…강력 규제법 필요\"",
-      "desc": "권영희 \"기형적인 창고형약국, 안전은 뒷전…강력 규제법 필요\" 약사공론",
-      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1CVlRGeXZGWFhaUElBZ0x2SjNVcWVoWF83R3dXQUt0cG9TRzloOHhXTHpiRk44VGNjN0FkWjhsQ2U3TDEtcmxYbXBaZmpwNnBwVVQxZ3lvWWt2WndMSkVFWGhrN0ZBUF85a0oxTA?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6611,17 +6577,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "대약, '현 비대위 체제'에 역량 총집결…내부 소통·전문성 강화",
-      "desc": "대한약사회가 현재 가동 중인 '국민건강권 사수 비상대책위원회'(이하 비대위) 체제에 더욱 힘을 싣고 조직을... 약사회는 이번 총회 결과를 바탕으로 그간 지적된 내부 소통 부재 문제를 적극적으로 보완하는 한편, 정책 및...",
-      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306851",
+      "title": "인천시약사회, 서해 일대서 바다낚시 행사 개최",
+      "desc": "인천광역시약사회는 지난 11일 서해 일대에서 회원 약사와 가족 등 16명이 참여한 가운데 '2026 주꾸미·갑오징어 바다낚시 행사'를 개최했다고 13일 밝혔다. 이번 행사는 인천광역시약사회 산하 바다낚시 동호회인 해조사단...",
+      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306856",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "인천시약사회, 서해 일대서 바다낚시 행사 개최",
-      "desc": "인천광역시약사회는 지난 11일 서해 일대에서 회원 약사와 가족 등 16명이 참여한 가운데 '2026 주꾸미·갑오징어 바다낚시 행사'를 개최했다고 13일 밝혔다. 이번 행사는 인천광역시약사회 산하 바다낚시 동호회인 해조사단...",
-      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306856",
+      "title": "대약, '현 비대위 체제'에 역량 총집결…내부 소통·전문성 강화",
+      "desc": "대한약사회가 현재 가동 중인 '국민건강권 사수 비상대책위원회'(이하 비대위) 체제에 더욱 힘을 싣고 조직을... 약사회는 이번 총회 결과를 바탕으로 그간 지적된 내부 소통 부재 문제를 적극적으로 보완하는 한편, 정책 및...",
+      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306851",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6891,33 +6857,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "인사말 하는 권영희 대한약사회장",
-      "desc": "권영희 대한약사회 회장이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 인사말을 하고 있다. 2026.10.11. kch0523@newsis.com",
-      "url": "https://www.newsis.com/view/NISI20261011_0021484100",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "대한약사회 임시대의원총회",
       "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
-      "url": "https://www.newsis.com/view/NISI20261011_0021484112",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "대한약사회 임시대의원총회",
-      "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
-      "url": "https://www.newsis.com/view/NISI20261011_0021484105",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "인사말 하는 권영희 대한약사회장",
-      "desc": "권영희 대한약사회 회장이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 인사말을 하고 있다. 2026.10.11. kch0523@newsis.com",
-      "url": "https://www.newsis.com/view/NISI20261011_0021484101",
+      "url": "https://www.newsis.com/view/NISI20261011_0021484116",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6933,15 +6875,31 @@
     {
       "title": "대한약사회 임시대의원총회",
       "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
+      "url": "https://www.newsis.com/view/NISI20261011_0021484114",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "대한약사회 임시대의원총회",
+      "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
       "url": "https://www.newsis.com/view/NISI20261011_0021484113",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "대한약사회 임시대의원총회",
-      "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
-      "url": "https://www.newsis.com/view/NISI20261011_0021484116",
+      "title": "인사말 하는 권영희 대한약사회장",
+      "desc": "권영희 대한약사회 회장이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 인사말을 하고 있다. 2026.10.11. kch0523@newsis.com",
+      "url": "https://www.newsis.com/view/NISI20261011_0021484100",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "인사말 하는 권영희 대한약사회장",
+      "desc": "권영희 대한약사회 회장이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 인사말을 하고 있다. 2026.10.11. kch0523@newsis.com",
+      "url": "https://www.newsis.com/view/NISI20261011_0021484101",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -6949,7 +6907,15 @@
     {
       "title": "대한약사회 임시대의원총회",
       "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
-      "url": "https://www.newsis.com/view/NISI20261011_0021484114",
+      "url": "https://www.newsis.com/view/NISI20261011_0021484105",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "대한약사회 임시대의원총회",
+      "desc": "권영희 대한약사회 회장을 비롯한 임원들이 11일 서울 서초구 대한건축사협회에서 열린 대한약사회 2026년도 임시대의원총회에서 구호를 외치고 있다. 2026.10.11. kch0523@newsis.com",
+      "url": "https://www.newsis.com/view/NISI20261011_0021484112",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -7059,6 +7025,14 @@
       "reason": "metadata_unavailable"
     },
     {
+      "title": "인사말 하는 권영희 대한약사회장",
+      "desc": "권영희 대한약사회장이 11일 서울 서초구 대한건축사협회 컨벤션홀에서 열린 대한약사회 임시대의원총회에서 인사말을 하고 있다. 2026.10.11/뉴스1",
+      "url": "https://www.news1.kr/photos/8152643",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "한자리에 모인 약사들",
       "desc": "11일 서울 서초구 대한건축사협회 컨벤션홀에서 열린 대한약사회 임시대의원총회에서 약사들이 비대면진료 및 의약품 배송 확대 중단을 촉구하는 구호를 외치고 있다. 이날 총회에서는 의약품 배송 확대와 창고형...",
       "url": "https://www.news1.kr/photos/8152652",
@@ -7067,14 +7041,6 @@
       ],
       "status": "candidate",
       "reason": "metadata_unavailable"
-    },
-    {
-      "title": "인사말 하는 권영희 대한약사회장",
-      "desc": "권영희 대한약사회장이 11일 서울 서초구 대한건축사협회 컨벤션홀에서 열린 대한약사회 임시대의원총회에서 인사말을 하고 있다. 2026.10.11/뉴스1",
-      "url": "https://www.news1.kr/photos/8152643",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
     },
     {
       "title": "한자리에 모인 약사들",
@@ -7113,17 +7079,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "양산부산대병원 김현수·송혜민 약사 표창",
-      "desc": "양산부산대학교병원은 약제부 김현수 약사와 송혜민 약사가 ‘부산·울산·경남 병원약사회 총회와 추계학술세미나’에서 표창을 받았다고 11일 밝혔다. 김 약사는 부울경 병원약사회장 표창을, 송 약사는...",
-      "url": "https://www.busan.com/view/busan/view.php?code=2026101018401785070",
+      "title": "[인천 대전환, 우리가 나선다] ⓹제물포구-제물포e음·건강이음…지역경...",
+      "desc": "구는 인천의료원을 비롯한 의료기관 7곳과 제물포·영종구 약사회 등 8개 기관과 협력체계를 구축했다. 가사와 식사, 이동, 방문목욕 등 일상생활을 지원할 수행기관 6곳도 선정했다. 지원 대상은 의료와 요양, 돌봄이...",
+      "url": "https://www.kgnews.co.kr/news/article.html?no=914572",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[인천 대전환, 우리가 나선다] ⓹제물포구-제물포e음·건강이음…지역경...",
-      "desc": "구는 인천의료원을 비롯한 의료기관 7곳과 제물포·영종구 약사회 등 8개 기관과 협력체계를 구축했다. 가사와 식사, 이동, 방문목욕 등 일상생활을 지원할 수행기관 6곳도 선정했다. 지원 대상은 의료와 요양, 돌봄이...",
-      "url": "https://www.kgnews.co.kr/news/article.html?no=914572",
+      "title": "양산부산대병원 김현수·송혜민 약사 표창",
+      "desc": "양산부산대학교병원은 약제부 김현수 약사와 송혜민 약사가 ‘부산·울산·경남 병원약사회 총회와 추계학술세미나’에서 표창을 받았다고 11일 밝혔다. 김 약사는 부울경 병원약사회장 표창을, 송 약사는...",
+      "url": "https://www.busan.com/view/busan/view.php?code=2026101018401785070",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -8465,6 +8431,22 @@
       "reason": "title_rules"
     },
     {
+      "title": "임시대의원총회 앞서 인사하는 권영희 대한약사회장",
+      "desc": "임시대의원총회 앞서 인사하는 권영희 대한약사회장 뉴시스",
+      "url": "https://news.google.com/rss/articles/CBMiYEFVX3lxTE1IQVVIdTdKcmR4cUNXaV8tb1hiQWdzOFdqVUNkdzlzVGZKS2xmYWh6RUJYYW1xTHUzb093SkRHcGN6X1VIb0dnRlBWT0Uwa3hmZUJyMmdTMXpIN2s0M3pJOQ?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "권영희 \"기형적인 창고형약국, 안전은 뒷전…강력 규제법 필요\"",
+      "desc": "권영희 \"기형적인 창고형약국, 안전은 뒷전…강력 규제법 필요\" 약사공론",
+      "url": "https://news.google.com/rss/articles/CBMibEFVX3lxTE1CVlRGeXZGWFhaUElBZ0x2SjNVcWVoWF83R3dXQUt0cG9TRzloOHhXTHpiRk44VGNjN0FkWjhsQ2U3TDEtcmxYbXBaZmpwNnBwVVQxZ3lvWWt2WndMSkVFWGhrN0ZBUF85a0oxTA?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "한자리에 모인 약사들",
       "desc": "한자리에 모인 약사들 뉴스1",
       "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE9KRkswbERKWDB0aUVnY01zVk5tNFF2ZEVzRkJZbUloRDMzXzNXMnlUM0pqTXZsTVdqdndLVDFVcEd2bUpzcW82aDNPaw?oc=5",
@@ -8476,6 +8458,14 @@
       "title": "창고형 약국 방치하면 동네약국 사라진다",
       "desc": "창고형 약국 방치하면 동네약국 사라진다 뉴스1",
       "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5jRkpDeVAzMTlyTzhOQnhqUHhUakctWXlEQzIxYXB3TmM0TGZpY05qYUVBR2tSSGFwTXRwUTBJZlpqakNiNWpXY19rMA?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "목포 토토즐 게임 내 언어 설정 확인",
+      "desc": "목포 토토즐 게임 내 언어 설정 확인 Calgary Roughnecks",
+      "url": "https://news.google.com/rss/articles/CBMidEFVX3lxTFBIWFV1T0t3dVdDV0x3TlBBeWJEZTNtNDY3TUpsckNDT2dxdUh3NkFEcW9rRmU1czdDUWliVUg1ajRhVEp6N29UQTJuaXliWnJOcVpUa3dPZDZrTzhrMERIMEJJSjczeHJ3NGR2WlRDRnhENUtm?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -8907,9 +8897,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "'약사 현안' 품은 건강서울…서울시약 \"약사·약국 역할 다시 세운다\"",
-      "desc": "최근 약사 현안에 대한 서울시약사회의 입장과 결의를 일방적인 직능 주장에 그치지 않고 시민의 눈높이에서 전달하겠다는 취지다.김 회장은 “그동안에는 약사들의 다짐이 주를 이뤘다면 올해는 현안과 관련한 문제점을...",
-      "url": "https://www.yakup.com/news/index.html?mode=view&cat=17&nid=333408",
+      "title": "편의점 97%, 상비약 규정 위반…\"관리체계 총체적 부실\"",
+      "desc": "대한약사회(회장 권영희)는 7일 전국 안전상비의약품 판매업소를 대상으로 실시한 실태조사 결과를 공개하고 국민의 안전한 의약품 사용을 위해 현행 판매업소에 대한 관리체계를 바로 세우는 것이 우선 과제라고...",
+      "url": "https://www.dailypharm.com/user/news/343135?REFERER=NP",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -8923,17 +8913,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "편의점 97%, 상비약 규정 위반…\"관리체계 총체적 부실\"",
-      "desc": "대한약사회(회장 권영희)는 7일 전국 안전상비의약품 판매업소를 대상으로 실시한 실태조사 결과를 공개하고 국민의 안전한 의약품 사용을 위해 현행 판매업소에 대한 관리체계를 바로 세우는 것이 우선 과제라고...",
-      "url": "https://www.dailypharm.com/user/news/343135?REFERER=NP",
+      "title": "[국감] 국정감사 돌입, 보건복지위 증인·참고인으로 미리 본 핵심 쟁점...",
+      "desc": "또한 권영희 대한약사회 회장이 출석해 비대면 약배송과 창고형 약국 운영에 대한 약계의 입장을 밝히고, 약료일원화에 대한 의견을 제시할 예정이다.젱점 2. 대형 플랫폼의 사회적 책임 및 개인정보 보호 도마 위로...",
+      "url": "https://www.yakup.com/news/index.html?mode=view&cat=11&nid=333411",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[국감] 국정감사 돌입, 보건복지위 증인·참고인으로 미리 본 핵심 쟁점...",
-      "desc": "또한 권영희 대한약사회 회장이 출석해 비대면 약배송과 창고형 약국 운영에 대한 약계의 입장을 밝히고, 약료일원화에 대한 의견을 제시할 예정이다.젱점 2. 대형 플랫폼의 사회적 책임 및 개인정보 보호 도마 위로...",
-      "url": "https://www.yakup.com/news/index.html?mode=view&cat=11&nid=333411",
+      "title": "'약사 현안' 품은 건강서울…서울시약 \"약사·약국 역할 다시 세운다\"",
+      "desc": "최근 약사 현안에 대한 서울시약사회의 입장과 결의를 일방적인 직능 주장에 그치지 않고 시민의 눈높이에서 전달하겠다는 취지다.김 회장은 “그동안에는 약사들의 다짐이 주를 이뤘다면 올해는 현안과 관련한 문제점을...",
+      "url": "https://www.yakup.com/news/index.html?mode=view&cat=17&nid=333408",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -8955,17 +8945,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "'제일 큰·마트' 약국명 정비 본격화…약사회 세부기준 협의",
-      "desc": "이에 대한약사회(회장 권영희)는 오는 12월 약국 명칭과 표시·광고를 제한하는 개정 약사법 시행을 앞두고 실제 약국에서 사용 중인 명칭을 살펴보며 보건복지부와 세부 적용기준을 조율하고 있다고 밝혔다. 약사회는 개정...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=545680",
+      "title": "안전상비약 판매업소 97% 기준 위반…'품목 확대보다 관리부터'",
+      "desc": "대한약사회는 7일 미래소비자행동과 전국 안전상비의약품 판매업소 1050개소를 대상으로 실시한 '2025년 안전상비의약품 판매업소 실태조사' 결과를 공개하고, 품목 확대나 판매처 등록기준 완화보다 현행 제도의...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=545685",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "안전상비약 판매업소 97% 기준 위반…'품목 확대보다 관리부터'",
-      "desc": "대한약사회는 7일 미래소비자행동과 전국 안전상비의약품 판매업소 1050개소를 대상으로 실시한 '2025년 안전상비의약품 판매업소 실태조사' 결과를 공개하고, 품목 확대나 판매처 등록기준 완화보다 현행 제도의...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=545685",
+      "title": "'제일 큰·마트' 약국명 정비 본격화…약사회 세부기준 협의",
+      "desc": "이에 대한약사회(회장 권영희)는 오는 12월 약국 명칭과 표시·광고를 제한하는 개정 약사법 시행을 앞두고 실제 약국에서 사용 중인 명칭을 살펴보며 보건복지부와 세부 적용기준을 조율하고 있다고 밝혔다. 약사회는 개정...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=545680",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -8982,6 +8972,14 @@
       "title": "심리상담은 심리 전문가에게",
       "desc": "최근 변화가 건물마다 여러 개의 심리상담센터 간판이 있는 것이 보일 만큼, 정신건강의학과나 동네 상담실... 보건복지부가 자살율 대응과 공공 서비스 접근성 광화를 위해 심리상담을 임상심리사뿐 아니라 간호사...",
       "url": "https://www.m-economynews.com/news/article.html?no=70732",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "대동병원, 단도박 프로그램 '자리매김'",
+      "desc": "G그룹은 2014년 9월 정신건강의학과 전문의(DR), 간호사(NS), 정신건강사회복지사(PSW), 임상심리사(CP)로 구성된 치료팀이 스터디를 시작하면서 출발했다. 같은 해 12월 단도박그룹을 정식 발족해 첫 회기를 진행했으며...",
+      "url": "https://www.idaegu.co.kr/news/articleView.html?idxno=555271",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9075,17 +9073,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "우리아이들의료재단, 오티즘엑스포서 '자폐·발달지연' 전문 상담",
-      "desc": "이번 행사에서 우리아이들의료재단은 우리아이들병원과 성북우리아이들병원의 소아청소년 정신건강 특성화... 상담에는 소아청소년정신과 전문의를 비롯해 임상심리사, 언어치료사, 놀이치료사, 인지치료사, ABA치료사 등...",
-      "url": "http://www.bokuennews.com/news/article.html?no=281416",
+      "title": "우리아이들의료재단, '제4회 오티즘엑스포' 참여…자폐·발달지연 전문...",
+      "desc": "소아청소년 정신건강 특성화센터인 '마음튼튼센터'를 소개하고 전문상담을 진행하는 부스를 운영했다.... 현장에는 소아청소년정신과 전문의들과 함께 임상심리사, 언어·놀이·인지·ABA 치료사 등 다양한 분야의 치료진이...",
+      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=3008532",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "우리아이들의료재단, '제4회 오티즘엑스포' 참여…자폐·발달지연 전문...",
-      "desc": "소아청소년 정신건강 특성화센터인 '마음튼튼센터'를 소개하고 전문상담을 진행하는 부스를 운영했다.... 현장에는 소아청소년정신과 전문의들과 함께 임상심리사, 언어·놀이·인지·ABA 치료사 등 다양한 분야의 치료진이...",
-      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=3008532",
+      "title": "우리아이들의료재단, 오티즘엑스포서 '자폐·발달지연' 전문 상담",
+      "desc": "이번 행사에서 우리아이들의료재단은 우리아이들병원과 성북우리아이들병원의 소아청소년 정신건강 특성화... 상담에는 소아청소년정신과 전문의를 비롯해 임상심리사, 언어치료사, 놀이치료사, 인지치료사, ABA치료사 등...",
+      "url": "http://www.bokuennews.com/news/article.html?no=281416",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9243,33 +9241,25 @@
       "reason": "title_rules"
     },
     {
-      "title": "자살시도자 마음 돌보는 응급실, 100곳으로 늘어난다",
-      "desc": "사업 참여 병원 응급실에는 '생명사랑위기대응센터'를 설치해 응급의학과, 정신건강의학과 의료진과 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이뤄 근무하며 의료적 치료와 심리·복지 지원을 함께...",
-      "url": "https://www.mt.co.kr/thebio/2026/07/15/2026071410562887848",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "자살시도자 촘촘히 관리한다...사후관리 참여 병원 대폭 확대",
-      "desc": "이에 사업 참여 병원 응급실에는 '생명사랑위기대응센터'를 설치해 응급의학과, 정신건강의학과 의료진과 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이루어 근무하며 의료적 치료와 심리·복지 지원을 함께...",
-      "url": "https://www.medicaltimes.com/Main/News/NewsView.html?ID=1169737&ref=naverpc",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "응급실 내원 자살시도자 사후관리…총 100개소로 확대",
-      "desc": "응급의학과·정신건강의학과 의료진과 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이뤄 근무하며 의료적 치료와 심리·복지 지원을 함께 제공한다. 자살시도자가 응급실에 내원하면 응급치료, 초기상담...",
-      "url": "https://www.newsis.com/view/NISX20260714_0003707874",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "복지부, 응급실 기반 자살시도자 사후관리사업 참여 병원 95곳→100곳",
       "desc": "사업 참여 병원 응급실에는 '생명사랑위기대응센터'를 설치해 응급의학과, 정신건강의학과 의료진, 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이뤄 의료적 치료와 심리·복지 지원을 제공한다....",
       "url": "https://www.newspim.com/news/view/20260714000308",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "\"치료부터 회복까지\"…'자살시도자 사후관리 병원' 전국 100곳으로 확대",
+      "desc": "사업 참여 병원에는 '생명사랑위기대응센터'가 설치돼 응급의학과와 정신건강의학과 의료진, 간호사, 임상심리사, 사회복지사 등이 팀을 이뤄 환자를 지원한다. 자살시도자가 응급실에 내원하면 응급치료를 받은 뒤...",
+      "url": "https://view.asiae.co.kr/article/2026071410164695859",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "응급실 자살시도자 사후관리 병원 95→100곳으로 확대한다",
+      "desc": "이번 사업 확대에 따라 전국 100개 병원 응급실에서는 '생명사랑위기대응센터'를 통해 응급의학과와 정신건강의학과 의료진, 간호사, 임상심리사, 사회복지사 등이 협력해 의료·심리·복지 서비스를 제공한다....",
+      "url": "https://www.news1.kr/bio/welfare-medical/6227321",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9291,17 +9281,25 @@
       "reason": "title_rules"
     },
     {
-      "title": "응급실 자살시도자 사후관리 병원 95→100곳으로 확대한다",
-      "desc": "이번 사업 확대에 따라 전국 100개 병원 응급실에서는 '생명사랑위기대응센터'를 통해 응급의학과와 정신건강의학과 의료진, 간호사, 임상심리사, 사회복지사 등이 협력해 의료·심리·복지 서비스를 제공한다....",
-      "url": "https://www.news1.kr/bio/welfare-medical/6227321",
+      "title": "자살시도자 마음 돌보는 응급실, 100곳으로 늘어난다",
+      "desc": "사업 참여 병원 응급실에는 '생명사랑위기대응센터'를 설치해 응급의학과, 정신건강의학과 의료진과 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이뤄 근무하며 의료적 치료와 심리·복지 지원을 함께...",
+      "url": "https://www.mt.co.kr/thebio/2026/07/15/2026071410562887848",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "\"치료부터 회복까지\"…'자살시도자 사후관리 병원' 전국 100곳으로 확대",
-      "desc": "사업 참여 병원에는 '생명사랑위기대응센터'가 설치돼 응급의학과와 정신건강의학과 의료진, 간호사, 임상심리사, 사회복지사 등이 팀을 이뤄 환자를 지원한다. 자살시도자가 응급실에 내원하면 응급치료를 받은 뒤...",
-      "url": "https://view.asiae.co.kr/article/2026071410164695859",
+      "title": "자살시도자 촘촘히 관리한다...사후관리 참여 병원 대폭 확대",
+      "desc": "이에 사업 참여 병원 응급실에는 '생명사랑위기대응센터'를 설치해 응급의학과, 정신건강의학과 의료진과 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이루어 근무하며 의료적 치료와 심리·복지 지원을 함께...",
+      "url": "https://www.medicaltimes.com/Main/News/NewsView.html?ID=1169737&ref=naverpc",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "응급실 내원 자살시도자 사후관리…총 100개소로 확대",
+      "desc": "응급의학과·정신건강의학과 의료진과 간호사, 임상심리사, 사회복지사 등 사례관리자가 팀을 이뤄 근무하며 의료적 치료와 심리·복지 지원을 함께 제공한다. 자살시도자가 응급실에 내원하면 응급치료, 초기상담...",
+      "url": "https://www.newsis.com/view/NISX20260714_0003707874",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9427,17 +9425,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "학교가 병원과 직접 연결…서울시교육청, 위기학생 정신건강 원스톱 지...",
-      "desc": "사업은 정신건강의학과 전문의와 임상심리사 등으로 구성된 전문 인력이 학교를 직접 방문해 위기학생을 평가하고 치료 방향을 제시하는 것이 핵심이다. 학교 요청이 들어오면 학생 심층평가와 사례관리, 병·의원 연계...",
-      "url": "https://www.news1.kr/society/education/6217346",
+      "title": "서울교육청, '위기학생' 찾아가는 정신건강사업 본격화 … 대학병원 4곳...",
+      "desc": "이번 사업은 정신건강의학과 전문의, 임상심리사 등이 학교로 찾아가 위기 학생에게 적기에 전문적인 도움을 주기 위해 추진한다. 이를 위해 11개 교육지원청 단위로 권역을 나눠 거점센터(거점병원)를 운영한다....",
+      "url": "https://biz.newdaily.co.kr/site/data/html/2026/07/05/2026070500054.html",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "서울교육청, '위기학생' 찾아가는 정신건강사업 본격화 … 대학병원 4곳...",
-      "desc": "이번 사업은 정신건강의학과 전문의, 임상심리사 등이 학교로 찾아가 위기 학생에게 적기에 전문적인 도움을 주기 위해 추진한다. 이를 위해 11개 교육지원청 단위로 권역을 나눠 거점센터(거점병원)를 운영한다....",
-      "url": "https://biz.newdaily.co.kr/site/data/html/2026/07/05/2026070500054.html",
+      "title": "정신과 전문의가 학교로…서울 학생 마음건강 지킨다",
+      "desc": "이번 사업은 병원 기반 거점센터를 통해 정신건강의학과 전문의와 임상심리사 등 전문 인력이 학교에 직접 방문해 개입이 필요한 위기 학생에게 적기에 전문적 지원을 제공하는 것을 목표로 한다. 교육지원청마다 연간...",
+      "url": "https://www.newsis.com/view/NISX20260703_0003695453",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9459,9 +9457,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "정신과 전문의가 학교로…서울 학생 마음건강 지킨다",
-      "desc": "이번 사업은 병원 기반 거점센터를 통해 정신건강의학과 전문의와 임상심리사 등 전문 인력이 학교에 직접 방문해 개입이 필요한 위기 학생에게 적기에 전문적 지원을 제공하는 것을 목표로 한다. 교육지원청마다 연간...",
-      "url": "https://www.newsis.com/view/NISX20260703_0003695453",
+      "title": "학교가 병원과 직접 연결…서울시교육청, 위기학생 정신건강 원스톱 지...",
+      "desc": "사업은 정신건강의학과 전문의와 임상심리사 등으로 구성된 전문 인력이 학교를 직접 방문해 위기학생을 평가하고 치료 방향을 제시하는 것이 핵심이다. 학교 요청이 들어오면 학생 심층평가와 사례관리, 병·의원 연계...",
+      "url": "https://www.news1.kr/society/education/6217346",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9643,17 +9641,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "강남구립행복요양병원, 복지부 '치매안심병원' 지정",
-      "desc": "신경과와 정신건강의학과 전문의, 작업치료사, 임상심리사, 정신건강사회복지사 등이 참여하는 다학제 진료체계를 구축해 개인별 맞춤 치료계획을 수립한다. 병원은 중증 환자를 대상으로 약물치료와 미술·음악...",
-      "url": "https://www.jeonmae.co.kr/news/articleView.html?idxno=1265039",
+      "title": "중증 치매 환자 전문 치료·지역사회 복귀까지…강남 공공의료 한 단계...",
+      "desc": "신경과·정신건강의학과 전문의를 중심으로 작업치료사·임상심리사·정신건강사회복지사 등이 참여하는 다학제 진료체계도 운영한다. 치료 프로그램은 약물치료와 함께 미술·음악·회상요법 등 비약물 치료를 병행한다....",
+      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3605487",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "중증 치매 환자 전문 치료·지역사회 복귀까지…강남 공공의료 한 단계...",
-      "desc": "신경과·정신건강의학과 전문의를 중심으로 작업치료사·임상심리사·정신건강사회복지사 등이 참여하는 다학제 진료체계도 운영한다. 치료 프로그램은 약물치료와 함께 미술·음악·회상요법 등 비약물 치료를 병행한다....",
-      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3605487",
+      "title": "강남구립행복요양병원, 복지부 '치매안심병원' 지정",
+      "desc": "신경과와 정신건강의학과 전문의, 작업치료사, 임상심리사, 정신건강사회복지사 등이 참여하는 다학제 진료체계를 구축해 개인별 맞춤 치료계획을 수립한다. 병원은 중증 환자를 대상으로 약물치료와 미술·음악...",
+      "url": "https://www.jeonmae.co.kr/news/articleView.html?idxno=1265039",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9683,25 +9681,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "\"누군지 다 보이니 차라리 길바닥이 편해요\"…성범죄·폭력에 노출된 서...",
-      "desc": "일부는 밀집된 시설 환경에서 느끼는 불안감과 정신건강 문제로 다시 거리로 돌아온다. 기자에게 \"긴팔 옷... 가정폭력, 정신질환 등 거리로 나온 원인부터 구분해야 한다\"며 \"사회복지사와 의사, 임상심리사 등이 함께...",
-      "url": "https://view.asiae.co.kr/article/2026060114550145238",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "게임 이름만으로 알기 어려운 슬롯 다이 코팅 단점 세부 규칙",
       "desc": "게임 이름만으로 알기 어려운 슬롯 다이 코팅 단점 세부 규칙 Calgary Roughnecks",
       "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQM3ViTjNTYWZWU0RMZFA4Q0NJdktZUTB3QTc4bERJLXJ1cndjNHdVRWlsa09hZHJrTTR5WGhQVWl1ZDNMX3drdnFpblVJeU5aeVZPQnpBUHRzVWhzQi00WTJkZ19Ndks2UVEzamRKNzktdzdPN0EwRmZLVzU0VG1TcWkzR2tnV05GRGFUUzAtSFIzN09VUk5jakJhUFJVUlktSjBYVUhLOW1UN1RzWk5fbkVhdVBWNFMtOEI2TTFtaWdDY0NybGc?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "카지노 영웅 5 무료 중단된 라운드 관련 도움말",
-      "desc": "카지노 영웅 5 무료 중단된 라운드 관련 도움말 Calgary Roughnecks",
-      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPNTZFYVJhWjJmblZuZ3ItcmxjS1VwdzhrS0p4QjhGSTkteGJkMGlzZlM5NmdDR1BlWkFtaVhWVVVSR2hwQ3UwWURuZHRIaFhJZmdaZlJ0NG4xaVJ3eTR6eGYtcEJTVU5wMF9WM29qaGpmbjNhVVJKOWt3OVhZbUdLeDRxQW5leEdzYnJhNTJjcE1fZ1ZSUkNRUndVYXB2M3k2LVVmQWMyaw?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -9812,7 +9794,7 @@
     },
     {
       "title": "\"어게인 2020\" 벌써부터 꿈틀…세종 집값 이번에도 오르나",
-      "desc": "(다솜동)에 약 3500가구가 공급될 예정이다. BS한양은 4개 블록(L6·7·8·11)에 ‘한양수자인’ 2191가구를, 우미건설은 ‘우미 린’ 1356가구를 공급할 계획이다. 5-1생활권에는 지상 주차장을 없애고 로봇 배송·자율주행...",
+      "desc": "(다솜동)에 약 3500가구가 공급될 예정이다. BS한양은 4개 블록(L6·7·8·11)에 ‘수자인’ 2191가구를, 우미건설은 ‘우미 린’ 1356가구를 공급할 계획이다. 5-1생활권에는 지상 주차장을 없애고 로봇 배송·자율주행 등...",
       "url": "https://www.hankyung.com/article/2026101420931",
       "topics": [],
       "status": "rejected",
@@ -10179,17 +10161,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "“안전하다던 코인지갑에 ‘스파이칩’”…9000만달러 털렸다",
-      "desc": "변조돼 약 9000만달러 규모의 가상자산이 탈취된 것으로 추정됐다. 프랑스 하드웨어 지갑 업체 레저(Ledger)는... 소비자에게 전달되기 전 제품이 물리적으로 변조될 수 있다면 제조부터 배송, 판매까지 유통 전 과정이 보안...",
-      "url": "https://www.donga.com/news/Economy/article/all/20261014/134840210/2",
+      "title": "[중국 비즈니스 트렌드&동향] AI 먼저 내건 세레스, 무인배송 1억 달러,...",
+      "desc": "위안(약 2,850억원)을 넘어섰다. 리노닷에이아이는 2019년 창업 초기 대형마트와 신선식품 유통업체를 대상으로 한 즉시배송 시장에 진출해 융훼이마트(永超市), 허마셴성(盒生) 등과 협력했다. 사업이 커진 전환점은...",
+      "url": "https://platum.kr/archives/296007",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[중국 비즈니스 트렌드&동향] AI 먼저 내건 세레스, 무인배송 1억 달러,...",
-      "desc": "위안(약 2,850억원)을 넘어섰다. 리노닷에이아이는 2019년 창업 초기 대형마트와 신선식품 유통업체를 대상으로 한 즉시배송 시장에 진출해 융훼이마트(永超市), 허마셴성(盒生) 등과 협력했다. 사업이 커진 전환점은...",
-      "url": "https://platum.kr/archives/296007",
+      "title": "“안전하다던 코인지갑에 ‘스파이칩’”…9000만달러 털렸다",
+      "desc": "변조돼 약 9000만달러 규모의 가상자산이 탈취된 것으로 추정됐다. 프랑스 하드웨어 지갑 업체 레저(Ledger)는... 소비자에게 전달되기 전 제품이 물리적으로 변조될 수 있다면 제조부터 배송, 판매까지 유통 전 과정이 보안...",
+      "url": "https://www.donga.com/news/Economy/article/all/20261014/134840210/2",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10203,17 +10185,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, 군포 1137가구 재개발 우선협상대상자 선정",
-      "desc": "중앙 공간에는 약 2180평 규모 광장을 조성하고 잔디마당과 테마정원을 잇는 1.4㎞ 순환 산책로도... 군포 지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 결합한 ‘아이파크 AI 라이프 설루션(IPARK AI LIFE SOLUTION)...",
-      "url": "https://www.edaily.co.kr/News/Read?newsId=03978646645612920&mediaCodeNo=257&utm_source=naver&utm_medium=referral&utm_campaign=news_syndication&utm_content=original_article",
+      "title": "미식부터 김장까지… 유통가, 장바구니 공략 나섰다",
+      "desc": "포함해 약 200개 브랜드의 800여 개 상품을 판매한다. 밀키트와 가정간편식(HMR)은 물론 베이커리, 디저트, 냉동식품, 유제품, 음료 등으로 품목을 넓혔다. 와우회원은 로켓프레시 새벽배송을 통해 다양한 지역의 맛집...",
+      "url": "https://www.pressman.kr/news/articleView.html?idxno=104001",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "미식부터 김장까지… 유통가, 장바구니 공략 나섰다",
-      "desc": "포함해 약 200개 브랜드의 800여 개 상품을 판매한다. 밀키트와 가정간편식(HMR)은 물론 베이커리, 디저트, 냉동식품, 유제품, 음료 등으로 품목을 넓혔다. 와우회원은 로켓프레시 새벽배송을 통해 다양한 지역의 맛집...",
-      "url": "https://www.pressman.kr/news/articleView.html?idxno=104001",
+      "title": "IPARK현대산업개발, 군포 1137가구 재개발 우선협상대상자 선정",
+      "desc": "중앙 공간에는 약 2180평 규모 광장을 조성하고 잔디마당과 테마정원을 잇는 1.4㎞ 순환 산책로도... 군포 지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 결합한 ‘아이파크 AI 라이프 설루션(IPARK AI LIFE SOLUTION)...",
+      "url": "https://www.edaily.co.kr/News/Read?newsId=03978646645612920&mediaCodeNo=257&utm_source=naver&utm_medium=referral&utm_campaign=news_syndication&utm_content=original_article",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10347,17 +10329,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, 금정역세권 우선협상대상자 선정…1137가구로 재탄생",
-      "desc": "최고층인 35층에는 스카이 커뮤니티를 조성하고 단지 중앙에는 약 7207㎡ 규모의 광장을 제안했다.... AI 홈 케어와 로봇 배송, 클린 서비스를 결합한 'IPARK AI LIFE SOLUTION'을 제안해 주거 편의성을 높였다. 층간소음...",
-      "url": "http://www.whitepaper.co.kr/news/articleView.html?idxno=267764",
+      "title": "[민주 유통가] GS25·롯데온·세라젬",
+      "desc": "지난 2024년부터 올해까지 게임 협업 상품 구매 고객의 평균 객단가는 약 3만 원으로 일반 고객 대비 최대... 포이즌 첫 구매 고객에게는 10만 원 이상 구매 시 사용할 수 있는 1000원 할인쿠폰과 무료배송 쿠폰을...",
+      "url": "http://www.iminju.net/news/articleView.html?idxno=170820",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[민주 유통가] GS25·롯데온·세라젬",
-      "desc": "지난 2024년부터 올해까지 게임 협업 상품 구매 고객의 평균 객단가는 약 3만 원으로 일반 고객 대비 최대... 포이즌 첫 구매 고객에게는 10만 원 이상 구매 시 사용할 수 있는 1000원 할인쿠폰과 무료배송 쿠폰을...",
-      "url": "http://www.iminju.net/news/articleView.html?idxno=170820",
+      "title": "IPARK현대산업개발, 금정역세권 우선협상대상자 선정…1137가구로 재탄생",
+      "desc": "최고층인 35층에는 스카이 커뮤니티를 조성하고 단지 중앙에는 약 7207㎡ 규모의 광장을 제안했다.... AI 홈 케어와 로봇 배송, 클린 서비스를 결합한 'IPARK AI LIFE SOLUTION'을 제안해 주거 편의성을 높였다. 층간소음...",
+      "url": "http://www.whitepaper.co.kr/news/articleView.html?idxno=267764",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10515,17 +10497,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "롯데온, 中 패션 플랫폼 '포이즌' 입점…국내 미출시 상품 판매 확대",
-      "desc": "베스트셀러 약 200여개 상품에 사용할 수 있는 3000원 할인쿠폰을 지급한다. 포이즌에서 처음 구매하는 고객에게는 10만원 이상 구매 시 적용 가능한 1000원 할인쿠폰과 무료배송 쿠폰도 제공한다. 전경두 롯데온 B2B팀장은...",
-      "url": "https://www.industrynews.co.kr/news/articleView.html?idxno=87513",
+      "title": "삼성전자, 'KES 2026' 참가...일상에 스며든 AI 라이프 공개",
+      "desc": "전체 약 869㎡(263평) 규모의 체험 공간을 구성했다. 전시장 입구에는 28대의 갤럭시 Z 폴드8 울트라·폴드8... 삼성전자는 ▲배송 ▲설치 ▲케어 서비스를 대폭 강화해 편의성을 높인 '삼성 AI 구독'도 소개했다....",
+      "url": "https://www.betanews.net/article/view/beta202610130091",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "삼성전자, 'KES 2026' 참가...일상에 스며든 AI 라이프 공개",
-      "desc": "전체 약 869㎡(263평) 규모의 체험 공간을 구성했다. 전시장 입구에는 28대의 갤럭시 Z 폴드8 울트라·폴드8... 삼성전자는 ▲배송 ▲설치 ▲케어 서비스를 대폭 강화해 편의성을 높인 '삼성 AI 구독'도 소개했다....",
-      "url": "https://www.betanews.net/article/view/beta202610130091",
+      "title": "롯데온, 中 패션 플랫폼 '포이즌' 입점…국내 미출시 상품 판매 확대",
+      "desc": "베스트셀러 약 200여개 상품에 사용할 수 있는 3000원 할인쿠폰을 지급한다. 포이즌에서 처음 구매하는 고객에게는 10만원 이상 구매 시 적용 가능한 1000원 할인쿠폰과 무료배송 쿠폰도 제공한다. 전경두 롯데온 B2B팀장은...",
+      "url": "https://www.industrynews.co.kr/news/articleView.html?idxno=87513",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10547,9 +10529,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "롯데백화점·롯데온·롯데마트 '에비뉴엘 글로벌 트립' 출시·'포이즌' ...",
-      "desc": "베스트셀러 약 200개 상품에 사용할 수 있는 3000원 할인 쿠폰을 제공한다. 포이즌 첫 구매 고객이 10만원 이상 상품을 구매하면 1000원 할인 쿠폰과 무료배송 쿠폰을 제공한다. 롯데마트는 15일부터 28일까지 전 점에서...",
-      "url": "http://www.wsobi.com/news/articleView.html?idxno=319653",
+      "title": "롯데온, 中 패션 플랫폼 '포이즌' 입점…글로벌 패션 상품군 확대",
+      "desc": "스토어 찜 고객에게는 인기 상품 약 200종에 사용할 수 있는 3000원 할인쿠폰을 제공하며, 첫 구매 고객을 위한 추가 할인 및 무료배송 혜택도 마련했다. 전경두 롯데온 B2B팀장은 \"포이즌 론칭을 통해 국내 미출시 상품을...",
+      "url": "http://www.dailysmart.co.kr/news/articleView.html?idxno=131031",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10563,9 +10545,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "롯데온, 中 패션 플랫폼 '포이즌' 입점…글로벌 패션 상품군 확대",
-      "desc": "스토어 찜 고객에게는 인기 상품 약 200종에 사용할 수 있는 3000원 할인쿠폰을 제공하며, 첫 구매 고객을 위한 추가 할인 및 무료배송 혜택도 마련했다. 전경두 롯데온 B2B팀장은 \"포이즌 론칭을 통해 국내 미출시 상품을...",
-      "url": "http://www.dailysmart.co.kr/news/articleView.html?idxno=131031",
+      "title": "롯데백화점·롯데온·롯데마트 '에비뉴엘 글로벌 트립' 출시·'포이즌' ...",
+      "desc": "베스트셀러 약 200개 상품에 사용할 수 있는 3000원 할인 쿠폰을 제공한다. 포이즌 첫 구매 고객이 10만원 이상 상품을 구매하면 1000원 할인 쿠폰과 무료배송 쿠폰을 제공한다. 롯데마트는 15일부터 28일까지 전 점에서...",
+      "url": "http://www.wsobi.com/news/articleView.html?idxno=319653",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10595,6 +10577,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "[유통24시] 메디큐브, 아마존 빅딜데이즈서 美 매출 85% 증가 外",
+      "desc": "에이피알의 미국 매출은 지난해 행사보다 약 85% 늘었으며, 처음 행사에 참여한 영국과 독일, 스페인... '김장용 해남 절임배추 5kg'을 1만4900원에 예약하면 다음 달 14일과 21일 가운데 원하는 날짜와 시간대에 배송받...",
+      "url": "https://news.dealsitetv.com/articles/176961",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "애경산업, 충남 자립준비청년 100명 주거 개선…1억원 기탁",
       "desc": "전체 기탁금 가운데 약 4200만원은 도배·장판 교체와 노후 시설물 수리, 주거 기능 보강 등에 사용한다. 지원... 충청남도새마을회는 주거 개선을, 보둠 나눔봉사단은 꾸러미 제작과 배송을, 충남자립지원전담기관은...",
       "url": "https://www.newsinside.kr/news/articleView.html?idxno=5023779",
@@ -10603,9 +10593,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "[유통24시] 메디큐브, 아마존 빅딜데이즈서 美 매출 85% 증가 外",
-      "desc": "에이피알의 미국 매출은 지난해 행사보다 약 85% 늘었으며, 처음 행사에 참여한 영국과 독일, 스페인... '김장용 해남 절임배추 5kg'을 1만4900원에 예약하면 다음 달 14일과 21일 가운데 원하는 날짜와 시간대에 배송받...",
-      "url": "https://news.dealsitetv.com/articles/176961",
+      "title": "IPARK현대산업개발, 군포 금정역세권1구역 우선협상대상자 선정",
+      "desc": "커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 군포지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 아우르는 ‘IPARK AI LIFE SOLUTION’을 비롯해 IPARK현대산업개발의 독자적인 층간소음 저감...",
+      "url": "https://www.smarttoday.co.kr/ko-kr/articles/112642",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10627,17 +10617,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, 군포 금정역세권1구역 우선협상대상자 선정",
-      "desc": "커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 군포지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 아우르는 ‘IPARK AI LIFE SOLUTION’을 비롯해 IPARK현대산업개발의 독자적인 층간소음 저감...",
-      "url": "https://www.smarttoday.co.kr/ko-kr/articles/112642",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "공영민 고흥군수 취임 100일…우주산업·에너지연금 중심 군정 본격화",
-      "desc": "군은 약 46만 평 규모의 우주발사체 국가산업단지 조성을 추진하고 있으며, 민간발사장 구축과 제2우주센터... 고흥군은 드론특화단지 조성과 실증·배송 서비스 확대를 통해 관련 기업 유치를 지원하고, 도심항공교통(UAM)...",
-      "url": "https://www.thefairnews.co.kr/news/articleView.html?idxno=90637",
+      "title": "새티스팩토리 보드게임, 펀딩 하루만에 목표 3,600% 초과",
+      "desc": "(한화 약 3,750만원)를 순식간에 달성한 후 14일 기준 90만 유로를 돌파하며 목표치의 3,600%를 넘겼다. 기본판은 70유로, 디럭스판은 135유로, 컬렉터즈판은 280유로이며 배송비는 별도다. 후원 접수는 한국시간 11월...",
+      "url": "https://www.gamemeca.com/mv.php?inflow=naver_s&gid=1781749",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10651,9 +10633,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "새티스팩토리 보드게임, 펀딩 하루만에 목표 3,600% 초과",
-      "desc": "(한화 약 3,750만원)를 순식간에 달성한 후 14일 기준 90만 유로를 돌파하며 목표치의 3,600%를 넘겼다. 기본판은 70유로, 디럭스판은 135유로, 컬렉터즈판은 280유로이며 배송비는 별도다. 후원 접수는 한국시간 11월...",
-      "url": "https://www.gamemeca.com/mv.php?inflow=naver_s&gid=1781749",
+      "title": "공영민 고흥군수 취임 100일…우주산업·에너지연금 중심 군정 본격화",
+      "desc": "군은 약 46만 평 규모의 우주발사체 국가산업단지 조성을 추진하고 있으며, 민간발사장 구축과 제2우주센터... 고흥군은 드론특화단지 조성과 실증·배송 서비스 확대를 통해 관련 기업 유치를 지원하고, 도심항공교통(UAM)...",
+      "url": "https://www.thefairnews.co.kr/news/articleView.html?idxno=90637",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10675,17 +10657,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "‘아이파크 원 어센트’ 제안한 IPARK현산, 군포 금정역세권1구역 우선...",
-      "desc": "가구당 약 1.7평을 확보했다. 첨단 주거 기술도 대거 들어간다. 군포 지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 묶은 ‘IPARK AI LIFE SOLUTION’을 도입하고, 회사 고유의 층간소음 저감 기술과 음식물쓰레기...",
-      "url": "https://www.fntimes.com/html/view.php?ud=20261014104056191708579a3016_18",
+      "title": "IPARK현대산업개발, 경기 군포 금정역세권1구역 우선협상대상자 선정",
+      "desc": "커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 뿐만 아니라 군포지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 아우르는 'IPARK AI LIFE SOLUTION'이 적용된다. 이외에도 단지는 지하철 1·4호선...",
+      "url": "http://www.srtimes.kr/news/articleView.html?idxno=214709",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, 경기 군포 금정역세권1구역 우선협상대상자 선정",
-      "desc": "커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 뿐만 아니라 군포지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 아우르는 'IPARK AI LIFE SOLUTION'이 적용된다. 이외에도 단지는 지하철 1·4호선...",
-      "url": "http://www.srtimes.kr/news/articleView.html?idxno=214709",
+      "title": "‘아이파크 원 어센트’ 제안한 IPARK현산, 군포 금정역세권1구역 우선...",
+      "desc": "가구당 약 1.7평을 확보했다. 첨단 주거 기술도 대거 들어간다. 군포 지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 묶은 ‘IPARK AI LIFE SOLUTION’을 도입하고, 회사 고유의 층간소음 저감 기술과 음식물쓰레기...",
+      "url": "https://www.fntimes.com/html/view.php?ud=20261014104056191708579a3016_18",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10699,17 +10681,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "[글로벌 트렌드] 아마존서 날개 단 K뷰티… 동국제약·에이피알, 연말 성...",
-      "desc": "특히 미국 매출은 지난해 행사보다 약 85% 늘었다. 영국·독일·스페인·이탈리아·프랑스 등 유럽 시장에서는... 향후 현지 물류 거점 확대와 판매 물량 증가로 배송 효율과 규모의 경제가 확보되면 매출 대비 물류비...",
-      "url": "http://www.newsian.co.kr/news/articleView.html?idxno=97033",
+      "title": "IPARK현대산업개발, 군포 금정역세권1구역 수의계약 수순…단지명 '아이...",
+      "desc": "동을 줄여 생긴 단지 중심부에는 약 2180평 넓이의 광장을 들인다. 잔디마당과 테마정원은 1.4㎞ 길이의... 인공지능(AI) 홈케어와 로봇 배송, 클린 서비스를 하나로 묶은 것으로 군포에서는 처음 도입되는 사례다....",
+      "url": "http://www.wikileaks-kr.org/news/articleView.html?idxno=193210",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, 군포 금정역세권1구역 수의계약 수순…단지명 '아이...",
-      "desc": "동을 줄여 생긴 단지 중심부에는 약 2180평 넓이의 광장을 들인다. 잔디마당과 테마정원은 1.4㎞ 길이의... 인공지능(AI) 홈케어와 로봇 배송, 클린 서비스를 하나로 묶은 것으로 군포에서는 처음 도입되는 사례다....",
-      "url": "http://www.wikileaks-kr.org/news/articleView.html?idxno=193210",
+      "title": "[글로벌 트렌드] 아마존서 날개 단 K뷰티… 동국제약·에이피알, 연말 성...",
+      "desc": "특히 미국 매출은 지난해 행사보다 약 85% 늘었다. 영국·독일·스페인·이탈리아·프랑스 등 유럽 시장에서는... 향후 현지 물류 거점 확대와 판매 물량 증가로 배송 효율과 규모의 경제가 확보되면 매출 대비 물류비...",
+      "url": "http://www.newsian.co.kr/news/articleView.html?idxno=97033",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10731,14 +10713,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "금정역 1137가구 품은 IPARK현대산업개발···도시정비 수주 확장 잇는...",
-      "desc": "주동 축소로 확보한 중앙 공간에는 약 2180평 규모의 광장을 조성하고, 잔디마당과 테마정원을 연결하는 1.4... IPARK현대산업개발은 AI 기반 홈 케어와 로봇 배송, 클린 서비스를 결합한 'IPARK AI LIFE SOLUTION'을 비롯해...",
-      "url": "https://www.smartbizn.com/news/articleView.html?idxno=156365",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "IPARK현대산업개발, 군포 금정역세권1구역 우협 선정…'아이파크 원 어...",
       "desc": "면적은 약 1.7평 수준이다. 주거 공간에는 유리난간 창호와 두 면이 개방되는 파노라마창을 적용해 실내 개방감과 외부 조망을 고려한 설계를 제시했다. 주거 편의 기술로는 인공지능(AI) 기반 홈 케어와 로봇 배송...",
       "url": "https://www.businessplus.kr/news/articleView.html?idxno=118138",
@@ -10750,6 +10724,14 @@
       "title": "이마트, 절임배추 사전예약…최대 40% 할인",
       "desc": "마련…택배 배송·이마트 에브리데이 예약 병행 [서울타임즈뉴스 = 서연옥 기자] 이마트는 15일부터... 할인율은 약 40%다. 1차 물량이 소진되면 2차 행사로 넘어간다. 2차 물량 4만박스는 1만4000원 할인한...",
       "url": "https://www.seoultimes.news/news/article.html?no=2000100861",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "금정역 1137가구 품은 IPARK현대산업개발···도시정비 수주 확장 잇는...",
+      "desc": "주동 축소로 확보한 중앙 공간에는 약 2180평 규모의 광장을 조성하고, 잔디마당과 테마정원을 연결하는 1.4... IPARK현대산업개발은 AI 기반 홈 케어와 로봇 배송, 클린 서비스를 결합한 'IPARK AI LIFE SOLUTION'을 비롯해...",
+      "url": "https://www.smartbizn.com/news/articleView.html?idxno=156365",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10771,6 +10753,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "[나눔] 상미당홀딩스, 행복한재단과 연탄 기부→임직원 배달 봉사 外",
+      "desc": "주거환경 개선에는 약 4200만원을 투입해 도배·장판 교체와 노후 시설 수리, 기능 보강을 지원한다.... 보둠 나눔봉사단이 기획·제작·배송을 맡고, 충남자립지원전담기관은 대상자 추천·안내·사례관리를 담당한다....",
+      "url": "https://www.slist.kr/news/articleView.html?idxno=773297",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "IPARK현대산업개발, 군포 금정역세권1구역 우선협상대상자 선정",
       "desc": "커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 또한, 군포지역 최초로 AI 홈 케어와 로봇 배송, 클린 서비스를 아우르는 ‘IPARK AI 라이프 솔루션’을 비롯해 IPARK현대산업개발의 독자적인 층간소음...",
       "url": "https://www.donga.com/news/Economy/article/all/20261014/134838685/2",
@@ -10782,14 +10772,6 @@
       "title": "공영민 고흥군수, 민선 9기 100일…우주·드론·스마트팜 중심 미래산업...",
       "desc": "군이 추진하는 우주발사체 국가산업단지는 약 46만 평 규모로, 발사체 제조와 시험·연구 기능을 집적하는... 드론산업은 특화단지 조성과 실증·배송 서비스 확대를 중심으로 육성한다. 군은 도심항공교통(UAM) 시험·평가...",
       "url": "https://www.joongangenews.com/news/articleView.html?idxno=554797",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "[나눔] 상미당홀딩스, 행복한재단과 연탄 기부→임직원 배달 봉사 外",
-      "desc": "주거환경 개선에는 약 4200만원을 투입해 도배·장판 교체와 노후 시설 수리, 기능 보강을 지원한다.... 보둠 나눔봉사단이 기획·제작·배송을 맡고, 충남자립지원전담기관은 대상자 추천·안내·사례관리를 담당한다....",
-      "url": "https://www.slist.kr/news/articleView.html?idxno=773297",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10867,17 +10849,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "당장 '이 앱' 들어가 보자… 인기 뷰티 브랜드 최대 90% 할인, 언제까지...",
-      "desc": "(MAU) 약 400만 명에 달하는 방대한 빅데이터를 기반으로 고객별 구매 이력·검색 성향을 분석하는 AI 초개인화 추천 알고리즘을 선보이고 있다. 이와 함께 자정 전 주문 시 다음 날 상품을 받아볼 수 있는 빠른 배송...",
-      "url": "https://www.wikitree.co.kr/articles/1166022",
+      "title": "IPARK현대산업개발, ‘군포 금정역세권1구역’ 우선협상자 선정…시공권...",
+      "desc": "유리난간 창호와 2면 개방 파노라마창을 적용해 개방감과 조망을 강화했고, 커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 첨단 기술도 대거 적용된다. 군포지역 최초로 AI 홈케어, 로봇 배송...",
+      "url": "https://www.lawissue.co.kr/view.php?ud=20261014095935597767191f6c6e_12",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, ‘군포 금정역세권1구역’ 우선협상자 선정…시공권...",
-      "desc": "유리난간 창호와 2면 개방 파노라마창을 적용해 개방감과 조망을 강화했고, 커뮤니티 면적은 원안 대비 639평 늘려 가구당 약 1.7평을 확보했다. 첨단 기술도 대거 적용된다. 군포지역 최초로 AI 홈케어, 로봇 배송...",
-      "url": "https://www.lawissue.co.kr/view.php?ud=20261014095935597767191f6c6e_12",
+      "title": "당장 '이 앱' 들어가 보자… 인기 뷰티 브랜드 최대 90% 할인, 언제까지...",
+      "desc": "(MAU) 약 400만 명에 달하는 방대한 빅데이터를 기반으로 고객별 구매 이력·검색 성향을 분석하는 AI 초개인화 추천 알고리즘을 선보이고 있다. 이와 함께 자정 전 주문 시 다음 날 상품을 받아볼 수 있는 빠른 배송...",
+      "url": "https://www.wikitree.co.kr/articles/1166022",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10931,17 +10913,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "애경산업, 충남 자립준비청년에 3년째 지원...총 1억원 기탁",
-      "desc": "전체 사업비 1억원 가운데 약 4200만원은 주거환경 개선에 투입된다. 지원 대상자의 주거 상태와 생활 불편... 충청남도새마을회는 주거환경 개선을, 보둠 나눔봉사단은 꾸러미 제작과 배송을, 충남자립지원전담기관은...",
-      "url": "https://www.womentimes.co.kr/news/articleView.html?idxno=106988",
+      "title": "IPARK현대산업개발, 군포 금정역세권1구역 재개발 우선협상대상자 선정",
+      "desc": "커뮤니티 면적은 기존 계획보다 확대해 가구당 약 5.6㎡(1.7평)를 확보했다. 유리난간 창호와 2면 개방 파노라마창 등 조망 특화 설계도 적용한다. 이와 함께 AI 홈케어와 로봇 배송·청소 서비스를 결합한 ‘IPARK AI...",
+      "url": "https://www.etoday.co.kr/news/view/2635546",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "IPARK현대산업개발, 군포 금정역세권1구역 재개발 우선협상대상자 선정",
-      "desc": "커뮤니티 면적은 기존 계획보다 확대해 가구당 약 5.6㎡(1.7평)를 확보했다. 유리난간 창호와 2면 개방 파노라마창 등 조망 특화 설계도 적용한다. 이와 함께 AI 홈케어와 로봇 배송·청소 서비스를 결합한 ‘IPARK AI...",
-      "url": "https://www.etoday.co.kr/news/view/2635546",
+      "title": "애경산업, 충남 자립준비청년에 3년째 지원...총 1억원 기탁",
+      "desc": "전체 사업비 1억원 가운데 약 4200만원은 주거환경 개선에 투입된다. 지원 대상자의 주거 상태와 생활 불편... 충청남도새마을회는 주거환경 개선을, 보둠 나눔봉사단은 꾸러미 제작과 배송을, 충남자립지원전담기관은...",
+      "url": "https://www.womentimes.co.kr/news/articleView.html?idxno=106988",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10971,9 +10953,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "공영민 고흥군수, 취임 100일…누리호 성공 발판 삼아 우주산업 육성",
-      "desc": "실증·배송 서비스 활성화를 통해 관련 기업 유치 기반을 마련하고 미래항공모빌리티(UAM) 시험·평가 거점 구축도 추진한다. 기존 스마트팜 혁신밸리 주변에는 약 70만 평 규모의 고흥형 농수축산 스마트팜 혁신밸리를...",
-      "url": "https://www.getnews.co.kr/news/articleView.html?idxno=883467",
+      "title": "美 캘리포니아, 기업 탄소배출 의무공시 확정 [ESG 뉴스 5]",
+      "desc": "인도의 지난 8월 말 기준 비화석 발전설비는 304GW로 원전 약 9GW와 대규모 수력발전도 포함된다. 인도는... 1000주 이상을 1년 넘게 보유한 주주에게는 백화점 라운지 이용권과 발레파킹, 주차, 무료배송 쿠폰 등 추가...",
+      "url": "https://magazine.hankyung.com/business/article/202610140479b",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -10987,9 +10969,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "美 캘리포니아, 기업 탄소배출 의무공시 확정 [ESG 뉴스 5]",
-      "desc": "인도의 지난 8월 말 기준 비화석 발전설비는 304GW로 원전 약 9GW와 대규모 수력발전도 포함된다. 인도는... 1000주 이상을 1년 넘게 보유한 주주에게는 백화점 라운지 이용권과 발레파킹, 주차, 무료배송 쿠폰 등 추가...",
-      "url": "https://magazine.hankyung.com/business/article/202610140479b",
+      "title": "공영민 고흥군수, 취임 100일…누리호 성공 발판 삼아 우주산업 육성",
+      "desc": "실증·배송 서비스 활성화를 통해 관련 기업 유치 기반을 마련하고 미래항공모빌리티(UAM) 시험·평가 거점 구축도 추진한다. 기존 스마트팜 혁신밸리 주변에는 약 70만 평 규모의 고흥형 농수축산 스마트팜 혁신밸리를...",
+      "url": "https://www.getnews.co.kr/news/articleView.html?idxno=883467",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11003,14 +10985,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "[오늘의 유통가] 롯데백화점, VIP 전용 럭셔리 크루즈 여행 출시 外",
-      "desc": "해남 절임배추를 5㎏ 단위로 포장해 다음 달 14일이나 21일에 배송하며 김치양념을 비롯한 김장·수육 관련 상품 약 140종도 최대 43% 할인한다. 다음 달 11일부터 17일까지는 2차 사전예약과 함께 김장 채소 및 부재료...",
-      "url": "https://dealsite.co.kr/articles/170627",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "애경산업, 충남 자립준비청년 자립 지원…3년간 맞춤형 결실",
       "desc": "총 1억원 중 약 4200만원은 도배·장판 교체와 노후 시설 수리 등 주거공간 보수에 투입된다. 지원 대상자의... 주거공간 개선 작업은 충청남도새마을회가, 꾸러미 제작 및 배송은 보둠 나눔봉사단이 담당한다....",
       "url": "https://www.pointe.co.kr/news/articleView.html?idxno=86027",
@@ -11019,9 +10993,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "[유통갤러리] 신세계백화점, 센텀시티 남성관 새단장 오픈 外",
-      "desc": "베스트셀러 약 200여개 상품에 사용할 수 있는 3000원 할인쿠폰을 제공한다. 또한 포이즌 첫 구매 고객이 10만원 이상 상품을 구매하면 1000원 할인받을 수 있는 첫 구매 쿠폰과 무료배송 쿠폰도 준비했다....",
-      "url": "https://theviewers.co.kr/View.aspx?No=4262532",
+      "title": "[오늘의 유통가] 롯데백화점, VIP 전용 럭셔리 크루즈 여행 출시 外",
+      "desc": "해남 절임배추를 5㎏ 단위로 포장해 다음 달 14일이나 21일에 배송하며 김치양념을 비롯한 김장·수육 관련 상품 약 140종도 최대 43% 할인한다. 다음 달 11일부터 17일까지는 2차 사전예약과 함께 김장 채소 및 부재료...",
+      "url": "https://dealsite.co.kr/articles/170627",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11030,6 +11004,14 @@
       "title": "IPARK현산, 군포 금정역세권1구역 우협대상자 선정…‘아이파크 원 어센...",
       "desc": "커뮤니티 면적은 원안보다 639평(약 2100㎡) 늘려 가구당 1.7평(약 5.6㎡)을 확보했다. 설계에는 유리난간 창호와 2면 개방 파노라마창을 적용했다. 군포 지역에서는 처음으로 AI 홈 케어와 로봇 배송, 클린 서비스를...",
       "url": "https://www.sentv.co.kr/article/view/sentv202610140040",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "[유통갤러리] 신세계백화점, 센텀시티 남성관 새단장 오픈 外",
+      "desc": "베스트셀러 약 200여개 상품에 사용할 수 있는 3000원 할인쿠폰을 제공한다. 또한 포이즌 첫 구매 고객이 10만원 이상 상품을 구매하면 1000원 할인받을 수 있는 첫 구매 쿠폰과 무료배송 쿠폰도 준비했다....",
+      "url": "https://theviewers.co.kr/View.aspx?No=4262532",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11083,6 +11065,14 @@
       "reason": "title_rules"
     },
     {
+      "title": "국내 미발매 상품 선보인다… 롯데온, 中 패션 플랫폼 ‘포이즌’ 론칭",
+      "desc": "베스트셀러 약 200개 상품에 사용할 수 있는 3000원 할인쿠폰을 제공한다. 첫 구매 고객에게는 10만원 이상 상품 구매 시 적용할 수 있는 1000원 할인쿠폰과 무료배송 쿠폰을 지급한다. 전경두 롯데온 B2B팀장은 “포이즌...",
+      "url": "https://www.viva100.com/article/20261014500173",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "롯데쇼핑, 반토막 주가에 '주주 멤버십'…판촉과 환원 사이",
       "desc": "무료배송 쿠폰 등 프리미엄 혜택을 추가로 제공한다. 첫 혜택은 올해 9월 말 기준 주주를 대상으로 11월1일 제공된다. 이후에는 분기 말 기준 주주에게 3개월마다 제공된다. 롯데쇼핑은 일본 상장사의 약 40%가 주주...",
       "url": "https://www.bloter.net/news/articleView.html?idxno=675541",
@@ -11099,14 +11089,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "국내 미발매 상품 선보인다… 롯데온, 中 패션 플랫폼 ‘포이즌’ 론칭",
-      "desc": "베스트셀러 약 200개 상품에 사용할 수 있는 3000원 할인쿠폰을 제공한다. 첫 구매 고객에게는 10만원 이상 상품 구매 시 적용할 수 있는 1000원 할인쿠폰과 무료배송 쿠폰을 지급한다. 전경두 롯데온 B2B팀장은 “포이즌...",
-      "url": "https://www.viva100.com/article/20261014500173",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "세레브라스 CEO \"데이터센터 반발은 공포 마케팅 탓\"",
       "desc": "그는 \"처음에는 모두 불가능하다고 했다\"며 \"18개월 동안 매달 800만 달러(약 107억원)를 태우면서도 기술적... 인터넷이 느렸을 때는 넷플릭스가 DVD를 우편 배송해주는 서비스였다가 인터넷이 빨라지면서 종합 영화...",
       "url": "https://www.yna.co.kr/view/AKR20261014022500091?input=1195m",
@@ -11115,17 +11097,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "국내 안 나온 나이키·호카까지…롯데온, 中 포이즌 입점",
-      "desc": "스토어를 찜한 고객에게는 인기 상품 약 200개에 사용할 수 있는 3000원 할인쿠폰을 제공한다. 포이즌 첫 구매 고객이 10만원 이상 구매하면 사용할 수 있는 1000원 할인쿠폰과 무료배송 쿠폰도 마련했다. 전경두 롯데온...",
-      "url": "https://www.newsquest.co.kr/news/articleView.html?idxno=302566",
+      "title": "애경산업, 충남 자립준비청년에 1억원 기탁… 주거 환경 개선 지원",
+      "desc": "세부적으로는 약 4,200만 원을 투입해 도배 및 장판 교체, 노후 시설 수리 등 주거지 보수를 추진한다. 사전... 아울러 충청남도새마을회가 주거 개보수를, 보둠 나눔봉사단이 지원 물품 제작과 배송을 진행하며...",
+      "url": "http://www.newsdream.kr/news/articleView.html?idxno=119914",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "애경산업, 충남 자립준비청년에 1억원 기탁… 주거 환경 개선 지원",
-      "desc": "세부적으로는 약 4,200만 원을 투입해 도배 및 장판 교체, 노후 시설 수리 등 주거지 보수를 추진한다. 사전... 아울러 충청남도새마을회가 주거 개보수를, 보둠 나눔봉사단이 지원 물품 제작과 배송을 진행하며...",
-      "url": "http://www.newsdream.kr/news/articleView.html?idxno=119914",
+      "title": "국내 안 나온 나이키·호카까지…롯데온, 中 포이즌 입점",
+      "desc": "스토어를 찜한 고객에게는 인기 상품 약 200개에 사용할 수 있는 3000원 할인쿠폰을 제공한다. 포이즌 첫 구매 고객이 10만원 이상 구매하면 사용할 수 있는 1000원 할인쿠폰과 무료배송 쿠폰도 마련했다. 전경두 롯데온...",
+      "url": "https://www.newsquest.co.kr/news/articleView.html?idxno=302566",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11163,17 +11145,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "두핸즈 '품고', K-브랜드 인도 공략 지원…현지 유통부터 물류까지",
-      "desc": "인도는 인구 약 15억 명, 중위연령 28세의 대규모 소비 시장이다. 태국·베트남 등 한류 지수가 높은 주요... 원 이사는 한국 창고에서 인도 고객에게 상품이 전달되기까지 재고 관리와 출고, 배송을 연계하는 통합 운영...",
-      "url": "https://www.klnews.co.kr/news/articleView.html?idxno=323070",
+      "title": "품고, 인도 시장 진출 실전 웨비나 개최…\"인증부터 배송까지 한 번에\"",
+      "desc": "인도는 인구 약 15억명, 중위연령 28세의 대규모 소비 시장으로 한류 지수가 높은 태국, 베트남 등 주요 국가... 한국 창고에서 인도 고객까지 이어지는 재고·출고·배송 전 과정의 통합 운영 구조와 통관 및 현지 배송...",
+      "url": "https://www.epnc.co.kr/news/articleView.html?idxno=408140",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "품고, 인도 시장 진출 실전 웨비나 개최…\"인증부터 배송까지 한 번에\"",
-      "desc": "인도는 인구 약 15억명, 중위연령 28세의 대규모 소비 시장으로 한류 지수가 높은 태국, 베트남 등 주요 국가... 한국 창고에서 인도 고객까지 이어지는 재고·출고·배송 전 과정의 통합 운영 구조와 통관 및 현지 배송...",
-      "url": "https://www.epnc.co.kr/news/articleView.html?idxno=408140",
+      "title": "두핸즈 '품고', K-브랜드 인도 공략 지원…현지 유통부터 물류까지",
+      "desc": "인도는 인구 약 15억 명, 중위연령 28세의 대규모 소비 시장이다. 태국·베트남 등 한류 지수가 높은 주요... 원 이사는 한국 창고에서 인도 고객에게 상품이 전달되기까지 재고 관리와 출고, 배송을 연계하는 통합 운영...",
+      "url": "https://www.klnews.co.kr/news/articleView.html?idxno=323070",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11203,17 +11185,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "두핸즈 품고 인도 웨비나 마쳤다…K브랜드 물류부터 깔아야 팔린다",
-      "desc": "인도는 인구가 약 15억명이고 중위연령이 28세인 대규모 소비 시장이다. 한류 지수가 높은 태국과 베트남 등... 한국 창고에서 인도 고객까지 재고와 출고 배송이 이어지는 통합 운영 구조를 설명했고 통관과 현지 배송에...",
-      "url": "https://www.econovill.com/news/articleView.html?idxno=753495",
+      "title": "롯데온, 中 패션 플랫폼 '포이즌' 론칭…국내 미출시 상품 판매",
+      "desc": "전 상품에 9% 즉시 할인을 적용하고, 스토어 찜 고객에게 포이즌 베스트셀러 약 200개 상품에 사용할 수 있는 3000원 쿠폰을 제공한다. 첫 구매 고객에게는 10만원 이상 구매 시 사용할 수 있는 1000원 할인쿠폰과 무료배송...",
+      "url": "https://www.cstimes.com/news/articleView.html?idxno=723849",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "롯데온, 中 패션 플랫폼 '포이즌' 론칭…국내 미출시 상품 판매",
-      "desc": "전 상품에 9% 즉시 할인을 적용하고, 스토어 찜 고객에게 포이즌 베스트셀러 약 200개 상품에 사용할 수 있는 3000원 쿠폰을 제공한다. 첫 구매 고객에게는 10만원 이상 구매 시 사용할 수 있는 1000원 할인쿠폰과 무료배송...",
-      "url": "https://www.cstimes.com/news/articleView.html?idxno=723849",
+      "title": "두핸즈 품고 인도 웨비나 마쳤다…K브랜드 물류부터 깔아야 팔린다",
+      "desc": "인도는 인구가 약 15억명이고 중위연령이 28세인 대규모 소비 시장이다. 한류 지수가 높은 태국과 베트남 등... 한국 창고에서 인도 고객까지 재고와 출고 배송이 이어지는 통합 운영 구조를 설명했고 통관과 현지 배송에...",
+      "url": "https://www.econovill.com/news/articleView.html?idxno=753495",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11331,6 +11313,22 @@
       "reason": "title_rules"
     },
     {
+      "title": "노인 정신 건강 관리에 대한 지역 사회의 인식을 높입니다.",
+      "desc": "노인 정신 건강 관리에 대한 지역 사회의 인식을 높입니다. Vietnam.vn",
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOVDlYXzROMUhpc1IyWUNHeU5wcVctVl82M285MTI5YWJnanMybDhBZ1NpSS1EYjM5ZEpMamg3ZmlrY19qTDltQXIzM1NpaFhLczdyeng5VzVETE15MWJMZzl1dWVEMWpVeXljaUdPbWI1dEdXSFU5eE9GelFzelU2N0pEbXN2Y0dXUTVMSVJxTkhBSHNWSjNqbThxU3E3RnVZZjBuZ1hadmdfdw?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "생활권 숲에서 스트레스 53% 감소…정신건강 종사자 산림치유 효과 확인",
+      "desc": "생활권 숲에서 스트레스 53% 감소…정신건강 종사자 산림치유 효과 확인 한국영농신문",
+      "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTFB5eGF0ZGpVSzVkZ0VBcnNEcy1LMG1Pc1k5ektCekJyQkRCV1YzeUMyRlVvazRuTjFNaVllcU5teDR3OHFYZ1Y0NGotWW9sSnJqUlQzcDRXTU9hejU0TFpCZDVwVDZOWmE3UnNpMVNn?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
       "title": "코윈, 청소년 마약 예방·인식 개선 세미나",
       "desc": "코윈, 청소년 마약 예방·인식 개선 세미나 미주중앙일보",
       "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE5oajJNdHNudl9UOFVlQjdEOTBuMVFKNEtPQWRaRHRnWGUyRXpmWEVvUzA4Qmo2cloxcVp3eTRQMHdrUlVxOTdmX0pybG1sSU5GT3hna2pvMjVxdzNLbWNIUGxB?oc=5",
@@ -11350,6 +11348,14 @@
       "title": "DH times | 불필요한 약, AI가 끊어낸다…美 '아웃트로', 약물 오남용 시대에 던진 첫 신호",
       "desc": "DH times | 불필요한 약, AI가 끊어낸다…美 '아웃트로', 약물 오남용 시대에 던진 첫 신호 https://www.dhtimes.co.kr/",
       "url": "https://news.google.com/rss/articles/CBMiakFVX3lxTE83TUdleFp1YVRnU2N0RWRpZVVzaWQ1SnBGem16LVpXbzZXTHlqTUpwQzBJMnZHNVc4Smlib3ZkOTF1OEtrZVN6SnZnRWZDUGVDQ1hNbXNWM040Y3lrLU9nbHB1Zk0xYjh2S0E?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "베트남 노동총연맹은 노동자들의 목소리에 귀 기울입니다.",
+      "desc": "베트남 노동총연맹은 노동자들의 목소리에 귀 기울입니다. Vietnam.vn",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPZlgwTHRVWmlfZnI2dk5xbHpkZHNHcXJiNTVMMm9MMjRpRUlXM3YxeUw1ZUwzZWpQNzEwUTJiZWdBVTNNLU5vSnpLNHlkRENlZHJsVXVTUE9JZDUzXzVEMC01ZE44VzdiSmQ4cG9ETDktREx6YmtOZVZ0UzhLWThJMGVkUy1sN05JUEZEYU15NXRJT0o5VkxBVXBSY3o?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -11627,17 +11633,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "단양군서 '대한민국 의료봉사자의 날' 선포…주민 285명 무료 종합진료",
-      "desc": "현장에는 의사와 치과의사, 한의사, 간호사, 약사, 응급구조사 등 의료진과 의대·치대·한의대·약대·간호대... 이후 내과와 신경외과, 정신건강 관련 진료, 치과, 침구·한방재활의학과 등 필요한 진료과목을 선택해...",
-      "url": "http://www.bokuennews.com/news/article.html?no=285216",
+      "title": "울진군, 거동 불편 취약계층에 찾아가는 맞춤형 보건의료서비스 제공",
+      "desc": "의사와 보건소 간호사, 사회복지사가 팀을 구성해 장기요양 수급자 가정을 방문해 의료·건강관리와... 치매안심센터와 정신건강복지센터를 연계해 치매검진과 정신건강 관리도 지원한다. 황이주 울진군수는 \"군민들이...",
+      "url": "https://www.hidomin.com/news/articleView.html?idxno=724017",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "울진군, 거동 불편 취약계층에 찾아가는 맞춤형 보건의료서비스 제공",
-      "desc": "의사와 보건소 간호사, 사회복지사가 팀을 구성해 장기요양 수급자 가정을 방문해 의료·건강관리와... 치매안심센터와 정신건강복지센터를 연계해 치매검진과 정신건강 관리도 지원한다. 황이주 울진군수는 \"군민들이...",
-      "url": "https://www.hidomin.com/news/articleView.html?idxno=724017",
+      "title": "단양군서 '대한민국 의료봉사자의 날' 선포…주민 285명 무료 종합진료",
+      "desc": "현장에는 의사와 치과의사, 한의사, 간호사, 약사, 응급구조사 등 의료진과 의대·치대·한의대·약대·간호대... 이후 내과와 신경외과, 정신건강 관련 진료, 치과, 침구·한방재활의학과 등 필요한 진료과목을 선택해...",
+      "url": "http://www.bokuennews.com/news/article.html?no=285216",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -12635,14 +12641,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "삼성서울병원, '가치기반의료' 심포지엄 개최…'삶의 질' 중심 혁신",
-      "desc": "두 번째 세션에서는 암 환자 다학제 협진 시스템, 노인종양학 임상 경로, 고령 암 생존자의 정신건강 관리, 간호사 주도의 노인 암 케어 등 환자 중심 진료를 임상에 안착시키기 위한 구체적 실행 모델이 다뤄졌다....",
-      "url": "http://www.newsian.co.kr/news/articleView.html?idxno=95306",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "\"회사서 진료받고 약은 퇴근길에\"…일동제약 '새로닥터' 1년",
       "desc": "\"회사서 진료받고 약은 퇴근길에\"…일동제약 '새로닥터' 1년 데일리팜",
       "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1SS2owZFNtZTRUX1NjbllqVlZsZEtwMXR6aVZFbkxQdnV3TGlKbzJNanZvR01Ia0VVSFJjX2hPSTBnRlNKZER2SXBBcGtqdzNqbDNzNjR3?oc=5",
@@ -12665,6 +12663,16 @@
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
+    },
+    {
+      "title": "실천약 \"시범사업 평가도 없이 비대면진료 제도화 안 돼\"",
+      "desc": "실천약 \"시범사업 평가도 없이 비대면진료 제도화 안 돼\" 약업신문",
+      "url": "http://m.yakup.com/news/?mode=view&cat=17&cat2=&cat3=0&nid=333753",
+      "topics": [
+        "pharm"
+      ],
+      "status": "candidate",
+      "reason": "metadata_unavailable"
     },
     {
       "title": "삼가역(에버라인) 위고비 용량별 처방 최저가 5,000원~ 병원/약국 가격 비교(2026)",
@@ -13777,17 +13785,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "한화손보, 정신건강 입원학생 학업 지원 '병원학교' 개소…배움 공백 해...",
-      "desc": "한화손해보험이 정신건강 문제로 입원한 학생들의 학업 단절을 막고 일상 복귀를 돕는 지원에 나선다. 기존... 퇴원을 앞둔 학생에게 전문 의료사회복지사가 '학교 복귀 상담'을 진행해 장기간 치료 이후 학생이 기존...",
-      "url": "https://www.newsworks.co.kr/news/articleView.html?idxno=853266",
+      "title": "한화손보, 고대 안암병원·서울시교육청과 정신건강 병원학교 '다숨교실...",
+      "desc": "의료사회복지사가 학교 복귀 상담을 진행할 예정입니다. 한화손보 관계자는 \"의료기관, 교육기관 그리고 기업이 각자의 전문성을 모아 미래 세대의 건강한 성장이라는 공동의 목표를 이뤄낸 뜻깊은 사례\"라며 \"치료를 넘어...",
+      "url": "http://www.paxetv.com/news/articleView.html?idxno=281471",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "한화손보, 고대 안암병원·서울시교육청과 정신건강 병원학교 '다숨교실...",
-      "desc": "의료사회복지사가 학교 복귀 상담을 진행할 예정입니다. 한화손보 관계자는 \"의료기관, 교육기관 그리고 기업이 각자의 전문성을 모아 미래 세대의 건강한 성장이라는 공동의 목표를 이뤄낸 뜻깊은 사례\"라며 \"치료를 넘어...",
-      "url": "http://www.paxetv.com/news/articleView.html?idxno=281471",
+      "title": "한화손보, 정신건강 입원학생 학업 지원 '병원학교' 개소…배움 공백 해...",
+      "desc": "한화손해보험이 정신건강 문제로 입원한 학생들의 학업 단절을 막고 일상 복귀를 돕는 지원에 나선다. 기존... 퇴원을 앞둔 학생에게 전문 의료사회복지사가 '학교 복귀 상담'을 진행해 장기간 치료 이후 학생이 기존...",
+      "url": "https://www.newsworks.co.kr/news/articleView.html?idxno=853266",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -14025,14 +14033,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "단계가 많은 게임인지 비교하는 룰렛' 진행 구조",
-      "desc": "단계가 많은 게임인지 비교하는 룰렛' 진행 구조 Calgary Roughnecks",
-      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFBoeUd4QXZ0OWxHWlRvOG5NVGNGQWxVb3ZYMERhTklwY0ZoQkRwRFZXNXNGMmd6UEdWdkE5OVEwMWE0cnZwSXlSaFdfREhrNjlidlBZTlZjUFJXbEoxUXRva05vR1hzR0U?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "[금융권 이모저모]삼성자산운용, 연금투자 가이드북 'ETF 연금술사' 발간...",
       "desc": "토스뱅크는 자체 구축한 지식관리 시스템과 고객 채팅, 상담원 전용 플랫폼에 AI 에이전트를 연결해 AI... 취업준비생과 청년 사업자는 '서민금융 잇다' 앱 또는 홈페이지에서 비대면 보증심사를 거쳐 승인받은 뒤...",
       "url": "https://www.businessplus.kr/news/articleView.html?idxno=117801",
@@ -14250,6 +14250,14 @@
       "title": "광화문 1만 결집, 이젠 국회로… \"정부·여당에 위기의식 전달\"",
       "desc": "사진= 대한약사회 대한약사회의 비대면진료 약배송 확대 저지 투쟁이 광화문에서 국회로 무대를 옮긴다.... 노수진 홍보이사도 \"이번 총궐기대회에서 약배송과 플랫폼 문제를 국민 건강의 관점에서 환기할 수 있었다\"며...",
       "url": "https://www.hitnews.co.kr/news/articleView.html?idxno=79314",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "[단독] 핵심 인력이라더니 7.6%…복지부 심리상담 해명, 자기 자료와 어긋났다",
+      "desc": "[단독] 핵심 인력이라더니 7.6%…복지부 심리상담 해명, 자기 자료와 어긋났다 서울일보",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE5RR09xOGkwTnBPdzRuZTlVbTJ1VHpXb3hIblFGYmdSYUc1Wmh0Y0hOaFpSRXJSY1licHNXQ0tQbWZYYUZTLUtkOHJyQU1SWTREdnRWcS15bTFHWWxxNGV4bW42b1BoMGRkUDBz0gFvQVVfeXFMUEJyOWs1VVpwd0EteU9vZWtyQ3FXa2wyOG85NEZIOHVRZWYtRGJDeVVqVktJSE8yeWNUSk5fQnJqbV85dUpqeVZWa3pVNG5abGlMZVNoY0dPV2VGUl94ZC0wOEsxUnQxTW16WnBmWTA0?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -15543,24 +15551,6 @@
       "reason": "title_rules"
     },
     {
-      "title": "실천약 \"시범사업 평가도 없이 비대면진료 제도화 안 돼\"",
-      "desc": "실천약 \"시범사업 평가도 없이 비대면진료 제도화 안 돼\" 약업신문",
-      "url": "http://m.yakup.com/news/?mode=view&cat=17&cat2=&cat3=0&nid=333753",
-      "topics": [
-        "pharm"
-      ],
-      "status": "candidate",
-      "reason": "metadata_unavailable"
-    },
-    {
-      "title": "메가팩토리약국, 첫 가맹설명회 개최… 향후 사업 계획 설명 - 조선비즈",
-      "desc": "메가팩토리약국, 첫 가맹설명회 개최… 향후 사업 계획 설명 - 조선비즈 Chosunbiz",
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxPaU92LVNnTmlqck9WRlZJU09hNUdTeE1vVDQ2dldOTDBpeEZ3SVJnRG1tN19pc2lWcnk2TTFGeEZ6UG5sZ2NqZTlWUDNvZmlJSmVWVDR5VEVuVnJRbHpYU05ObFI2SmgyUkZ2YWlIUlhtMlZ3b2xLRm43dDkyV3BQaFRXWGE5dGtma1BwYtIBoAFBVV95cUxOMmxYcUdTNjh3X1dtbDh4VVM0bVNDcTdLd3hEaWdES3NEa2RNXzR4bE9Hb19DOGlfV1lUMHFmOGc3T2puSU9XazY2YUMwV2RraVNUNnFnS1Z1a3BPbGJmUDFxOVF4WWc4emtpUnRycTRyTmdMLUlIdjNlYXprRnotbTJyT0F4aFY5blB6UHk3Z3FHRlNxd0psUi1NWVpsLXQ0?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
       "title": "이기찬, 히트곡 ‘감기’ 들고 약국 순회…제약사 광고까지",
       "desc": "이기찬, 히트곡 ‘감기’ 들고 약국 순회…제약사 광고까지 스포츠동아",
       "url": "https://news.google.com/rss/articles/CBMibkFVX3lxTE8zQnBBMWtZaUwtNFpST1ZSUzNRajd6cTF6V0xma3lPVG0xWDZwenRvSWw3NUJwSVNQNl8yZG0zWURSaGg5amVRSGl3SFl1Mkl6c2NBWFYtUGU1T2RaMU9kQXpFcXhQb25mWUVRV2x3?oc=5",
@@ -15577,9 +15567,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "롱쩌우시와 베트남 젊은 의사 협회가 약국에서 의료 협력 사업을 시작했습니다.",
-      "desc": "롱쩌우시와 베트남 젊은 의사 협회가 약국에서 의료 협력 사업을 시작했습니다. Vietnam.vn",
-      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxONkQzTVFVX1BDYW9FakhiUjRPN3VlOUZqd2cxc2FESnY3WTRMM2lCT283RGx3Q0doaXVZYXo3eUNqYzNYMEp5NHROTnkzNkwxMXhXR3NUMkVTZVZTRXVoUkhsWGVKaXpsc2w2X1dndjVpazk0WWo1cUxMcUNtQW5TY3NoYVVkMUxkLWRoOXE2TW1HeUgtYXhBemdMYnpiQXBEYlo0cXlEQjIyVHVuWmZFQVdDOHIxUQ?oc=5",
+      "title": "롱차우는 지역 약국의 역할을 확대하여 의사들이 주민들과 더 가까워지도록 합니다.",
+      "desc": "롱차우는 지역 약국의 역할을 확대하여 의사들이 주민들과 더 가까워지도록 합니다. Vietnam.vn",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPQ1lmUUxRNTNxOEFwaUFOQ0xBZjA2Z1o1aFNhcWdPc181b3hNMzNyZW9NdGhURXRodjl6YXM1QktGOXR4MXVSWm01ZDA1eFdTbUxBZ3pDa1lRWi00QjNGTldaaG1QTFFmSXFlTzVSTXRrMTFQaHhnNm00RF9rT0hiWFRhbjlLVWNqM1hMMHZJMGdKVXd4T3gzV0duX0YzQlFSWXRMSjJRcw?oc=5",
+      "topics": [],
+      "status": "rejected",
+      "reason": "title_rules"
+    },
+    {
+      "title": "창고형 약국, 개인약국·유통법인 결합 운영…법적 관리 사각지대 논란",
+      "desc": "창고형 약국, 개인약국·유통법인 결합 운영…법적 관리 사각지대 논란 더쎈뉴스",
+      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1FZC1lWE95SFhLRndRdnNwdmZwZlpqS3ZPRjNjc0RHa3R1dXlsRU9OLWxTU2Q0SVlJNDM2TGJ5SkRCNEJOYUR3NVg2WWdna3BKTmVhWm1TTHNPek1NZTNSOEFGck1jNVJF?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -15596,14 +15594,6 @@
       "title": "전국 건강검진 데이터를 바탕으로 의사들이 약국에서 진료 상담을 시행하고 있다.",
       "desc": "전국 건강검진 데이터를 바탕으로 의사들이 약국에서 진료 상담을 시행하고 있다. Vietnam.vn",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOTkdyMUtDNDhybV8yQTVWTzIyczI0M0kyLW8zOW1fWk00SXJuVUpVWk9tSjVjTEN0UTlqYWlRM2ZNR3hQckYxQ3lEcy1NRDZSR3czdzJtSDlVSHowSzRNckpnZmZWSXVoazBxd0ZRY0xONlotOFJQaXlOVDQ0SzRFWW9LeFZZTlFsaGRPYkVha2x0Nk04eU1jcFg4ckctNjA?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "창고형 약국, 개인약국·유통법인 결합 운영…법적 관리 사각지대 논란",
-      "desc": "창고형 약국, 개인약국·유통법인 결합 운영…법적 관리 사각지대 논란 더쎈뉴스",
-      "url": "https://news.google.com/rss/articles/CBMiaEFVX3lxTE1FZC1lWE95SFhLRndRdnNwdmZwZlpqS3ZPRjNjc0RHa3R1dXlsRU9OLWxTU2Q0SVlJNDM2TGJ5SkRCNEJOYUR3NVg2WWdna3BKTmVhWm1TTHNPek1NZTNSOEFGck1jNVJF?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -15652,14 +15642,6 @@
       "title": "스칼프 브랜드 리필드, 뷰티컬리 입점… 잔류형 두피케어 확대",
       "desc": "스칼프 브랜드 리필드, 뷰티컬리 입점… 잔류형 두피케어 확대 피앤피뉴스",
       "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFBobFQ4ZEdsdGlZRDVNNWZNeTlLVWRNSGVBVWJHRFROaWZmYklQR1V6b0VyT21LWGhHa1N5di1peFdPY3NlcnJFd3ZWUUJ6ZE1ET0ttZEE2RFVKYnVyb0E?oc=5",
-      "topics": [],
-      "status": "rejected",
-      "reason": "title_rules"
-    },
-    {
-      "title": "유럽 약국 AI 로보틱스 산업 분석",
-      "desc": "유럽 약국 AI 로보틱스 산업 분석 브런치",
-      "url": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE1DeEVQLXpKekdVenVhSFdBLWpOdkwwWmxwbVR3S2lDSEctSFJRWF9QMWNBbzN0TzRJZEo5NEdfb1VINk5reVVBUA?oc=5",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -16721,17 +16703,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "반팜, 약국 화장품 유통망 확장...'더마벨' 2종 독점 입점",
-      "desc": "약국 통합 관리 플랫폼 '반팜' 운영사인 더약솔루션은 더마코스메틱 브랜드 더마벨(DERMABELL)의 대표 제품 2종을 지난 9월 14일부터 반팜 커머스를 통해 국내 약국 유통 채널에 단독 공급하고 있다고 7일 밝혔다. 입점...",
-      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306755",
+      "title": "국내개발 첫 GLP-1 비만약 상용화…위고비·마운자로 양강구도 흔들까",
+      "desc": "에페글레나타이드는 한미약품의 자체 장기지속형 플랫폼 기술인 '랩스커버리(LAPSCOVERY)'가 적용된 GLP-1... 실제 약국 판매가는 위고비가 25만원 안팎, 마운자로는 30만원 안팎으로 형성돼 있다. 에페는 이보다 낮은...",
+      "url": "https://www.apsk.co.kr/news/articleView.html?idxno=540671",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "국내개발 첫 GLP-1 비만약 상용화…위고비·마운자로 양강구도 흔들까",
-      "desc": "에페글레나타이드는 한미약품의 자체 장기지속형 플랫폼 기술인 '랩스커버리(LAPSCOVERY)'가 적용된 GLP-1... 실제 약국 판매가는 위고비가 25만원 안팎, 마운자로는 30만원 안팎으로 형성돼 있다. 에페는 이보다 낮은...",
-      "url": "https://www.apsk.co.kr/news/articleView.html?idxno=540671",
+      "title": "반팜, 약국 화장품 유통망 확장...'더마벨' 2종 독점 입점",
+      "desc": "약국 통합 관리 플랫폼 '반팜' 운영사인 더약솔루션은 더마코스메틱 브랜드 더마벨(DERMABELL)의 대표 제품 2종을 지난 9월 14일부터 반팜 커머스를 통해 국내 약국 유통 채널에 단독 공급하고 있다고 7일 밝혔다. 입점...",
+      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306755",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -18329,17 +18311,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온 \"후속 제품군, 美 대형 PBM 추가 등재 임박\"",
-      "desc": "지난해 10월 미국 출시된 자가면역질환 치료제 앱토즈마(성분명 토실리주맙)는 미국 3대 PBM 사보험 처방집에 선호의약품으로 등재되며 출시 초반부터 미국 보험 시장의 절반 이상 환급 커버리지를 확보했다. 이달 초...",
-      "url": "https://www.insight.co.kr/news/577703",
+      "title": "한미약품, 기술료·비만 신약 기대감..3분기 실적 부진 만회한다",
+      "desc": "한미약품의 비만치료제 '에페오토인젝터주(성분명 에페글레나타이드)'는 지난 7일... 낮고 처방 환자군이 제한적이라는 점에서 초기 시장 침투를 위해 가격 경쟁력 확보가 중요하다\"고 분석했다. 유안타증권에 따르면...",
+      "url": "https://kpenews.com/View.aspx?No=4262782",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "한미약품, 기술료·비만 신약 기대감..3분기 실적 부진 만회한다",
-      "desc": "한미약품의 비만치료제 '에페오토인젝터주(성분명 에페글레나타이드)'는 지난 7일... 낮고 처방 환자군이 제한적이라는 점에서 초기 시장 침투를 위해 가격 경쟁력 확보가 중요하다\"고 분석했다. 유안타증권에 따르면...",
-      "url": "https://kpenews.com/View.aspx?No=4262782",
+      "title": "셀트리온 \"후속 제품군, 美 대형 PBM 추가 등재 임박\"",
+      "desc": "지난해 10월 미국 출시된 자가면역질환 치료제 앱토즈마(성분명 토실리주맙)는 미국 3대 PBM 사보험 처방집에 선호의약품으로 등재되며 출시 초반부터 미국 보험 시장의 절반 이상 환급 커버리지를 확보했다. 이달 초...",
+      "url": "https://www.insight.co.kr/news/577703",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -18385,17 +18367,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 미국 대형 PBM 추가 계약 추진…4분기 성장세 지속 예고",
-      "desc": "셀트리온은 앞서 자가면역질환 치료제 앱토즈마(성분명 토실리주맙)를 미국 3대 PBM의 사보험 처방집에 선호의약품으로 등재했다. 이달 초 미국에 출시한 알레르기 치료제 옴리클로(오말리주맙)도 대형 PBM 옵텀의...",
-      "url": "https://news.tf.co.kr/read/economy/2376030.htm",
+      "title": "美 대형 PBM 등재 임박…셀트리온, 4분기 실적 가속도 붙는다",
+      "desc": "앞서 셀트리온은 지난해 10월 미국에 출시한 자가면역질환 치료제 '앱토즈마'(성분명 토실리주맙)를 3대 PBM 사보험 처방집에 선호의약품으로 등재시키며 현지 보험 시장 절반 이상의 환급 기반을 다졌다. 이달 초 선보인...",
+      "url": "https://www.thefairnews.co.kr/news/articleView.html?idxno=90636",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "美 대형 PBM 등재 임박…셀트리온, 4분기 실적 가속도 붙는다",
-      "desc": "앞서 셀트리온은 지난해 10월 미국에 출시한 자가면역질환 치료제 '앱토즈마'(성분명 토실리주맙)를 3대 PBM 사보험 처방집에 선호의약품으로 등재시키며 현지 보험 시장 절반 이상의 환급 기반을 다졌다. 이달 초 선보인...",
-      "url": "https://www.thefairnews.co.kr/news/articleView.html?idxno=90636",
+      "title": "셀트리온, 미국 대형 PBM 추가 계약 추진…4분기 성장세 지속 예고",
+      "desc": "셀트리온은 앞서 자가면역질환 치료제 앱토즈마(성분명 토실리주맙)를 미국 3대 PBM의 사보험 처방집에 선호의약품으로 등재했다. 이달 초 미국에 출시한 알레르기 치료제 옴리클로(오말리주맙)도 대형 PBM 옵텀의...",
+      "url": "https://news.tf.co.kr/read/economy/2376030.htm",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -18465,17 +18447,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 고수익 후속 제품군 美 대형 PBM 추가 등재 초읽기…4분기 실...",
-      "desc": "지난해 10월 미국 시장에 첫발을 내디딘 자가면역질환 치료제 앱토즈마(성분명 토실리주맙)의 경우, 현지 3대 PBM 사보험 처방집에 모두 선호의약품으로 이름을 올리며 출시 초반부터 전체 보험 시장의 과반에 달하는 환급...",
-      "url": "https://www.widedaily.com/news/articleView.html?idxno=301924",
+      "title": "한미약품 주가 7%대 급락…국산 비만신약 '에페' 허가에도 41만8000원, 시...",
+      "desc": "한미약품은 지난 7일 식품의약품안전처로부터 GLP-1 계열 비만신약 '에페(성분명 에페글레나타이드)'의 국내... 실제 시장에서는 약가와 환자 부담, 처방 편의성, 공급 안정성, 기존 치료제와의 임상적 차별성 등이...",
+      "url": "https://www.cbci.co.kr/news/articleView.html?idxno=615241",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "한미약품 주가 7%대 급락…국산 비만신약 '에페' 허가에도 41만8000원, 시...",
-      "desc": "한미약품은 지난 7일 식품의약품안전처로부터 GLP-1 계열 비만신약 '에페(성분명 에페글레나타이드)'의 국내... 실제 시장에서는 약가와 환자 부담, 처방 편의성, 공급 안정성, 기존 치료제와의 임상적 차별성 등이...",
-      "url": "https://www.cbci.co.kr/news/articleView.html?idxno=615241",
+      "title": "셀트리온, 고수익 후속 제품군 美 대형 PBM 추가 등재 초읽기…4분기 실...",
+      "desc": "지난해 10월 미국 시장에 첫발을 내디딘 자가면역질환 치료제 앱토즈마(성분명 토실리주맙)의 경우, 현지 3대 PBM 사보험 처방집에 모두 선호의약품으로 이름을 올리며 출시 초반부터 전체 보험 시장의 과반에 달하는 환급...",
+      "url": "https://www.widedaily.com/news/articleView.html?idxno=301924",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19113,17 +19095,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 3분기 영업이익 5100억원…\"분기 사상 최대 실적\"",
-      "desc": "유럽에서는 ‘램시마SC’(성분명 인플릭시맙, 피하주사제형)와 ‘옴리클로’(성분명 오말리주맙)를 중심으로 처방과 입찰 성과가 확대됐다. 또한 유럽 26개국에서 판매 중인 옴리클로는 올해 7월 현지 시장 데이터 기준...",
-      "url": "https://www.mediapen.com/news/view/1129303",
+      "title": "위고비 건강보험 급여 도전, 비만약 가격전쟁",
+      "desc": "GLP-1 계열인 마운자로와 위고비를 처방받으려면 월 30만~40만원을 본인이 부담해야 한다. 가격 차가 해외... 식약처는 지난 7일 에페오토인젝터주(성분명 에페글레나타이드)를 국산 신약 45호로 허가했다. 당뇨병이 없는...",
+      "url": "http://www.smedaily.co.kr/news/articleView.html?idxno=364526",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "위고비 건강보험 급여 도전, 비만약 가격전쟁",
-      "desc": "GLP-1 계열인 마운자로와 위고비를 처방받으려면 월 30만~40만원을 본인이 부담해야 한다. 가격 차가 해외... 식약처는 지난 7일 에페오토인젝터주(성분명 에페글레나타이드)를 국산 신약 45호로 허가했다. 당뇨병이 없는...",
-      "url": "http://www.smedaily.co.kr/news/articleView.html?idxno=364526",
+      "title": "셀트리온, 3분기 영업이익 5100억원…\"분기 사상 최대 실적\"",
+      "desc": "유럽에서는 ‘램시마SC’(성분명 인플릭시맙, 피하주사제형)와 ‘옴리클로’(성분명 오말리주맙)를 중심으로 처방과 입찰 성과가 확대됐다. 또한 유럽 26개국에서 판매 중인 옴리클로는 올해 7월 현지 시장 데이터 기준...",
+      "url": "https://www.mediapen.com/news/view/1129303",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19241,17 +19223,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "HK이노엔, 케이캡 美 임상 3상 발표…주요 지표 충족",
-      "desc": "테고프라잔은 HK이노엔이 개발한 대한민국 제30호 신약 케이캡의 성분명이다. 케이캡은 국내에서 2019년 3월 출시돼 올해 상반기까지 누적 1조 433억원의 원외처방실적을 기록했다. 해외 55개국과 기술수출 또는...",
-      "url": "https://www.edaily.co.kr/News/Read?newsId=02847046645612264&mediaCodeNo=257&utm_source=naver&utm_medium=referral&utm_campaign=news_syndication&utm_content=original_article",
+      "title": "셀트리온, 올 3분기 영업익 첫 5000억원 돌파…역대 최대 실적",
+      "desc": "실제 유럽에서는 ‘램시마SC’(성분명: 인플릭시맙, 피하주사제형)와 ‘옴리클로’(성분명: 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 특히, 유럽 26개국에서 판매 중인 옴리클로는 주요...",
+      "url": "https://www.dnews.co.kr/uhtml/view.jsp?idxno=202610120813468190086",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 올 3분기 영업익 첫 5000억원 돌파…역대 최대 실적",
-      "desc": "실제 유럽에서는 ‘램시마SC’(성분명: 인플릭시맙, 피하주사제형)와 ‘옴리클로’(성분명: 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 특히, 유럽 26개국에서 판매 중인 옴리클로는 주요...",
-      "url": "https://www.dnews.co.kr/uhtml/view.jsp?idxno=202610120813468190086",
+      "title": "HK이노엔, 케이캡 美 임상 3상 발표…주요 지표 충족",
+      "desc": "테고프라잔은 HK이노엔이 개발한 대한민국 제30호 신약 케이캡의 성분명이다. 케이캡은 국내에서 2019년 3월 출시돼 올해 상반기까지 누적 1조 433억원의 원외처방실적을 기록했다. 해외 55개국과 기술수출 또는...",
+      "url": "https://www.edaily.co.kr/News/Read?newsId=02847046645612264&mediaCodeNo=257&utm_source=naver&utm_medium=referral&utm_campaign=news_syndication&utm_content=original_article",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19353,17 +19335,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 3Q 영업益 5100억… 분기 사상 최대 실적에 주가도 2%대 상승...",
-      "desc": "유럽 시장에서는 자가면역질환 치료제 ‘램시마SC’(성분명 인플릭시맙)와 알레르기 치료제 ‘옴리클로’(성분명 오말리주맙)를 중심으로 후속 제품군의 처방과 입찰 성과가 확대됐다. 특히 유럽 26개국에서 판매 중인...",
-      "url": "https://www.mediawatch.kr/news/article.html?no=261313",
+      "title": "셀트리온, 3분기 매출 1.5조·영업익 5100억…최대기록 경신",
+      "desc": "유럽에서는 '램시마SC'(성분명: 인플릭시맙, 피하주사제형)와 '옴리클로'(성분명: 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 주요국 입찰과 제품 공급이 하반기에 집중되는 유럽 시장...",
+      "url": "http://www.whitepaper.co.kr/news/articleView.html?idxno=267654",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 3분기 매출 1.5조·영업익 5100억…최대기록 경신",
-      "desc": "유럽에서는 '램시마SC'(성분명: 인플릭시맙, 피하주사제형)와 '옴리클로'(성분명: 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 주요국 입찰과 제품 공급이 하반기에 집중되는 유럽 시장...",
-      "url": "http://www.whitepaper.co.kr/news/articleView.html?idxno=267654",
+      "title": "셀트리온, 3Q 영업益 5100억… 분기 사상 최대 실적에 주가도 2%대 상승...",
+      "desc": "유럽 시장에서는 자가면역질환 치료제 ‘램시마SC’(성분명 인플릭시맙)와 알레르기 치료제 ‘옴리클로’(성분명 오말리주맙)를 중심으로 후속 제품군의 처방과 입찰 성과가 확대됐다. 특히 유럽 26개국에서 판매 중인...",
+      "url": "https://www.mediawatch.kr/news/article.html?no=261313",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19401,17 +19383,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 3분기 매출 1조 5000억·영업익 5100억...분기 최대 실적",
-      "desc": "유럽 시장에서는 피하주사 제형인 자가면역질환 치료제 '램시마SC(성분명 인플릭시맙)'와 알레르기성 천식·두드러기 치료제 '옴리클로(성분명 오말리주맙)'를 중심으로 처방 및 입찰 성과를 냈다. 유럽 26개국에...",
-      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306819",
+      "title": "[실적분석] 3분기에도 호실적 이어간 셀트리온...하지만 과제와 리스크...",
+      "desc": "유럽에서는 '램시마SC'(성분명: 인플릭시맙, 피하주사제형)와 '옴리클로'(성분명: 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 특히 유럽 26개국에서 판매 중인 옴리클로는 주요 5개국(EU5) 중...",
+      "url": "https://www.moneystorm.kr/news/articleView.html?idxno=7159",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "[실적분석] 3분기에도 호실적 이어간 셀트리온...하지만 과제와 리스크...",
-      "desc": "유럽에서는 '램시마SC'(성분명: 인플릭시맙, 피하주사제형)와 '옴리클로'(성분명: 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 특히 유럽 26개국에서 판매 중인 옴리클로는 주요 5개국(EU5) 중...",
-      "url": "https://www.moneystorm.kr/news/articleView.html?idxno=7159",
+      "title": "셀트리온, 3분기 매출 1조 5000억·영업익 5100억...분기 최대 실적",
+      "desc": "유럽 시장에서는 피하주사 제형인 자가면역질환 치료제 '램시마SC(성분명 인플릭시맙)'와 알레르기성 천식·두드러기 치료제 '옴리클로(성분명 오말리주맙)'를 중심으로 처방 및 입찰 성과를 냈다. 유럽 26개국에...",
+      "url": "https://www.pharmnews.com/news/articleView.html?idxno=306819",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19425,17 +19407,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 3분기 영업이익 5100억원…분기 첫 5000억원 돌파",
-      "desc": "유럽에서는 '램시마SC'(성분명 인플릭시맙, 피하주사제형)와 '옴리클로'(성분명 오말리주맙)를 중심으로 처방 및 입찰 성과가 확대됐다. 현재 유럽 26개국에서 판매 중인 옴리클로는 주요 5개국(EU5) 중 하나인...",
-      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546058",
+      "title": "셀트리온, 분기 최대 실적 다시 썼다…글로벌 성장 견인",
+      "desc": "유럽에서는 ‘램시마SC’(성분명 인플릭시맙)와 ‘옴리클로’(성분명 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 특히 유럽 26개국에서 판매 중인 옴리클로는 주요 5개국(EU5) 중 하나인...",
+      "url": "https://dealsite.co.kr/articles/170433",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온, 분기 최대 실적 다시 썼다…글로벌 성장 견인",
-      "desc": "유럽에서는 ‘램시마SC’(성분명 인플릭시맙)와 ‘옴리클로’(성분명 오말리주맙)를 중심으로 후속 제품군의 처방 및 입찰 성과가 확대됐다. 특히 유럽 26개국에서 판매 중인 옴리클로는 주요 5개국(EU5) 중 하나인...",
-      "url": "https://dealsite.co.kr/articles/170433",
+      "title": "셀트리온, 3분기 영업이익 5100억원…분기 첫 5000억원 돌파",
+      "desc": "유럽에서는 '램시마SC'(성분명 인플릭시맙, 피하주사제형)와 '옴리클로'(성분명 오말리주맙)를 중심으로 처방 및 입찰 성과가 확대됐다. 현재 유럽 26개국에서 판매 중인 옴리클로는 주요 5개국(EU5) 중 하나인...",
+      "url": "https://www.kpanews.co.kr/news/articleView.html?idxno=546058",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19585,17 +19567,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온 3분기 영업익 '역대 최대'...69.2% 늘어 5100억원",
-      "desc": "유럽에서는 '램시마SC'(성분명 인플릭시맙, 피하주사 제형)와 '옴리클로'(성분명 오말리주맙) 등 후발 제품군의 처방, 입찰 성과가 나타났다. 미국에서도 '스테키마'(성분명 우스테키누맙)와 '유플라이마'(성분명...",
-      "url": "http://www.wowtv.co.kr/NewsCenter/News/Read?articleId=A202610120021&t=NN",
+      "title": "셀트리온 첫 분기 영업이익 5천억원 돌파",
+      "desc": "유럽에서는 '램시마SC'(성분명 인플릭시맙, 피하주사 제형)와 '옴리클로'(성분명 오말리주맙)를 중심으로 처방, 입찰 성과가 가시화됐고, 미국에선 '스테키마'(성분명 우스테키누맙)와 '유플라이마'(성분명 아달리무맙)...",
+      "url": "https://www.koreareport.co.kr/news/articleView.html?idxno=53555",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "셀트리온 첫 분기 영업이익 5천억원 돌파",
-      "desc": "유럽에서는 '램시마SC'(성분명 인플릭시맙, 피하주사 제형)와 '옴리클로'(성분명 오말리주맙)를 중심으로 처방, 입찰 성과가 가시화됐고, 미국에선 '스테키마'(성분명 우스테키누맙)와 '유플라이마'(성분명 아달리무맙)...",
-      "url": "https://www.koreareport.co.kr/news/articleView.html?idxno=53555",
+      "title": "셀트리온 3분기 영업익 '역대 최대'...69.2% 늘어 5100억원",
+      "desc": "유럽에서는 '램시마SC'(성분명 인플릭시맙, 피하주사 제형)와 '옴리클로'(성분명 오말리주맙) 등 후발 제품군의 처방, 입찰 성과가 나타났다. 미국에서도 '스테키마'(성분명 우스테키누맙)와 '유플라이마'(성분명...",
+      "url": "http://www.wowtv.co.kr/NewsCenter/News/Read?articleId=A202610120021&t=NN",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -19705,17 +19687,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "사천시보건소, 공공의료·출산·건강증진·질병예방·안전망 등 5대 전략...",
-      "desc": "'사천행복 마음안심버스'와 마음건강 주치의 상담실, 생애주기별 마음건강사업을 통해 심리상담 접근성을 높이고, 정신건강 심리상담 바우처도 지원한다. 치매 분야에서는 조기검진과 지역사회 치매안전망을 강화하고...",
-      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3719897",
+      "title": "사천시, 시민 건강 지키는 5대 보건의료 전략 추진…예방부터 돌봄까지",
+      "desc": "'사천행복 마음안심버스'와 마음건강 주치의 상담실, 생애주기별 마음건강사업을 운영하고 정신건강 심리상담 바우처 지원도 추진한다. 치매 조기검진과 지역사회 돌봄체계를 강화하는 한편 치매안심마을을 6개...",
+      "url": "https://www.shinailbo.co.kr/news/articleView.html?idxno=5071113",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "사천시, 시민 건강 지키는 5대 보건의료 전략 추진…예방부터 돌봄까지",
-      "desc": "'사천행복 마음안심버스'와 마음건강 주치의 상담실, 생애주기별 마음건강사업을 운영하고 정신건강 심리상담 바우처 지원도 추진한다. 치매 조기검진과 지역사회 돌봄체계를 강화하는 한편 치매안심마을을 6개...",
-      "url": "https://www.shinailbo.co.kr/news/articleView.html?idxno=5071113",
+      "title": "사천시보건소, 공공의료·출산·건강증진·질병예방·안전망 등 5대 전략...",
+      "desc": "'사천행복 마음안심버스'와 마음건강 주치의 상담실, 생애주기별 마음건강사업을 통해 심리상담 접근성을 높이고, 정신건강 심리상담 바우처도 지원한다. 치매 분야에서는 조기검진과 지역사회 치매안전망을 강화하고...",
+      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3719897",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -21065,17 +21047,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "[국감] 원외탕전실 규제 강화 필요성 제기",
-      "desc": "원외탕전실 조제한약은 해외에 의약품으로 수출할 수 없어 식품이나 대체의약에 불과하다”고 주장했다. 남인순 의원은 “소수의 원외탕전실에 수백 곳 이상의 의료기관이 처방을 보내는 구조가 확산되었으며, 한약 조제...",
-      "url": "http://www.whosaeng.com/174318",
+      "title": "허종식 \"어린이 약 공급위기, 정부가 사실상 방치\"",
+      "desc": "이 때문에 최근 5년간 어린이 의약품의 공급중단 현황과 정상화 시점, 공급 차질 지속기간, 대체의약품 유무... 가루약을 조제하는 일까지 벌어졌다. 그러나 식약처의 공식 통계에는 당시 어린이 해열제 시럽 공급 부족...",
+      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3718258",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "허종식 \"어린이 약 공급위기, 정부가 사실상 방치\"",
-      "desc": "이 때문에 최근 5년간 어린이 의약품의 공급중단 현황과 정상화 시점, 공급 차질 지속기간, 대체의약품 유무... 가루약을 조제하는 일까지 벌어졌다. 그러나 식약처의 공식 통계에는 당시 어린이 해열제 시럽 공급 부족...",
-      "url": "https://www.gukjenews.com/news/articleView.html?idxno=3718258",
+      "title": "[국감] 원외탕전실 규제 강화 필요성 제기",
+      "desc": "원외탕전실 조제한약은 해외에 의약품으로 수출할 수 없어 식품이나 대체의약에 불과하다”고 주장했다. 남인순 의원은 “소수의 원외탕전실에 수백 곳 이상의 의료기관이 처방을 보내는 구조가 확산되었으며, 한약 조제...",
+      "url": "http://www.whosaeng.com/174318",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -21137,17 +21119,17 @@
       "reason": "title_rules"
     },
     {
-      "title": "'격오지 근무 군무원 주거 지원' 인권위 권고…국방부 \"불수용\"",
-      "desc": "또 군무원도 의약품 원내 조제를 받을 수 있게 조치하겠다고 했다. 그러나 군무원을 주거 지원 대상에... 격오지의 경우 주거 인프라가 부족하고 실질적인 대체 주거 수단이 충분치 않은 데다 군무원은 당직 근무·비상 대응...",
-      "url": "https://www.yna.co.kr/view/AKR20261008016600004?input=1195m",
+      "title": "국방부, '격오지 군무원 주거지원' 인권위 권고 불수용…\"공무원과 형평...",
+      "desc": "원내 조제 허용 등이 포함됐다. 하지만 국방부는 취약지역 군무원을 주거지원 대상에 포함하라는 권고를... 있는 대체 주거 수단이 충분하지 않은 것으로 확인됐다고 지적했다. 군무원 역시 당직근무와 비상대응 등 군 조직...",
+      "url": "https://www.news1.kr/society/general-society/6314120",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
     },
     {
-      "title": "국방부, '격오지 군무원 주거지원' 인권위 권고 불수용…\"공무원과 형평...",
-      "desc": "원내 조제 허용 등이 포함됐다. 하지만 국방부는 취약지역 군무원을 주거지원 대상에 포함하라는 권고를... 있는 대체 주거 수단이 충분하지 않은 것으로 확인됐다고 지적했다. 군무원 역시 당직근무와 비상대응 등 군 조직...",
-      "url": "https://www.news1.kr/society/general-society/6314120",
+      "title": "'격오지 근무 군무원 주거 지원' 인권위 권고…국방부 \"불수용\"",
+      "desc": "또 군무원도 의약품 원내 조제를 받을 수 있게 조치하겠다고 했다. 그러나 군무원을 주거 지원 대상에... 격오지의 경우 주거 인프라가 부족하고 실질적인 대체 주거 수단이 충분치 않은 데다 군무원은 당직 근무·비상 대응...",
+      "url": "https://www.yna.co.kr/view/AKR20261008016600004?input=1195m",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -21377,9 +21359,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "\"특허만료약 거품 빼고 혁신신약 채우자\"…건보재정 전략은?",
-      "desc": "최저가 대체조제와 참조가격제, 리베이트 차단 등은 가격경쟁을 촉진할 수 있는 방안으로 거론됐다. 반면 혁신신약은 비용효과성 평가 원칙을 유지하되 환자 접근이 지나치게 늦어지지 않도록 신속등재와 사후평가를...",
-      "url": "https://www.dailypharm.com/user/news/342963?REFERER=NP",
+      "title": "'수급 불안정' 속 다국적 제약사 각양각색 대응 '눈길'",
+      "desc": "기존 국문 패키지와 외관 디자인이 다른 만큼, 현장의 조제·투약 혼선을 줄이고자 호주팩 이미지와... 제약사의 선제적인 대체재 확보와 신속한 현장 대응이 의약품 유통 현장의 혼란을 줄이는 열쇠\"라고 강조했다.",
+      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=3012716",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -21393,9 +21375,9 @@
       "reason": "title_rules"
     },
     {
-      "title": "'수급 불안정' 속 다국적 제약사 각양각색 대응 '눈길'",
-      "desc": "기존 국문 패키지와 외관 디자인이 다른 만큼, 현장의 조제·투약 혼선을 줄이고자 호주팩 이미지와... 제약사의 선제적인 대체재 확보와 신속한 현장 대응이 의약품 유통 현장의 혼란을 줄이는 열쇠\"라고 강조했다.",
-      "url": "https://www.bosa.co.kr/news/articleView.html?idxno=3012716",
+      "title": "\"특허만료약 거품 빼고 혁신신약 채우자\"…건보재정 전략은?",
+      "desc": "최저가 대체조제와 참조가격제, 리베이트 차단 등은 가격경쟁을 촉진할 수 있는 방안으로 거론됐다. 반면 혁신신약은 비용효과성 평가 원칙을 유지하되 환자 접근이 지나치게 늦어지지 않도록 신속등재와 사후평가를...",
+      "url": "https://www.dailypharm.com/user/news/342963?REFERER=NP",
       "topics": [],
       "status": "rejected",
       "reason": "title_rules"
@@ -21484,27 +21466,27 @@
   "stop_reason": "candidate_budget",
   "days": 4,
   "backfill": false,
-  "cutoff": "2026-10-10T14:08:02.797389+00:00",
+  "cutoff": "2026-10-10T16:07:09.385563+00:00",
   "config_hash": "a8668ce19f6f0aaf",
   "planned_queries": 60,
   "max_candidates": 400,
   "pages": 2,
   "candidate_count": 400,
-  "accepted": 351,
+  "accepted": 352,
   "workers": {
     "decode": 16,
     "pages": 16
   },
-  "elapsed_seconds": 43,
+  "elapsed_seconds": 39,
   "titles": {
     "tried": 0,
     "fixed": 0
   },
   "images": {
-    "tried": 0,
+    "tried": 1,
     "filled": 0
   },
   "psych": 223,
-  "pharm": 1671,
+  "pharm": 1674,
   "rejected_archive": 1050
 }
