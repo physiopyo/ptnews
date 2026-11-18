@@ -41,10 +41,11 @@ let pagesPassed = 0;
 let checkboxActivations = 0;
 let detailChanges = 0;
 
-function runPage(input, check, recovered = {}) {
+function runPage(input, check, recovered = {}, extraFixtures = {}) {
   const built = buildBoard({
     "buzz.json": input,
     "buzz_recovered.json": recovered,
+    ...extraFixtures,
   });
   const errors = [];
   const virtualConsole = new VirtualConsole();
@@ -300,7 +301,15 @@ const recovered = {
     },
   },
 };
-collected.naver.hourly = { 도수치료: [{ t: "2026-09-27 12:00", news: null }] };
+const hourlyArchive = {
+  "2026-10.json": {
+    도수치료: [{ t: "2026-10-01 00:00", news: 5 }],
+    심리상담: [{ t: "2026-10-01 00:00", news: 1 }],
+  },
+  "2026-09.json": {
+    도수치료: [{ t: "2026-09-27 12:00", news: null }],
+  },
+};
 collected.naver.related_weeks = {
   도수치료: [{ key: "2026-39", items: [{ w: "현재", c: 3 }] }],
 };
@@ -320,6 +329,8 @@ runPage(
       null,
     );
     assert.ok(nv.hourly.도수치료.some((row) => row.t === "2030-01-01 12:00"));
+    assert.ok(nv.hourly.도수치료.some((row) => row.t === "2026-10-01 00:00"));
+    assert.deepEqual(Object.keys(nv.hourly).slice(0, 2), ["도수치료", "심리상담"]);
     assert.equal(nv.related_weeks.도수치료.length, 1);
     assert.equal(nv.related_weeks.도수치료[0].items[0].w, "현재");
     assert.equal(
@@ -390,6 +401,7 @@ runPage(
     );
   },
   recovered,
+  { __hourly: hourlyArchive },
 );
 
 runPage({}, ({ text, click, changeEnd, changeDetail, center }) => {

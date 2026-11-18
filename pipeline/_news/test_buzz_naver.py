@@ -14,7 +14,7 @@ import unittest
 from unittest.mock import patch
 
 import buzz_config as config
-from buzz_history import HistoryArchive, digest, observed_at
+from buzz_history import HistoryArchive, MonthlyStore, digest, history_stores, latest_per_week, observed_at
 import fetch_buzz_naver as collector
 
 STAGE = Path(__file__).resolve().parents[2]
@@ -105,6 +105,16 @@ class OfflineCase(unittest.TestCase):
     def write(self, filename, value):
         config.save(str(self.root / filename), value)
 
+    def history(self, name):
+        return history_stores(self.root)[name].load()
+
+    def channel_state(self, keyword='검색어'):
+        state = dict(self.read('buzz_channel_daily.json').get(keyword, {}))
+        for field, name in (('sb', 'seen_blog'), ('sc', 'seen_cafe')):
+            if keyword in self.history(name):
+                state[field] = self.history(name)[keyword]
+        return state
+
     def word_daily(self, keyword='검색어'):
         return HistoryArchive(self.root).word_daily(keyword)
 
@@ -165,9 +175,9 @@ class CollectorTests(OfflineCase):
         self.assertEqual(count, 10)
         self.assertEqual(self.word_daily()[0]['documents'], word_day['documents'])
         self.assertEqual(self.word_daily()[0]['related'], word_day['related'])
-        self.assertEqual(len(third['naver']['hourly']['검색어']), 2)
-        self.assertEqual(third['naver']['hourly']['검색어'][-1]['interval_hours'], 6)
-        self.assertEqual(len(third['naver']['history']), 2)
+        self.assertEqual(len(self.history('hourly')['검색어']), 2)
+        self.assertEqual(self.history('hourly')['검색어'][-1]['interval_hours'], 6)
+        self.assertEqual(len(self.history('totals')), 2)
 
     def test_daily_boundary_rss_or_queries_and_only_two_history_backfills(self):
         first_client = FakeClient()
@@ -360,10 +370,13 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
     def test_error_preserves_successful_data_and_does_not_leak_exceptions(self):
         first, _ = self.execute()
         rows = self.word_daily()
+        histories = {name: self.history(name) for name in ('totals', 'hourly', 'weeks')}
         failed = FakeClient(lambda method, url, kwargs: Response(status=503))
         result, _ = self.execute(failed, now=NOW + config.DAY)
-        for section in ('totals', 'related', 'sentiment', 'datalab', 'samples', 'history', 'hourly'):
+        for section in ('totals', 'related', 'sentiment', 'datalab', 'samples'):
             self.assertEqual(result['naver'][section], first['naver'][section], section)
+        for name, value in histories.items():
+            self.assertEqual(self.history(name), value, name)
         self.assertEqual(self.word_daily(), rows)
         for key, value in first['collection'].items():
             if 'success_at' in value:
@@ -459,6 +472,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
 
     def test_config_change_invalidates_cadence_without_losing_old_history(self):
         first, _ = self.execute()
+        first_totals = len(self.history('totals'))
         changed = {**SPEC, 'terms': [*SPEC['terms'], '새별칭']}
         client = FakeClient()
         with patch.object(config, 'CONFIG_HASH', 'new-config'):
@@ -466,7 +480,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         self.assertGreater(count, 0)
         self.assertTrue(any(call[2].get('params', {}).get('query') == '새별칭' for call in client.calls))
         self.assertEqual(result['collection']['mentions:검색어:blog']['config_hash'], 'new-config')
-        self.assertGreater(len(result['naver']['history']), len(first['naver']['history']))
+        self.assertGreater(len(self.history('totals')), first_totals)
 
     def test_zero_budget_is_byte_preserving_and_does_not_change_statuses(self):
         initial = {'naver': {'related': {'검색어': [{'w': '옛관측', 'c': 5}]},
@@ -490,25 +504,43 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
                           'collection': {'google:untouched': {'status': 'ok'}},
                           'naver': {'custom': {'preserve': True}, 'word_daily': {'검색어': [{'date': old_date, 'related': [{'w': '옛', 'c': 1}]},
                                                                              {'date': '1999-01-02', 'basis': 'first_seen'}]}}},
-            'buzz_naver_history.json': [{'date': old_date, 'totals': {'검색어': {'blog': 999}}}] * 121,
-            'buzz_related_weeks.json': {'검색어': [{'key': str(i), 'label': 'legacy', 'items': []} for i in range(9)]},
-            'buzz_hourly.json': {'검색어': [{'t': f'1999-01-01 {i:02}:00', 'blog': i} for i in range(17)]},
-            'buzz_channel_daily.json': {'검색어': {'daily': {old_date: {'blog': 5, 'cafe': 4}}, 'sb': seen, 'sc': seen}},
+            'buzz_channel_daily.json': {'검색어': {'daily': {old_date: {'blog': 5, 'cafe': 4}}}},
             'buzz_news_daily.json': {'검색어': {old_date: 7}},
             'buzz_daum_daily.json': {'검색어': {old_date: 9}},
             'buzz_custom.json': {'arbitrary': ['all', 'old', 'observations']},
         }
         for name, value in old.items():
             self.write(name, value)
+        months = {
+            'buzz_archive/related_weeks/1999-01.json': {'검색어': [
+                {'key': f'1999-01-{i + 1:02}', 'label': 'legacy', 'items': []} for i in range(9)]},
+            'buzz_archive/hourly/1999-01.json': {'검색어': [
+                {'t': f'1999-01-01 {i:02}:00', 'blog': i} for i in range(17)]},
+            'buzz_archive/totals/1999-01.json': [
+                {'date': old_date, 'totals': {'검색어': {'blog': 999}}}] * 121,
+            'buzz_archive/channel_seen/blog/1999-01.json': {'검색어': seen},
+            'buzz_archive/channel_seen/cafe/1999-01.json': {'검색어': seen},
+        }
+        for name, value in months.items():
+            self.write(name, value)
         raw = {name: (self.root / name).read_bytes() for name in old}
+        month_raw = {name: (self.root / name).read_bytes() for name in months}
         result, _ = self.execute()
         self.assertEqual(result['google'], {'preserve': 42})
         self.assertEqual(result['collection']['google:untouched'], {'status': 'ok'})
         self.assertEqual(result['naver']['custom'], {'preserve': True})
-        self.assertEqual(len(result['naver']['history']), 122)
+        self.assertEqual(len(self.history('totals')), 122)
+        self.assertEqual(len(self.history('weeks')['검색어']), 10)
         self.assertEqual(len(result['naver']['related_weeks']['검색어']), 10)
-        self.assertEqual(len(result['naver']['hourly']['검색어']), 18)
-        state = self.read('buzz_channel_daily.json')['검색어']
+        self.assertEqual(len(self.history('hourly')['검색어']), 18)
+        for name, content in month_raw.items():
+            self.assertEqual((self.root / name).read_bytes(), content, name)
+        self.assertNotIn('history', result['naver'])
+        self.assertNotIn('hourly', result['naver'])
+        stored = self.read('buzz_channel_daily.json')['검색어']
+        self.assertNotIn('sb', stored)
+        self.assertNotIn('sc', stored)
+        state = self.channel_state()
         self.assertEqual(state['daily'][old_date], {'blog': 5, 'cafe': 4})
         self.assertTrue(set(seen) <= set(state['sb']))
         self.assertTrue(set(seen) <= set(state['sc']))
@@ -526,6 +558,72 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
         self.execute(now=NOW + config.DAY)
         self.assertEqual(self.read('buzz_archive/legacy/manifest.json')['files'], manifest)
         self.assertEqual((self.root / 'buzz_custom.json').read_bytes(), raw['buzz_custom.json'])
+
+    def test_monthly_store_round_trip_running_max_month_and_untouched_files(self):
+        def rows(*values):
+            return [{'t': value} for value in values]
+        store = MonthlyStore(self.root, 'hourly', month_of=lambda row: row['t'][:7])
+        self.assertEqual(store.load(), {})
+        data = {'b': rows('2026-01-05 00:00', '2026-03-01 00:00'),
+                'a': rows('2026-02-01 00:00', '2026-02-02 00:00')}
+        store.save(data, NOW)
+        self.assertEqual(store.load(), data)
+        self.assertEqual(list(store.load()), ['b', 'a'])
+        directory = self.root / 'buzz_archive/hourly'
+        self.assertEqual(sorted(path.name for path in directory.glob('*.json')),
+                         ['2026-01.json', '2026-02.json', '2026-03.json'])
+        self.assertEqual(self.read('buzz_archive/hourly/2026-02.json'), {'a': data['a']})
+        january = (directory / '2026-01.json').read_bytes()
+        february = (directory / '2026-02.json').read_bytes()
+        march_stat = (directory / '2026-03.json').stat().st_mtime_ns
+        store = MonthlyStore(self.root, 'hourly', month_of=lambda row: row['t'][:7])
+        data = store.load()
+        # 2026-01 row after a 2026-03 row stays in the running-max month; 'a' may still use 2026-02.
+        data['b'].append({'t': '2026-01-20 00:00'})
+        data['a'].append({'t': '2026-02-10 00:00'})
+        data['c'] = rows('2026-02-11 00:00')
+        store.save(data, NOW)
+        self.assertEqual(self.read('buzz_archive/hourly/2026-03.json')['b'], data['b'][1:])
+        self.assertEqual((directory / '2026-01.json').read_bytes(), january)
+        self.assertNotEqual((directory / '2026-02.json').read_bytes(), february)
+        self.assertEqual(MonthlyStore(self.root, 'hourly').load(), data)
+        self.assertEqual(list(MonthlyStore(self.root, 'hourly').load()), ['b', 'a', 'c'])
+        # A second save in the same process appends correctly.
+        data['b'].append({'t': '2026-01-21 00:00'})
+        store.save(data, NOW)
+        self.assertEqual(MonthlyStore(self.root, 'hourly').load(), data)
+        self.assertGreaterEqual((directory / '2026-03.json').stat().st_mtime_ns, march_stat)
+        data['a'] = data['a'][:-1]
+        with self.assertRaises(ValueError):
+            store.save(data, NOW)
+        del data['a']
+        with self.assertRaises(ValueError):
+            store.save(data, NOW)
+
+    def test_monthly_store_unkeyed_uses_kst_month_without_month_of(self):
+        store = MonthlyStore(self.root, 'plain', keyed=False)
+        self.assertEqual(store.load(), [])
+        data = ['x', 'y']
+        store.save(data, NOW)  # 2026-01-31T15:00Z is already 2026-02 in KST
+        self.assertEqual(self.read('buzz_archive/plain/2026-02.json'), data)
+        self.assertEqual(MonthlyStore(self.root, 'plain', keyed=False).load(), data)
+
+    def test_buzz_json_keeps_weekly_projection_only(self):
+        self.execute()
+        # A second week appends a new key; a re-observation of the same week must not add a key.
+        later = NOW + 8 * config.DAY
+        result, _ = self.execute(now=later)
+        rows = self.history('weeks')['검색어']
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(result['naver']['related_weeks']['검색어'], latest_per_week(rows))
+        self.assertEqual(self.read('buzz.json')['naver']['related_weeks']['검색어'], latest_per_week(rows))
+        for section in ('history', 'hourly'):
+            self.assertNotIn(section, self.read('buzz.json')['naver'])
+        self.assertEqual(latest_per_week([{'key': 'b', 'v': 1}, {'key': 'a', 'v': 2}, {'key': 'b', 'v': 3}]),
+                         [{'key': 'a', 'v': 2}, {'key': 'b', 'v': 3}])
+        self.assert_compact_archive()
+        for path in (self.root / 'buzz_archive').rglob('????-??.json'):
+            self.assertNotIn('\n ', path.read_text(encoding='utf-8'), path)
 
     def test_full_word_maps_seen_url_not_recounted_and_month_boundaries(self):
         vocabulary = ' '.join(f'단어{i}' for i in range(70))
@@ -588,6 +686,7 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
 
     def test_malformed_success_does_not_become_zero_or_destroy_history(self):
         first, _ = self.execute()
+        totals = self.history('totals')
         def malformed(method, url, kwargs):
             if method == 'post':
                 return Response({'results': []})
@@ -595,8 +694,9 @@ print(json.dumps({'used': used, 'queries': [call[2]['params']['q'] for call in c
                 return Response(content=b'<html>upstream failure</html>')
             return Response({})
         result, _ = self.execute(FakeClient(malformed), now=NOW + config.DAY)
-        for section in ('totals', 'related', 'sentiment', 'datalab', 'history'):
+        for section in ('totals', 'related', 'sentiment', 'datalab'):
             self.assertEqual(result['naver'][section], first['naver'][section])
+        self.assertEqual(self.history('totals'), totals)
         self.assertEqual(result['collection']['rss:검색어']['error'], 'invalid_rss')
 
     def test_malformed_document_and_datalab_point_are_persisted_errors(self):
@@ -734,7 +834,7 @@ class BackfillTests(OfflineCase):
                          ('partial', '2026-01-30', '2026-01-30'))
 
     def test_never_overwrites_existing_observations(self):
-        self.write('buzz_channel_daily.json', {'검색어': {'daily': {'2026-01-29': {'blog': 99}}, 'sb': [], 'sc': []}})
+        self.write('buzz_channel_daily.json', {'검색어': {'daily': {'2026-01-29': {'blog': 99}}}})
         self.write('buzz_daum_daily.json', {'검색어': {'2026-01-29': 7}})
         self.write('buzz_news_daily.json', {'검색어': {'2026-01-28': 3}})
         result, _ = self.execute(PagedClient(self.fixture()), backfill_days=5, credentials=CREDS)

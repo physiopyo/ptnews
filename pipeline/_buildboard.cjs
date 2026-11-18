@@ -296,6 +296,22 @@ function buildWordFiles(keywords) {
   });
   return files;
 }
+// Six-hour snapshots are stored per month in buzz_archive/hourly.
+function loadHourlyRows() {
+  const dir = __dirname + '/_news/buzz_archive/hourly';
+  let names;
+  try { names = fs.readdirSync(dir).filter(function (n) { return /^\d{4}-\d{2}\.json$/.test(n); }).sort(); } catch (e) { return {}; }
+  const rows = {};
+  names.forEach(function (name) {
+    const month = JSON.parse(fs.readFileSync(dir + '/' + name, 'utf8'));
+    Object.keys(month).forEach(function (kw) {
+      const target = rows[kw] || (rows[kw] = []);
+      month[kw].forEach(function (row) { target.push(row); });
+    });
+  });
+  return rows;
+}
+const hourlyRows = loadHourlyRows();
 const BUZZ = {
   updated: buzz.updated || '',
   trend: buzz.trend || {},
@@ -319,7 +335,7 @@ const BUZZ = {
     word_daily: currentNaver.word_daily || {},
     word_history_metadata: currentNaver.word_history_metadata || {},
     channel_daily: mergeBuzzRows(currentNaver.channel_daily, recoveredNaver.channel_daily, 'date'),
-    hourly: mergeBuzzRows(currentNaver.hourly, recoveredNaver.hourly, 't'),
+    hourly: mergeBuzzRows(hourlyRows, recoveredNaver.hourly, 't'),
     related_weeks: mergeBuzzRows(currentNaver.related_weeks, recoveredNaver.related_weeks, 'key'),
     legacy_snapshots: recoveredNaver.legacy_snapshots || currentNaver.legacy_snapshots || {}
   }

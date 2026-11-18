@@ -16,6 +16,7 @@ from pathlib import Path
 
 import requests
 import buzz_config as config
+from buzz_history import preserve_legacy
 
 ROOT = Path(__file__).resolve().parent
 TIMEFRAME = 'today 3-m'
@@ -160,21 +161,6 @@ def immutable_bytes(path, content):
             raise ValueError('Immutable archive collision: ' + str(path))
 
 
-def archive_legacy(path):
-    """Archive exact original bytes BEFORE writing any collection output."""
-    if not path.exists():
-        return None
-    content = path.read_bytes()
-    digest = hashlib.sha256(content).hexdigest()
-    target = path.parent / 'buzz_archive' / 'legacy' / (digest + '.json')
-    immutable_bytes(target, content)
-    origin = {'original_filename': path.name, 'source': 'pre-collection ' + path.name,
-              'sha256': digest, 'byte_length': len(content)}
-    immutable_bytes(target.with_suffix('.source.json'),
-                    json.dumps(origin, ensure_ascii=False, sort_keys=True).encode())
-    return target.relative_to(path.parent).as_posix()
-
-
 def archive_snapshot(root, provider, identifier, snapshot, now):
     content = json.dumps(snapshot, ensure_ascii=False, sort_keys=True,
                          allow_nan=False).encode('utf-8')
@@ -296,10 +282,10 @@ def collect(output_dir=ROOT, *, keywords=None, max_requests=DEFAULT_MAX_REQUESTS
     old = config.load(path)
     if not isinstance(old, dict):
         raise ValueError('buzz.json must be an object')
-    legacy = archive_legacy(path)
+    legacy = preserve_legacy(path.parent, [path.name])
     statuses = deepcopy(old.get('collection', {}))
     changes, series_updates, related_updates, ac_updates, windows = {}, {}, {}, {}, {}
-    archives = {'legacy': [legacy] if legacy else [], 'google': [], 'autocomplete': []}
+    archives = {'legacy': legacy, 'google': [], 'autocomplete': []}
     api = api_class(budget)
     stopped = blocked_provider(statuses, 'google', now)
     for batch in config.batches(specs):
@@ -408,9 +394,6 @@ def collect(output_dir=ROOT, *, keywords=None, max_requests=DEFAULT_MAX_REQUESTS
 
     # Re-read shared data; never replace Naver fields or another worker's statuses.
     data = config.load(path)
-    legacy = archive_legacy(path)
-    if legacy:
-        archives['legacy'].append(legacy)
     data['collection'] = {**data.get('collection', {}), **changes}
     data['keywords'] = list(dict.fromkeys(data.get('keywords', []) + config.KEYWORDS))
     subjects = {item['id']: item for item in data.get('subjects', [])}

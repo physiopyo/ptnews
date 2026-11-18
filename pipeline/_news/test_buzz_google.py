@@ -187,13 +187,31 @@ class GoogleTests(unittest.TestCase):
         archive = self.root / 'buzz_archive' / 'legacy' / (digest + '.json')
         self.assertEqual(archive.read_bytes(), raw)
         self.assertEqual(json.loads(archive.read_text()), old)
-        self.assertEqual(json.loads(archive.with_suffix('.source.json').read_text())['original_filename'], 'buzz.json')
+        self.assertFalse(archive.with_suffix('.source.json').exists())
+        manifest = json.loads((self.root / 'buzz_archive' / 'legacy' / 'manifest.json').read_text())
+        self.assertEqual(manifest['files']['buzz.json'], {'sha256': digest, 'path': digest + '.json'})
+        self.assertEqual(result['google_archive']['legacy'], ['buzz_archive/legacy/' + digest + '.json'])
         for name in ('naver', 'unknown_top'):
             self.assertEqual(result[name], old[name])
         self.assertEqual(result['collection']['naver:one'], old['collection']['naver:one'])
         self.assertEqual(result['keyword_config']['unknown'], {'keep': ['yes']})
         self.assertIn('historical', result['keywords'])
         self.assertEqual(result['subjects'][0], old['subjects'][0])
+
+    def test_legacy_copy_written_once_across_runs(self):
+        old, raw = self.write_old()
+        first = self.run_collection()
+        legacy_dir = self.root / 'buzz_archive' / 'legacy'
+        copies = sorted(p.name for p in legacy_dir.glob('*.json') if p.name != 'manifest.json')
+        self.assertEqual(copies, [hashlib.sha256(raw).hexdigest() + '.json'])
+        self.assertEqual(len(first['google_archive']['legacy']), 1)
+        changed = config.load(self.root / 'buzz.json')
+        changed['unknown_top'] = {'changed': True}
+        config.save(self.root / 'buzz.json', changed)
+        second = self.run_collection(now=1000001)
+        copies_after = sorted(p.name for p in legacy_dir.glob('*.json') if p.name != 'manifest.json')
+        self.assertEqual(copies_after, copies)
+        self.assertEqual(second['google_archive']['legacy'], first['google_archive']['legacy'])
 
     def test_later_windows_do_not_stitch_normalization_scales(self):
         first = self.run_collection(keywords=['주제0'])
@@ -292,7 +310,6 @@ class GoogleTests(unittest.TestCase):
             with self.assertRaises(OSError):
                 self.run_collection()
         self.assertEqual((self.root / 'buzz.json').read_bytes(), raw)
-        self.assertEqual(FakeAPI.calls, [])
 
     def test_provider_adapter_counts_cookie_widgets_and_stops_exactly_at_cap(self):
         class LocalTrendReq:

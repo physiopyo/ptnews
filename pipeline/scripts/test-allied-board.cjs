@@ -12,8 +12,11 @@ function buildBoard(fixtures = {}) {
   const writes = [];
   const extra = {};
   const wordsDir = path.join(builderDir, "_news/buzz_archive/words");
+  const hourlyDir = path.join(builderDir, "_news/buzz_archive/hourly");
   const fakeFs = {
     readFileSync(p, encoding) {
+      if (fixtures.__hourly && p.startsWith(hourlyDir + "/"))
+        return JSON.stringify(fixtures.__hourly[path.basename(p)]);
       if (fixtures.__words && p.startsWith(wordsDir + "/"))
         return JSON.stringify(fixtures.__words[path.basename(p)]);
       if (
@@ -33,6 +36,8 @@ function buildBoard(fixtures = {}) {
     readdirSync(p) {
       if (p === wordsDir && fixtures.__words)
         return Object.keys(fixtures.__words);
+      if (p === hourlyDir && fixtures.__hourly)
+        return Object.keys(fixtures.__hourly);
       throw new Error("no directory: " + p);
     },
     mkdirSync() {},

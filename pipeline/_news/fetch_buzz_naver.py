@@ -19,7 +19,8 @@ from urllib.parse import urldefrag
 
 import requests
 import buzz_config as config
-from buzz_history import BACKFILL, FIRST_SEEN, HistoryArchive, digest, kst_date, observed_at, summarize
+from buzz_history import (BACKFILL, FIRST_SEEN, HistoryArchive, digest, history_stores, kst_date,
+                          latest_per_week, observed_at, summarize)
 
 ROOT = Path(__file__).resolve().parent
 KST = timezone(timedelta(hours=9))
@@ -666,9 +667,15 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
     naver = buzz.setdefault('naver', {})
     collection = buzz.setdefault('collection', {})
     histories = {name: config.load(str(output_dir / filename), default) for name, filename, default in (
-        ('totals', 'buzz_naver_history.json', []), ('weeks', 'buzz_related_weeks.json', {}),
         ('news', 'buzz_news_daily.json', {}), ('channels', 'buzz_channel_daily.json', {}),
-        ('daum', 'buzz_daum_daily.json', {}), ('hourly', 'buzz_hourly.json', {}))}
+        ('daum', 'buzz_daum_daily.json', {}))}
+    stores = history_stores(output_dir)
+    for name in ('totals', 'weeks', 'hourly'):
+        histories[name] = stores[name].load()
+    seen = {'sb': stores['seen_blog'].load(), 'sc': stores['seen_cafe'].load()}
+    for field, urls in seen.items():
+        for keyword, values in urls.items():
+            histories['channels'].setdefault(keyword, {})[field] = values
     http = RequestBudget(client, collection, max_requests, now)
     analyzer = Analyzer(kiwi, lexicon or {}, specs)
     day = datetime.fromtimestamp(now, KST).date()
@@ -788,21 +795,10 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
     if successes:
         histories['totals'].append({'date': today, 'observed_at': stamp,
                                     'totals': {keyword: dict(naver['totals'][keyword]) for keyword in successes}})
-    # Existing independently stored histories are retained in full; no slicing.
-    for section, name in (('history', 'totals'), ('related_weeks', 'weeks'), ('hourly', 'hourly')):
-        old = naver.get(section)
-        current = histories[name]
-        if isinstance(current, list):
-            for value in old or []:
-                if value not in current:
-                    current.append(value)
-        elif isinstance(old, dict):
-            for keyword, values in old.items():
-                target = current.setdefault(keyword, [])
-                for value in values:
-                    if value not in target:
-                        target.append(value)
-        naver[section] = current
+    # The monthly archives are the full histories; buzz.json keeps only the weekly display projection.
+    naver['related_weeks'] = {keyword: latest_per_week(rows) for keyword, rows in histories['weeks'].items()}
+    naver.pop('history', None)
+    naver.pop('hourly', None)
     naver['hourly_interval_hours'] = 6
     naver.setdefault('datalab', {'dates': [], 'series': {}})
     naver['word_history_metadata'] = {
@@ -812,9 +808,15 @@ def run(output_dir, specs, credentials, client, now, kiwi=None, lexicon=None, ma
     buzz['keywords'], buzz['subjects'], buzz['config'] = config.KEYWORDS, config.SUBJECTS, config.metadata()
     buzz['updated'] = datetime.fromtimestamp(now, KST).strftime('%Y-%m-%d %H:%M')
     archive.save()
-    for name, filename in (('totals', 'buzz_naver_history.json'), ('weeks', 'buzz_related_weeks.json'),
-                           ('news', 'buzz_news_daily.json'), ('channels', 'buzz_channel_daily.json'),
-                           ('daum', 'buzz_daum_daily.json'), ('hourly', 'buzz_hourly.json')):
+    for name in ('totals', 'weeks', 'hourly'):
+        stores[name].save(histories[name], now)
+    channels = histories['channels']
+    config.save(str(output_dir / 'buzz_channel_daily.json'),
+                {keyword: {key: value for key, value in state.items() if key not in ('sb', 'sc')}
+                 for keyword, state in channels.items()})
+    stores['seen_blog'].save({keyword: state['sb'] for keyword, state in channels.items() if 'sb' in state}, now)
+    stores['seen_cafe'].save({keyword: state['sc'] for keyword, state in channels.items() if 'sc' in state}, now)
+    for name, filename in (('news', 'buzz_news_daily.json'), ('daum', 'buzz_daum_daily.json')):
         config.save(str(output_dir / filename), histories[name])
     config.save(str(output_dir / 'buzz.json'), buzz)
     return buzz, http.used

@@ -9,7 +9,9 @@ Storage has no retention window. Instead of raw documents (text/tokens), it keep
   ``publication_date_backfill`` rows use the KST publication date of documents first
   found by a one-shot backfill. A document is counted in exactly one row.
 * ``events-YYYY-MM.json``: small collection receipts (counts, requests, windows).
-* ``legacy/``: byte-for-byte copies of pre-existing buzz*.json files.
+* ``legacy/``: byte-for-byte copies of pre-existing buzz*.json files (once per file name).
+* ``related_weeks/``, ``hourly/``, ``totals/``, ``channel_seen/{blog,cafe}/``: append-only
+  Naver histories, one ``YYYY-MM.json`` per month (see ``MonthlyStore``).
 """
 from collections import Counter
 from datetime import datetime, timedelta, timezone
@@ -17,6 +19,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import tempfile
 from urllib.parse import urldefrag
 
@@ -27,6 +30,7 @@ CHANNELS = ('news', 'blog', 'cafe')
 FIRST_SEEN = 'first_seen'
 BACKFILL = 'publication_date_backfill'
 ID_LENGTH = 16
+MONTH_FILE = re.compile(r'^\d{4}-\d{2}\.json$')
 
 
 def observed_at(now):
@@ -106,6 +110,123 @@ def save_compact(path, value):
         raise
 
 
+def preserve_legacy(output_dir, names=None):
+    """Copy each pre-existing <output_dir>/<name> byte-for-byte into buzz_archive/legacy/ once.
+
+    names=None means every buzz*.json directly inside output_dir. A name already recorded in the
+    manifest is never copied again. Returns the newly written archive paths relative to output_dir.
+    """
+    output_dir = Path(output_dir)
+    directory = output_dir / 'buzz_archive' / 'legacy'
+    manifest_path = directory / 'manifest.json'
+    manifest = config.load(str(manifest_path), {'files': {}})
+    if names is None:
+        names = [path.name for path in sorted(output_dir.glob('buzz*.json'))]
+    written, changed = [], False
+    for name in names:
+        if name in manifest['files']:
+            continue
+        path = output_dir / name
+        if not path.is_file():
+            continue
+        raw = path.read_bytes()
+        content_hash = hashlib.sha256(raw).hexdigest()
+        target = directory / (content_hash + '.json')
+        if not target.exists():
+            directory.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw)
+            written.append(target.relative_to(output_dir).as_posix())
+        manifest['files'][name] = {'sha256': content_hash, 'path': target.name}
+        changed = True
+    if changed or not manifest_path.exists():
+        config.save(str(manifest_path), manifest)
+    return written
+
+
+def week_month(row):
+    return ((row.get('observed_at') or {}).get('kst') or row['key'])[:7]
+
+
+def latest_per_week(rows):
+    """Display projection: the last row for each week key, sorted by key."""
+    latest = {}
+    for row in rows:
+        latest[row['key']] = row
+    return [latest[key] for key in sorted(latest)]
+
+
+class MonthlyStore:
+    """Append-only history split into <output_dir>/buzz_archive/<name>/YYYY-MM.json.
+
+    keyed=True: data is {keyword: [row, ...]}; keyed=False: data is [row, ...]. Rows already on
+    disk stay in their month file; a row appended later goes to the later of the previous row's
+    month and its own month (month_of(row), else the KST month of `now`).
+    """
+
+    def __init__(self, output_dir, name, keyed=True, month_of=None):
+        self.directory = Path(output_dir) / 'buzz_archive' / name
+        self.keyed = keyed
+        self.month_of = month_of
+        self.loaded = None  # list key -> rows known to be on disk
+        self.months = None  # list key -> month of each of those rows
+
+    def load(self):
+        data = {} if self.keyed else []
+        self.loaded, self.months = {}, {}
+        paths = sorted(path for path in self.directory.glob('*.json') if MONTH_FILE.match(path.name))
+        for path in paths:
+            month = path.stem
+            content = config.load(str(path), {} if self.keyed else [])
+            for key, rows in (content.items() if self.keyed else [(None, content)]):
+                target = data.setdefault(key, []) if self.keyed else data
+                target.extend(rows)
+                self.loaded.setdefault(key, []).extend(rows)
+                self.months.setdefault(key, []).extend([month] * len(rows))
+        return data
+
+    def save(self, data, now):
+        if self.loaded is None:
+            raise RuntimeError('load() must be called before save()')
+        lists = data if self.keyed else {None: data}
+        for key, rows in self.loaded.items():
+            if key not in lists or lists[key][:len(rows)] != rows:
+                raise ValueError('loaded history rows were modified: %s' % (key,))
+        current = observed_at(now)['kst'][:7]
+        months, touched = {}, set()
+        for key, rows in lists.items():
+            known = list(self.months.get(key, []))
+            for row in rows[len(known):]:
+                month = self.month_of(row) if self.month_of else current
+                if known and known[-1] > month:
+                    month = known[-1]
+                known.append(month)
+                touched.add(month)
+            months[key] = known
+        for month in sorted(touched):
+            if self.keyed:
+                content = {}
+                for key, rows in lists.items():
+                    part = [row for row, row_month in zip(rows, months[key]) if row_month == month]
+                    if part:
+                        content[key] = part
+            else:
+                content = [row for row, row_month in zip(data, months[None]) if row_month == month]
+            config.save(str(self.directory / (month + '.json')), content)
+        self.loaded = {key: list(rows) for key, rows in lists.items() if rows}
+        self.months = {key: months[key] for key in self.loaded}
+
+
+def history_stores(output_dir):
+    """The monthly histories of the Naver collector."""
+    return {
+        'weeks': MonthlyStore(output_dir, 'related_weeks', month_of=week_month),
+        'hourly': MonthlyStore(output_dir, 'hourly', month_of=lambda row: row['t'][:7]),
+        'totals': MonthlyStore(output_dir, 'totals', keyed=False, month_of=lambda row: row['date'][:7]),
+        'seen_blog': MonthlyStore(output_dir, 'channel_seen/blog'),
+        'seen_cafe': MonthlyStore(output_dir, 'channel_seen/cafe'),
+    }
+
+
 def empty_aggregate():
     return {'documents': {}, 'related': {}, 'sentiment': {}, 'coverage': [], 'observed_at': None}
 
@@ -133,23 +254,7 @@ class HistoryArchive:
 
     def preserve_legacy(self):
         """Copy each pre-existing buzz*.json byte-for-byte before any mutation."""
-        directory = self.root / 'legacy'
-        directory.mkdir(parents=True, exist_ok=True)
-        manifest_path = directory / 'manifest.json'
-        manifest = config.load(str(manifest_path), {'files': {}})
-        changed = False
-        for path in sorted(self.output_dir.glob('buzz*.json')):
-            if path.name in manifest['files']:
-                continue
-            raw = path.read_bytes()
-            content_hash = hashlib.sha256(raw).hexdigest()
-            target = directory / (content_hash + '.json')
-            if not target.exists():
-                target.write_bytes(raw)
-            manifest['files'][path.name] = {'sha256': content_hash, 'path': target.name}
-            changed = True
-        if changed or not manifest_path.exists():
-            config.save(str(manifest_path), manifest)
+        preserve_legacy(self.output_dir)
 
     def snapshot(self, kind, keyword, source, data, now):
         stamp = observed_at(now)
