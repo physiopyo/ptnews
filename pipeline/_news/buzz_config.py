@@ -62,7 +62,8 @@ def save(path, value):
     fd, tmp = tempfile.mkstemp(prefix=path.name + '.', suffix='.tmp', dir=path.parent)
     try:
         with os.fdopen(fd, 'w', encoding='utf-8') as f:
-            json.dump(value, f, ensure_ascii=False, indent=1)
+            # Compact: indent=1 doubled buzz.json past GitHub's 100 MB push limit.
+            json.dump(value, f, ensure_ascii=False, separators=(',', ':'))
             f.write('\n')
             f.flush()
             os.fsync(f.fileno())
